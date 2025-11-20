@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
 	
-	public MainMenuPanel(MainFrame frame) {
+	public MainMenuPanel() {
 		setLayout(new BorderLayout());
 	    setBackground(new Color(30, 40, 60));
 	    
@@ -19,20 +19,15 @@ public class MainMenuPanel extends JPanel {
 		title.setFont(new Font("맑은 고딕", Font.BOLD, 26));
 		title.setForeground(Color.WHITE);
 		
-		JLabel easy = createMenuLabel("쉬움");
-		leftMenu.add(easy);
+		leftMenu.add(wrapLabel(new MenuLabel("시작"), 40));
 		leftMenu.add(Box.createVerticalStrut(20));
 		
-		JLabel normal = createMenuLabel("보통");
-		leftMenu.add(normal);
+		leftMenu.add(wrapLabel(new MenuLabel("상점"), 40));
 		leftMenu.add(Box.createVerticalStrut(20));
-		
-		JLabel hard = createMenuLabel("어려움");
-		leftMenu.add(hard);
+
+		leftMenu.add(wrapLabel(new MenuLabel("설정"), 40));
 		leftMenu.add(Box.createVerticalStrut(20));
-		
-		JLabel start = createMenuLabel("게임 시작");
-		leftMenu.add(start);
+
 
         add(title, BorderLayout.NORTH);
         add(leftMenu, BorderLayout.WEST);
@@ -42,34 +37,21 @@ public class MainMenuPanel extends JPanel {
         add(emptyRight, BorderLayout.CENTER);
 	}
 	
-	private JLabel createMenuLabel(String text) {
-	    JLabel label = new JLabel(text);
-	    label.setForeground(Color.WHITE);
-	    label.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 28));
+	private JPanel wrapLabel(MenuLabel label, int height) {
+	    JPanel panel = new JPanel(null);
+	    panel.setOpaque(false);
+	    
+	    panel.setPreferredSize(new Dimension(150, height));
+	    panel.setMaximumSize(new Dimension(150, height));
+	    
+	    label.setBounds(0, 0, 150, height);
 
-	    label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
-	    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    panel.add(label);
 
-
-	    label.addMouseListener(new java.awt.event.MouseAdapter() {
-	        @Override
-	        public void mouseEntered(java.awt.event.MouseEvent e) {
-	            label.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 32));
-	        }
-
-	        @Override
-	        public void mouseExited(java.awt.event.MouseEvent e) {
-	            label.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 28));
-	        }
-
-	        @Override
-	        public void mouseClicked(java.awt.event.MouseEvent e) {
-	            System.out.println(text + " 클릭됨");
-	        }
-	    });
-
-	    return label;
+	    return panel;
 	}
+	
+
 
 
 }

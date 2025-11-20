@@ -17,9 +17,11 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		
-		MainMenuPanel menuPanel = new MainMenuPanel(this);
+		MainMenuPanel menuPanel = new MainMenuPanel();
+		DifficultyPanel difficultyPanel = new DifficultyPanel();
 		
 		mainPanel.add(menuPanel, "menu");
+		mainPanel.add(difficultyPanel, "difficulty");
 		
 		add(mainPanel);
 		setVisible(true);
@@ -28,11 +30,6 @@ public class MainFrame extends JFrame {
 	//화면 전환 메소드
 	public void showPanel(String name) {
 		cardLayout.show(mainPanel, name);
-	}
-	
-	//패널 등록 메소드
-	public void addPanel(JPanel panel, String name) {
-		mainPanel.add(panel, name);
 	}
 
 }
