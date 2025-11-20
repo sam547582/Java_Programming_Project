@@ -13,7 +13,7 @@ public class MenuLabel extends JLabel {
 
         // 기본 폰트
         normalFont = new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 28);
-        hoverFont = new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 34);  // hover 시 폰트
+        hoverFont = new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 34);
 
         setFont(normalFont);
         setForeground(Color.WHITE);
