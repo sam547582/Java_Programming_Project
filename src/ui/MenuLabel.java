@@ -11,9 +11,8 @@ public class MenuLabel extends JLabel {
     public MenuLabel(String text) {
         super(text);
 
-        // 기본 폰트
-        normalFont = new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 28);
-        hoverFont = new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 34);
+        normalFont = new Font("Arial", Font.BOLD | Font.ITALIC, 28);
+        hoverFont = new Font("Arial", Font.BOLD | Font.ITALIC, 34);
 
         setFont(normalFont);
         setForeground(Color.WHITE);
@@ -28,21 +27,18 @@ public class MenuLabel extends JLabel {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 setFont(hoverFont);
                 
-                Dimension d = getPreferredSize();
-                d.width += 30; 
-                
-                setBounds(0, 0, d.width, getHeight());
+                Dimension d = getPreferredSize();    
+                setBounds(0, 0, d.width+5, d.height);
                 
                 repaint();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
+            	setFont(normalFont);
             	
             	Dimension d = getPreferredSize();
-            	setBounds(0, 0, d.width, getHeight());
-            	
-            	setFont(normalFont);
+            	setBounds(0, 0, d.width+5, d.height);
                 
                 repaint();
             }

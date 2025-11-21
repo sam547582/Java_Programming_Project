@@ -5,27 +5,34 @@ import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
 	
-	public MainMenuPanel() {
+	public MainMenuPanel(MainFrame frame) {
 		setLayout(new BorderLayout());
 	    setBackground(new Color(30, 40, 60));
 	    
 	    JPanel leftMenu = new JPanel();
 	    leftMenu.setLayout(new BoxLayout(leftMenu, BoxLayout.Y_AXIS));
 	    leftMenu.setOpaque(false);
-
+	    
 	    leftMenu.add(Box.createVerticalStrut(60));
 	    
-		JLabel title = new JLabel("수능 수학 훈련 프로그램", SwingConstants.CENTER);
-		title.setFont(new Font("맑은 고딕", Font.BOLD, 26));
+		JLabel title = new JLabel("KICE MATH TRAINING", SwingConstants.CENTER);
+		title.setFont(new Font("Arial", Font.BOLD, 26));
 		title.setForeground(Color.WHITE);
 		
-		leftMenu.add(wrapLabel(new MenuLabel("시작"), 40));
+		MenuLabel start = new MenuLabel("Start");
+		start.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent e) {
+		        frame.showPanel("difficulty"); 
+		    }
+		});		
+		leftMenu.add(wrapLabel(start));
 		leftMenu.add(Box.createVerticalStrut(20));
 		
-		leftMenu.add(wrapLabel(new MenuLabel("상점"), 40));
+		leftMenu.add(wrapLabel(new MenuLabel("Shop")));
 		leftMenu.add(Box.createVerticalStrut(20));
 
-		leftMenu.add(wrapLabel(new MenuLabel("설정"), 40));
+		leftMenu.add(wrapLabel(new MenuLabel("Settings")));
 		leftMenu.add(Box.createVerticalStrut(20));
 
 
@@ -37,15 +44,16 @@ public class MainMenuPanel extends JPanel {
         add(emptyRight, BorderLayout.CENTER);
 	}
 	
-	private JPanel wrapLabel(MenuLabel label, int height) {
+	private JPanel wrapLabel(MenuLabel label) {
 	    JPanel panel = new JPanel(null);
 	    panel.setOpaque(false);
 	    
-	    panel.setPreferredSize(new Dimension(150, height));
-	    panel.setMaximumSize(new Dimension(150, height));
+	    panel.setPreferredSize(new Dimension(300, 60));
+	    panel.setMaximumSize(new Dimension(300,60));
 	    
-	    label.setBounds(0, 0, 150, height);
-
+	    Dimension d = label.getPreferredSize();
+	    label.setBounds(0,0,d.width+5,d.height);
+	    
 	    panel.add(label);
 
 	    return panel;
