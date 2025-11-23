@@ -39,7 +39,7 @@ public class ProblemPanel extends JPanel {
 		getProblem();
 		
 		getImage(0);
-		scaled_img = scaleImage(img, 400);
+		scaled_img = scaleImage(img, 500);
 		
 		createProblemNumberButton();
 		
@@ -62,8 +62,7 @@ public class ProblemPanel extends JPanel {
 			
 			problemNumberButton[i] = new JButton(String.valueOf(i+1));
 			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
-			problemNumberButton[i].addActionListener(e -> getImage(num));
-			scaled_img = scaleImage(img, 400);
+			problemNumberButton[i].addActionListener(e -> {getImage(num); updateImage();});
 		}
 	}
 	
@@ -92,7 +91,8 @@ public class ProblemPanel extends JPanel {
 		topWrapper.add(top,BorderLayout.CENTER);
 		
 		center = new JPanel(new BorderLayout());
-		center.setOpaque(true);
+		center.setOpaque(false);
+		center.setBackground(Color.WHITE);
 		center.add(problemContentLabel,BorderLayout.WEST);
 		
 		bottom = new JPanel(new FlowLayout());
@@ -193,13 +193,27 @@ public class ProblemPanel extends JPanel {
 
 	    return scaled;
 	}
-	 	
+	
+	private void updateImage() {
+		scaled_img = scaleImage(img, 500);
+		problemContentLabel.setIcon(new ImageIcon(scaled_img));
+		problemContentLabel.setIcon(new ImageIcon(scaled_img));
+	}
+	
     private BufferedImage removeBackground(BufferedImage img, int threshold) {
         int w = img.getWidth();
         int h = img.getHeight();
 
         BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
+        
+        Color panelBg = new Color(255, 255, 255);
+        Color textColor = getContrastColor(panelBg);
+        
+        int tr = textColor.getRed();
+        int tg = textColor.getGreen();
+        int tb = textColor.getBlue();
+        int textRGB = (0xFF << 24) | (tr << 16) | (tg << 8) | tb;
+        
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
 
@@ -208,18 +222,27 @@ public class ProblemPanel extends JPanel {
                 int r = (rgb >> 16) & 0xFF;
                 int g = (rgb >> 8) & 0xFF;
                 int b = rgb & 0xFF;
-
+                
                 int brightness = (r + g + b) / 3;
 
                 if (brightness >= threshold) {
-                    output.setRGB(x, y, 0x00FFFFFF);
-                } else {
-                    output.setRGB(x, y, (rgb & 0xFFFFFF) | 0xFF000000);
+                    output.setRGB(x, y, 0x00000000);
+                }
+                else {
+                    output.setRGB(x, y, textRGB);
                 }
             }
         }
 
         return output;
+    }
+    
+    private Color getContrastColor(Color bg) {
+        double brightness = bg.getRed() * 0.299
+                          + bg.getGreen() * 0.587
+                          + bg.getBlue() * 0.114;
+
+        return brightness > 128 ? Color.BLACK : Color.WHITE;
     }
 
 	
