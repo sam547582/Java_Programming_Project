@@ -1,10 +1,12 @@
 package ui;
 
+import java.util.List;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import model.*;
 
 public class ProblemPanel extends JPanel {
 	
@@ -12,11 +14,12 @@ public class ProblemPanel extends JPanel {
 	
 	private String difficulty = "";
 	
-	private JLabel problemNumberLabel;
+	private JButton[] problemNumberButton;
 	private JLabel problemContentLabel;
 	private JTextField answerField;
 	private JButton submit;
 	
+	private Problem[] problems;
 	private String answer;
 	
 	ProblemPanel(MainFrame frame) {
@@ -24,11 +27,12 @@ public class ProblemPanel extends JPanel {
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
 		
-		answer = "12";
+        List<Problem> all = ProblemManager.loadProblems("resources/img/" + difficulty + "/");
+        problems = ProblemManager.pickRandomFive(all);
 		
 		BufferedImage original = null;
 		try {
-			original = ImageIO.read(new File("resources/img/easy/test3.png"));
+			original = ImageIO.read(new File(problems[0].getPath()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,9 +40,10 @@ public class ProblemPanel extends JPanel {
 		img = removeBackground(original, 240); 
 		BufferedImage scaled_img = scaleImage(img, 400);
 		
-		problemNumberLabel = new JLabel("Problem 1", SwingConstants.CENTER);
-		problemNumberLabel.setFont(new Font("Arial", Font.BOLD, 28));
-		problemNumberLabel.setForeground(Color.WHITE);;
+		for(int i=0;i<5;i++) {
+			problemNumberButton[i] = new JButton(String.valueOf(i+1));
+			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
+		}
 		
 		problemContentLabel = new JLabel();
 		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
@@ -93,7 +98,6 @@ public class ProblemPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Miscorrect");
         }
     }
-
 	
 	private static BufferedImage scaleImage(BufferedImage input, int newWidth) {
 	    int orgWidth = input.getWidth();
