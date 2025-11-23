@@ -2,6 +2,7 @@ package ui;
 
 import java.util.List;
 import java.io.*;
+import java.net.URL;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -11,8 +12,12 @@ import model.*;
 public class ProblemPanel extends JPanel {
 	
 	private BufferedImage img;
+	private BufferedImage scaled_img;
 	
-	private String difficulty = "";
+	private JPanel topWrapper;
+	private JPanel top;
+	private JPanel center;
+	private JPanel bottom;
 	
 	private JButton[] problemNumberButton;
 	private JLabel problemContentLabel;
@@ -20,71 +25,93 @@ public class ProblemPanel extends JPanel {
 	private JButton submit;
 	
 	private Problem[] problems;
-	private String answer;
 	
-	ProblemPanel(MainFrame frame) {
+	private String difficulty = "easy";
+	private int size;
+	private int now_number;
+	
+	ProblemPanel(MainFrame frame,String difficulty) {
+		this.difficulty = difficulty;
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
 		
-        List<Problem> all = ProblemManager.loadProblems("resources/img/" + difficulty + "/");
-        problems = ProblemManager.pickRandomFive(all);
+		getProblem();
 		
-		BufferedImage original = null;
-		try {
-			original = ImageIO.read(new File(problems[0].getPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		getImage(0);
+		scaled_img = scaleImage(img, 400);
 		
-		img = removeBackground(original, 240); 
-		BufferedImage scaled_img = scaleImage(img, 400);
+		createProblemNumberButton();
 		
-		for(int i=0;i<5;i++) {
-			problemNumberButton[i] = new JButton(String.valueOf(i+1));
-			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
-		}
+		createProblemContentLabel();
 		
-		problemContentLabel = new JLabel();
-		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
-		problemContentLabel.setIcon(new ImageIcon(scaled_img));
-		problemContentLabel.setBounds(0, 0, scaled_img.getWidth(), scaled_img.getHeight());
-		problemContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		createAnswerPanel();
 		
-		answerField = new JTextField(20);
-		answerField.setFont(new Font("Arial", Font.PLAIN, 20));
+		createJPanel();
 		
-		submit = new JButton("Submit");
-		submit.setFont(new Font("Arial", Font.BOLD, 18));
-		submit.addActionListener(e -> checkAnswer());	
-		
-		JPanel top = new JPanel(new BorderLayout());
-		top.setOpaque(false);
-		top.add(problemNumberLabel,BorderLayout.CENTER);
-		top.setBorder(BorderFactory.createEmptyBorder(20, 0, 20 , 0));
-		
-		JPanel center = new JPanel(new BorderLayout());
-		center.setOpaque(true);
-		center.add(problemContentLabel,BorderLayout.WEST);
-		
-		JPanel bottom = new JPanel(new FlowLayout());
-		bottom.setOpaque(false);
-		bottom.add(answerField);
-		bottom.add(submit);
-		bottom.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
-		
-		add(top, BorderLayout.NORTH);
+		add(topWrapper, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
 		add(bottom, BorderLayout.SOUTH);
 		
 	}
 	
-	public void setDifficulty(String difficulty) {
-		this.difficulty = difficulty;
-		
+	private void createProblemNumberButton() {
+		problemNumberButton = new JButton[size];
+		for(int i=0;i<size;i++) {
+			int num = i;
+			
+			problemNumberButton[i] = new JButton(String.valueOf(i+1));
+			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
+			problemNumberButton[i].addActionListener(e -> getImage(num));
+			scaled_img = scaleImage(img, 400);
+		}
 	}
 	
-	private void checkAnswer() {
+	private void createProblemContentLabel() {
+		problemContentLabel = new JLabel();
+		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
+		problemContentLabel.setIcon(new ImageIcon(scaled_img));
+		problemContentLabel.setBounds(0, 0, scaled_img.getWidth(), scaled_img.getHeight());
+		problemContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	}
+	
+	private void createJPanel() {
+		top = new JPanel();
+		top.setLayout(new BoxLayout(top,BoxLayout.X_AXIS));
+		top.setOpaque(false);
+		
+		top.add(Box.createHorizontalGlue());
+		for(int i=0;i<size;i++) {
+			top.add(problemNumberButton[i]);
+			top.add(Box.createHorizontalStrut(20));
+		}
+		top.add(Box.createHorizontalGlue());
+		
+		topWrapper = new JPanel(new BorderLayout());
+		topWrapper.setOpaque(false);
+		topWrapper.add(top,BorderLayout.CENTER);
+		
+		center = new JPanel(new BorderLayout());
+		center.setOpaque(true);
+		center.add(problemContentLabel,BorderLayout.WEST);
+		
+		bottom = new JPanel(new FlowLayout());
+		bottom.setOpaque(false);
+		bottom.add(answerField);
+		bottom.add(submit);
+		bottom.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+	}
+	
+	private void createAnswerPanel() {
+		answerField = new JTextField(20);
+		answerField.setFont(new Font("Arial", Font.PLAIN, 20));
+		
+		submit = new JButton("Submit");
+		submit.setFont(new Font("Arial", Font.BOLD, 18));
+		submit.addActionListener(e -> checkAnswer(problems[now_number]));	
+	}
+	
+	private void checkAnswer(Problem nowProblem) {
 		String userInput = answerField.getText().trim();
 		
         if (userInput.isEmpty()) {
@@ -92,14 +119,65 @@ public class ProblemPanel extends JPanel {
             return;
         }
 
-        if (userInput.equals(answer)) {
+        if (userInput.equals(nowProblem.getAnswer())) {
             JOptionPane.showMessageDialog(this, "Correct!");
         } else {
             JOptionPane.showMessageDialog(this, "Miscorrect");
         }
     }
 	
-	private static BufferedImage scaleImage(BufferedImage input, int newWidth) {
+	private void getProblem() {
+		if(difficulty.equals("easy")) {
+			List<Problem> all = ProblemManager.loadProblems("img/easy");
+			
+			size = Math.min(all.size(), 20);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("normal")) {
+			List<Problem> all = ProblemManager.loadProblems("img/normal");
+			
+			size = Math.min(all.size(), 20);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("hard")) {
+			List<Problem> all = ProblemManager.loadProblems("img/hard");
+			
+			size = Math.min(all.size(), 10);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("extreme")) {
+			List<Problem> all = ProblemManager.loadProblems("img/extreme");
+			
+			size = Math.min(all.size(), 5);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+	}
+	
+	private void getImage(int num) {
+		BufferedImage original = null;
+		
+		now_number = num;
+		
+		try {
+			URL path = getClass().getClassLoader().getResource(problems[num].getPath());
+			if (path == null) {
+			    System.out.println("Can't find image" + problems[num].getPath());
+			}
+			original = ImageIO.read(path);
+		}
+		catch(IOException e) {
+		    JOptionPane.showMessageDialog(this,"Error" + e.getMessage());
+		}
+
+		
+		img = removeBackground(original, 240); 
+	}
+	
+	private BufferedImage scaleImage(BufferedImage input, int newWidth) {
 	    int orgWidth = input.getWidth();
 	    int orgHeight = input.getHeight();
 
@@ -116,7 +194,7 @@ public class ProblemPanel extends JPanel {
 	    return scaled;
 	}
 	 	
-    private static BufferedImage removeBackground(BufferedImage img, int threshold) {
+    private BufferedImage removeBackground(BufferedImage img, int threshold) {
         int w = img.getWidth();
         int h = img.getHeight();
 

@@ -51,7 +51,7 @@ public class DifficultyPanel extends JPanel {
         		+ "<br><br><br>"
         		+ "10 Coins / problem"
         		+ "</center></html>", frame);
-        easy.addActionListener(e -> frame.showProblem("Easy"));
+        easy.addActionListener(e -> frame.showProblem("easy"));
         
         JButton normal = BtnCreate("<html><center> "
         		+ "Normal "
@@ -64,7 +64,7 @@ public class DifficultyPanel extends JPanel {
         		+ "<br><br><br>"
         		+ "50 Coins / problem"
         		+ "</center></html>", frame);
-        normal.addActionListener(e -> frame.showProblem("Normal"));
+        normal.addActionListener(e -> frame.showProblem("normal"));
         
         JButton hard = BtnCreate("<html><center> "
         		+ "Hard "
@@ -73,7 +73,7 @@ public class DifficultyPanel extends JPanel {
         		+ "<br><br><br><br>"
         		+ "100 Coins / problem"
         		+ "</center></html>", frame);
-        hard.addActionListener(e -> frame.showProblem("Hard"));
+        hard.addActionListener(e -> frame.showProblem("hard"));
         
         JButton extreme = BtnCreate("<html><center> "
         		+ "Extreme "
@@ -82,7 +82,7 @@ public class DifficultyPanel extends JPanel {
         		+ "<br><br><br><br>"
         		+ "300 Coins / problem"
         		+ "</center></html>", frame);
-        extreme.addActionListener(e -> frame.showProblem("Extreme"));
+        extreme.addActionListener(e -> frame.showProblem("extreme"));
         
         center.add(Box.createHorizontalStrut(25));
         center.add(easy);

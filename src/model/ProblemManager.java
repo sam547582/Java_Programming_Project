@@ -1,14 +1,20 @@
 package model;
 
 import java.io.File;
+import java.net.URL;
 import java.util.*;
 
 public class ProblemManager {
 
     public static List<Problem> loadProblems(String folderPath) {
-        File folder = new File(folderPath);
+    	URL folderURL = ProblemManager.class.getClassLoader().getResource(folderPath);
+    	if (folderURL == null) {
+    	    throw new RuntimeException("폴더를 찾을 수 없습니다: " + folderPath);
+    	}
 
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
+    	File folder = new File(folderURL.getFile());
+    	File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
+
 
         if (files == null || files.length == 0) {
             throw new RuntimeException("문제 이미지가 없습니다!");
@@ -33,11 +39,11 @@ public class ProblemManager {
         return list;
     }
 
-    public static Problem[] pickRandomFive(List<Problem> all) {
+    public static Problem[] pickRandom(List<Problem> all,int size) {
         Collections.shuffle(all);
-
-        Problem[] selected = new Problem[5];
-        for (int i = 0; i < 5; i++) {
+        
+        Problem[] selected = new Problem[size];
+        for (int i = 0; i < size; i++) {
             selected[i] = all.get(i);
         }
         return selected;
