@@ -17,57 +17,90 @@ public class ProblemPanel extends JPanel {
 	private JPanel topWrapper;
 	private JPanel top;
 	private JPanel center;
-	private JPanel bottom;
+	private JPanel bottomWrapper;
+	private JPanel bottomLeft;
+	private JPanel bottomCenter;
+	private JPanel bottomRight;
 	
 	private JButton[] problemNumberButton;
-	private JLabel problemContentLabel;
+	private ColorLabel problemContentLabel;
 	private JTextField answerField;
 	private JButton submit;
 	
+	private JButton black;
+	private JButton white;
+	
 	private Problem[] problems;
 	
-	private String difficulty = "easy";
+	private String difficulty;
+	
 	private int size;
 	private int now_number;
 	
 	ProblemPanel(MainFrame frame,String difficulty) {
 		this.difficulty = difficulty;
+		now_number = 0;
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
 		
 		getProblem();
 		
-		getImage(0);
+		getImage(now_number);
 		scaled_img = scaleImage(img, 500);
-		
-		createProblemNumberButton();
 		
 		createProblemContentLabel();
 		
+		createProblemNumberButton(frame);
+		
 		createAnswerPanel();
+		
+		black = new ColorButton(Color.BLACK);
+		black.setPreferredSize(new Dimension(30,30));
+		black.addActionListener(e -> {  
+										center.setBackground(Color.BLACK);
+										getImage(now_number); 
+										updateImage(); });
+		white = new ColorButton(Color.WHITE);
+		white.setBackground(Color.WHITE);
+		white.setPreferredSize(new Dimension(30,30));
+		white.addActionListener(e -> {  
+										center.setBackground(Color.WHITE);
+										getImage(now_number); 
+										updateImage(); });
 		
 		createJPanel();
 		
+		
+		
+		
+		
+		
 		add(topWrapper, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
-		add(bottom, BorderLayout.SOUTH);
+		add(bottomWrapper, BorderLayout.SOUTH);
+		
+		Dimension d = getPreferredSize();
+		frame.setSize(800,d.height + 100);
 		
 	}
 	
-	private void createProblemNumberButton() {
+	private void createProblemNumberButton(MainFrame frame) {
 		problemNumberButton = new JButton[size];
 		for(int i=0;i<size;i++) {
 			int num = i;
 			
 			problemNumberButton[i] = new JButton(String.valueOf(i+1));
 			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
-			problemNumberButton[i].addActionListener(e -> {getImage(num); updateImage();});
+			problemNumberButton[i].addActionListener(e -> {getImage(num); 
+													 updateImage();
+													 Dimension d = getPreferredSize();
+													 frame.setSize(800,d.height + 100); });
 		}
 	}
 	
 	private void createProblemContentLabel() {
-		problemContentLabel = new JLabel();
+		problemContentLabel = new ColorLabel();
 		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
 		problemContentLabel.setIcon(new ImageIcon(scaled_img));
 		problemContentLabel.setBounds(0, 0, scaled_img.getWidth(), scaled_img.getHeight());
@@ -91,15 +124,32 @@ public class ProblemPanel extends JPanel {
 		topWrapper.add(top,BorderLayout.CENTER);
 		
 		center = new JPanel(new BorderLayout());
-		center.setOpaque(false);
+		center.setOpaque(true);
 		center.setBackground(Color.WHITE);
 		center.add(problemContentLabel,BorderLayout.WEST);
 		
-		bottom = new JPanel(new FlowLayout());
-		bottom.setOpaque(false);
-		bottom.add(answerField);
-		bottom.add(submit);
-		bottom.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+		bottomCenter = new JPanel(new FlowLayout());
+		bottomCenter.setOpaque(false);
+		bottomCenter.add(answerField);
+		bottomCenter.add(submit);
+		bottomCenter.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+		
+		bottomLeft = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
+		bottomLeft.setOpaque(false);
+		bottomLeft.add(black);
+		bottomLeft.add(white);
+		bottomLeft.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+		
+        bottomRight = new JPanel(new FlowLayout());
+        bottomRight.setOpaque(false);
+        bottomRight.setPreferredSize(bottomLeft.getPreferredSize());
+        bottomRight.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+        
+		bottomWrapper = new JPanel(new BorderLayout());
+		bottomWrapper.setOpaque(false);
+		bottomWrapper.add(bottomCenter,BorderLayout.CENTER);
+		bottomWrapper.add(bottomLeft,BorderLayout.WEST);
+		bottomWrapper.add(bottomRight,BorderLayout.EAST);
 	}
 	
 	private void createAnswerPanel() {
@@ -197,7 +247,6 @@ public class ProblemPanel extends JPanel {
 	private void updateImage() {
 		scaled_img = scaleImage(img, 500);
 		problemContentLabel.setIcon(new ImageIcon(scaled_img));
-		problemContentLabel.setIcon(new ImageIcon(scaled_img));
 	}
 	
     private BufferedImage removeBackground(BufferedImage img, int threshold) {
@@ -206,7 +255,15 @@ public class ProblemPanel extends JPanel {
 
         BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         
-        Color panelBg = new Color(255, 255, 255);
+        Color panelBg;
+        
+        if(center != null) {
+        	panelBg = center.getBackground();
+        }
+        else {
+        	panelBg = new Color(255,255,255);
+        }
+        
         Color textColor = getContrastColor(panelBg);
         
         int tr = textColor.getRed();
