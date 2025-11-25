@@ -8,8 +8,11 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import model.*;
+import controller.*;
 
 public class ProblemPanel extends JPanel {
+	
+	MainFrame frame;
 	
 	private BufferedImage img;
 	private BufferedImage scaled_img;
@@ -26,6 +29,7 @@ public class ProblemPanel extends JPanel {
 	private ColorLabel problemContentLabel;
 	private JTextField answerField;
 	private JButton submit;
+	private problemTimer timer;
 	
 	private JButton black;
 	private JButton white;
@@ -38,11 +42,15 @@ public class ProblemPanel extends JPanel {
 	private int now_number;
 	
 	ProblemPanel(MainFrame frame,String difficulty) {
+		this.frame = frame;
 		this.difficulty = difficulty;
 		now_number = 0;
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
+		
+		timer = new problemTimer();
+		setTimer();
 		
 		getProblem();
 		
@@ -51,7 +59,7 @@ public class ProblemPanel extends JPanel {
 		
 		createProblemContentLabel();
 		
-		createProblemNumberButton(frame);
+		createProblemNumberButton(this.frame);
 		
 		createAnswerPanel();
 		
@@ -81,8 +89,31 @@ public class ProblemPanel extends JPanel {
 		add(bottomWrapper, BorderLayout.SOUTH);
 		
 		Dimension d = getPreferredSize();
-		frame.setSize(800,d.height + 100);
+		this.frame.setSize(800,d.height + 100);
+		timer.start();
 		
+	}
+	
+	private void setTimer() {
+		if(difficulty.equals("easy")) {
+			timer.setTime(5);
+		}
+		else if(difficulty.equals("normal")) {
+			timer.setTime(600);
+		}
+		else if(difficulty.equals("normal")) {
+			timer.setTime(900);
+		}
+		else {
+			timer.setTime(1800);
+		}
+		
+		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
+			@Override
+			public void Timeout() {
+				frame.showPanel("difficulty");
+			}
+		});
 	}
 	
 	private void createProblemNumberButton(MainFrame frame) {
