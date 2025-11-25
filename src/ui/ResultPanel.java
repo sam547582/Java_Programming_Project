@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import model.*;
 
-public class ResultPanel extends JFrame {
+public class ResultPanel extends JPanel {
 	
 	private Problem[] problems;
 	
@@ -16,7 +16,7 @@ public class ResultPanel extends JFrame {
 	private int correct;
 	private int wrong;
 	
-	public ResultPanel(MainFrame frame, Problem[] problems) {
+	ResultPanel(MainFrame frame, Problem[] problems) {
 		this.problems = problems;
 		correct = wrong = 0;
 		
@@ -27,11 +27,13 @@ public class ResultPanel extends JFrame {
 		
 		correctLabel = new JLabel(String.valueOf(correct));
 		correctLabel.setFont(new Font("Arial",Font.BOLD,40));
+		correctLabel.setForeground(Color.BLACK);
 		
 		wrongLabel = new JLabel(String.valueOf(wrong));
 		wrongLabel.setFont(new Font("Arial",Font.BOLD,40));
+		wrongLabel.setForeground(Color.BLACK);
 		
-		center.setLayout(new FlowLayout());
+		center = new JPanel(new FlowLayout());
 		center.setOpaque(false);
 		center.add(correctLabel);
 		center.add(wrongLabel);

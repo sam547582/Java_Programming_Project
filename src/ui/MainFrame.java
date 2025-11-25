@@ -39,23 +39,24 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showProblem(String difficulty) {
-		mainPanel.remove(menuPanel);
-		mainPanel.remove(difficultyPanel);
 		
 		problemPanel = new ProblemPanel(this, difficulty);
 		
 		mainPanel.add(problemPanel, "problem");
 		cardLayout.show(mainPanel, "problem");
+		
+		mainPanel.remove(menuPanel);
+		mainPanel.remove(difficultyPanel);
 	}
 	
 	public void showResult(Problem[] problems) {
-		mainPanel.remove(problemPanel);
 		
 		resultPanel = new ResultPanel(this, problems);
 		
 		mainPanel.add(resultPanel, "result");
-		
 		cardLayout.show(mainPanel, "result");
+		
+		mainPanel.remove(problemPanel);
 	}
 
 }

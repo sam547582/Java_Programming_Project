@@ -7,14 +7,19 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+
 import model.*;
 import controller.*;
+import util.*;
 
 public class ProblemPanel extends JPanel {
 	
 	MainFrame frame;
 	
+	private ImageUtils imgUtils;
+	
 	private BufferedImage img;
+	private BufferedImage removed_img;
 	private BufferedImage scaled_img;
 	
 	private JPanel topWrapper;
@@ -27,7 +32,7 @@ public class ProblemPanel extends JPanel {
 	private JPanel bottomRight;
 	
 	private JButton[] problemNumberButton;
-	private ColorLabel problemContentLabel;
+	private JLabel problemContentLabel;
 	private JTextField answerField;
 	private JButton submit;
 	private JButton finish;
@@ -56,7 +61,7 @@ public class ProblemPanel extends JPanel {
 		
 		finish = new JButton("FINISH");
 		finish.setFont(new Font("Arial",Font.BOLD,25));
-		finish.addActionListener(e -> { frame.showResult(problems); });
+		finish.addActionListener(e -> {frame.showResult(problems); });
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
@@ -66,8 +71,12 @@ public class ProblemPanel extends JPanel {
 		
 		getProblem();
 		
-		getImage(now_number);
-		scaled_img = scaleImage(img, 500);
+		imgUtils = new ImageUtils(null, problems);
+		
+		img = imgUtils.getImage(now_number);
+		removed_img = imgUtils.removeBackground(240);
+		scaled_img = imgUtils.scaleImage(500);
+		timerLabel.setForeground(imgUtils.getTextColor());
 		
 		createProblemContentLabel();
 		
@@ -79,15 +88,23 @@ public class ProblemPanel extends JPanel {
 		black.setPreferredSize(new Dimension(30,30));
 		black.addActionListener(e -> {  
 										center.setBackground(Color.BLACK);
-										getImage(now_number); 
-										updateImage(); });
+										imgUtils.setPanel(center);
+										
+										removed_img = imgUtils.removeBackground(240);
+										scaled_img = imgUtils.scaleImage(500);
+										timerLabel.setForeground(imgUtils.getTextColor());
+										problemContentLabel.setIcon(new ImageIcon(scaled_img)); });
 		white = new ColorButton(Color.WHITE);
 		white.setBackground(Color.WHITE);
 		white.setPreferredSize(new Dimension(30,30));
 		white.addActionListener(e -> {  
 										center.setBackground(Color.WHITE);
-										getImage(now_number); 
-										updateImage(); });
+										imgUtils.setPanel(center);
+										
+										removed_img = imgUtils.removeBackground(240);
+										scaled_img = imgUtils.scaleImage(500);
+										timerLabel.setForeground(imgUtils.getTextColor());
+										problemContentLabel.setIcon(new ImageIcon(scaled_img)); });
 		
 		createJPanel();
 		
@@ -137,15 +154,24 @@ public class ProblemPanel extends JPanel {
 			
 			problemNumberButton[i] = new JButton(String.valueOf(i+1));
 			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
-			problemNumberButton[i].addActionListener(e -> {getImage(num); 
-													 updateImage();
+			problemNumberButton[i].addActionListener(e -> { 
+													 now_number = num;
+													 imgUtils.setPanel(center);
+													 
+													 img = imgUtils.getImage(now_number); 
+													 removed_img = imgUtils.removeBackground(240);
+													 scaled_img = imgUtils.scaleImage(500);
+													 
+													 timerLabel.setForeground(imgUtils.getTextColor());
+													 problemContentLabel.setIcon(new ImageIcon(scaled_img));
+													 
 													 Dimension d = getPreferredSize();
 													 frame.setSize(d.width + 400,d.height + 100); });
 		}
 	}
 	
 	private void createProblemContentLabel() {
-		problemContentLabel = new ColorLabel();
+		problemContentLabel = new JLabel();
 		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
 		problemContentLabel.setIcon(new ImageIcon(scaled_img));
 		problemContentLabel.setBounds(0, 0, scaled_img.getWidth(), scaled_img.getHeight());
@@ -242,104 +268,4 @@ public class ProblemPanel extends JPanel {
 			problems = ProblemManager.pickRandom(all,size);
 		}
 	}
-	
-	private void getImage(int num) {
-		BufferedImage original = null;
-		
-		now_number = num;
-		
-		try {
-			URL path = getClass().getClassLoader().getResource(problems[num].getPath());
-			if (path == null) {
-			    System.out.println("Can't find image" + problems[num].getPath());
-			}
-			original = ImageIO.read(path);
-		}
-		catch(IOException e) {
-		    JOptionPane.showMessageDialog(this,"Error" + e.getMessage());
-		}
-
-		
-		img = removeBackground(original, 240); 
-	}
-	
-	private BufferedImage scaleImage(BufferedImage input, int newWidth) {
-	    int orgWidth = input.getWidth();
-	    int orgHeight = input.getHeight();
-
-	    double ratio = (double)newWidth / orgWidth;
-	    int newHeight = (int)(orgHeight * ratio);
-
-	    Image tmp = input.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-
-	    BufferedImage scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2 = scaled.createGraphics();
-	    g2.drawImage(tmp, 0, 0, null);
-	    g2.dispose();
-
-	    return scaled;
-	}
-	
-	private void updateImage() {
-		scaled_img = scaleImage(img, 500);
-		problemContentLabel.setIcon(new ImageIcon(scaled_img));
-	}
-	
-    private BufferedImage removeBackground(BufferedImage img, int threshold) {
-        int w = img.getWidth();
-        int h = img.getHeight();
-
-        BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        
-        Color panelBg;
-        
-        if(center != null) {
-        	panelBg = center.getBackground();
-        }
-        else {
-        	panelBg = new Color(255,255,255);
-        }
-        
-        Color textColor = getContrastColor(panelBg);
-        
-        timerLabel.setForeground(textColor);
-        
-        int tr = textColor.getRed();
-        int tg = textColor.getGreen();
-        int tb = textColor.getBlue();
-        int textRGB = (0xFF << 24) | (tr << 16) | (tg << 8) | tb;
-        
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-
-                int rgb = img.getRGB(x, y);
-
-                int r = (rgb >> 16) & 0xFF;
-                int g = (rgb >> 8) & 0xFF;
-                int b = rgb & 0xFF;
-                
-                int brightness = (r + g + b) / 3;
-
-                if (brightness >= threshold) {
-                    output.setRGB(x, y, 0x00000000);
-                }
-                else {
-                    output.setRGB(x, y, textRGB);
-                }
-            }
-        }
-
-        return output;
-    }
-    
-    private Color getContrastColor(Color bg) {
-        double brightness = bg.getRed() * 0.299
-                          + bg.getGreen() * 0.587
-                          + bg.getBlue() * 0.114;
-
-        return brightness > 128 ? Color.BLACK : Color.WHITE;
-    }
-
-	
-	
 }
