@@ -6,10 +6,14 @@ import java.awt.event.*;
 
 public class problemTimer extends Timer {
 	private int remainSeconds;
+	private JLabel label;
 	private TimeoutListener listener;
 	
-	public problemTimer() {
+	public problemTimer(JLabel label) {
 		super(1000, null);
+		this.label = label;
+		
+		updateLabel();
 		
 		addActionListener(new ActionListener() {
             @Override
@@ -25,8 +29,7 @@ public class problemTimer extends Timer {
 	
 	private void tick() {
         remainSeconds--;
-
-        System.out.println("남은 시간: " + remainSeconds + "초"); 
+        updateLabel();
 
         if (remainSeconds <= 0) {
             stop();
@@ -34,6 +37,13 @@ public class problemTimer extends Timer {
             listener.Timeout();
         }
     }
+	
+	private void updateLabel() {
+		int min = remainSeconds / 60;
+		int sec = remainSeconds % 60;
+		
+		label.setText(String.format("%02d:%02d", min, sec));
+	}
 	
     public void setTimeoutListener(TimeoutListener listener) {
         this.listener = listener;

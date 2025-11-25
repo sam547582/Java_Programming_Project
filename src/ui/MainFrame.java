@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.*;
 import javax.swing.*;
+import model.*;
 
 public class MainFrame extends JFrame {
 	
@@ -11,6 +12,7 @@ public class MainFrame extends JFrame {
 	private MainMenuPanel menuPanel;
 	private DifficultyPanel difficultyPanel;
 	private ProblemPanel problemPanel;
+	private ResultPanel resultPanel;
 	
 	public MainFrame() {
 		setTitle("KICE MATH TRAINING");
@@ -28,7 +30,6 @@ public class MainFrame extends JFrame {
 		
 		mainPanel.add(menuPanel, "menu");
 		mainPanel.add(difficultyPanel, "difficulty");
-		
 		c.add(mainPanel);
 		setVisible(true);
 	}
@@ -38,9 +39,23 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showProblem(String difficulty) {
-		ProblemPanel p = new ProblemPanel(this, difficulty);
-		mainPanel.add(p, "problem");
+		mainPanel.remove(menuPanel);
+		mainPanel.remove(difficultyPanel);
+		
+		problemPanel = new ProblemPanel(this, difficulty);
+		
+		mainPanel.add(problemPanel, "problem");
 		cardLayout.show(mainPanel, "problem");
+	}
+	
+	public void showResult(Problem[] problems) {
+		mainPanel.remove(problemPanel);
+		
+		resultPanel = new ResultPanel(this, problems);
+		
+		mainPanel.add(resultPanel, "result");
+		
+		cardLayout.show(mainPanel, "result");
 	}
 
 }

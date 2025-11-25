@@ -19,6 +19,7 @@ public class ProblemPanel extends JPanel {
 	
 	private JPanel topWrapper;
 	private JPanel top;
+	private JPanel timerLabelWrapper;
 	private JPanel center;
 	private JPanel bottomWrapper;
 	private JPanel bottomLeft;
@@ -29,7 +30,10 @@ public class ProblemPanel extends JPanel {
 	private ColorLabel problemContentLabel;
 	private JTextField answerField;
 	private JButton submit;
+	private JButton finish;
+	
 	private problemTimer timer;
+	private JLabel timerLabel;
 	
 	private JButton black;
 	private JButton white;
@@ -46,10 +50,18 @@ public class ProblemPanel extends JPanel {
 		this.difficulty = difficulty;
 		now_number = 0;
 		
+		timerLabel = new JLabel();
+		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		timerLabel.setFont(new Font("Arial",Font.BOLD,30));
+		
+		finish = new JButton("FINISH");
+		finish.setFont(new Font("Arial",Font.BOLD,25));
+		finish.addActionListener(e -> { frame.showResult(problems); });
+		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
 		
-		timer = new problemTimer();
+		timer = new problemTimer(timerLabel);
 		setTimer();
 		
 		getProblem();
@@ -79,33 +91,34 @@ public class ProblemPanel extends JPanel {
 		
 		createJPanel();
 		
-		
-		
-		
-		
-		
 		add(topWrapper, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
 		add(bottomWrapper, BorderLayout.SOUTH);
 		
 		Dimension d = getPreferredSize();
-		this.frame.setSize(800,d.height + 100);
+		this.frame.setSize(d.width + 400,d.height + 100);
+		
+		frame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - (d.width + 400) / 2 , 0);
 		timer.start();
 		
 	}
 	
 	private void setTimer() {
 		if(difficulty.equals("easy")) {
-			timer.setTime(5);
+			timer.setTime(30);
+			timerLabel.setText("00:30");
 		}
 		else if(difficulty.equals("normal")) {
 			timer.setTime(600);
+			timerLabel.setText("10:00");
 		}
 		else if(difficulty.equals("normal")) {
 			timer.setTime(900);
+			timerLabel.setText("15:00");
 		}
 		else {
 			timer.setTime(1800);
+			timerLabel.setText("30:00");
 		}
 		
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
@@ -127,7 +140,7 @@ public class ProblemPanel extends JPanel {
 			problemNumberButton[i].addActionListener(e -> {getImage(num); 
 													 updateImage();
 													 Dimension d = getPreferredSize();
-													 frame.setSize(800,d.height + 100); });
+													 frame.setSize(d.width + 400,d.height + 100); });
 		}
 	}
 	
@@ -155,10 +168,15 @@ public class ProblemPanel extends JPanel {
 		topWrapper.setOpaque(false);
 		topWrapper.add(top,BorderLayout.CENTER);
 		
+		timerLabelWrapper = new JPanel(new FlowLayout());
+		timerLabelWrapper.setOpaque(false);
+		timerLabelWrapper.add(timerLabel);
+		
 		center = new JPanel(new BorderLayout());
 		center.setOpaque(true);
 		center.setBackground(Color.WHITE);
 		center.add(problemContentLabel,BorderLayout.WEST);
+		center.add(timerLabelWrapper,BorderLayout.NORTH);
 		
 		bottomCenter = new JPanel(new FlowLayout());
 		bottomCenter.setOpaque(false);
@@ -176,6 +194,7 @@ public class ProblemPanel extends JPanel {
         bottomRight.setOpaque(false);
         bottomRight.setPreferredSize(bottomLeft.getPreferredSize());
         bottomRight.setBorder(BorderFactory.createEmptyBorder(20,0,20,0));
+        bottomRight.add(finish);
         
 		bottomWrapper = new JPanel(new BorderLayout());
 		bottomWrapper.setOpaque(false);
@@ -190,23 +209,8 @@ public class ProblemPanel extends JPanel {
 		
 		submit = new JButton("Submit");
 		submit.setFont(new Font("Arial", Font.BOLD, 18));
-		submit.addActionListener(e -> checkAnswer(problems[now_number]));	
+		submit.addActionListener(e -> problems[now_number].setPlayerAnswer(answerField.getText().trim()));	
 	}
-	
-	private void checkAnswer(Problem nowProblem) {
-		String userInput = answerField.getText().trim();
-		
-        if (userInput.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Write Answer");
-            return;
-        }
-
-        if (userInput.equals(nowProblem.getAnswer())) {
-            JOptionPane.showMessageDialog(this, "Correct!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Miscorrect");
-        }
-    }
 	
 	private void getProblem() {
 		if(difficulty.equals("easy")) {
@@ -297,6 +301,8 @@ public class ProblemPanel extends JPanel {
         }
         
         Color textColor = getContrastColor(panelBg);
+        
+        timerLabel.setForeground(textColor);
         
         int tr = textColor.getRed();
         int tg = textColor.getGreen();
