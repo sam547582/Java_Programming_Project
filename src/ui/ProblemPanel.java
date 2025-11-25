@@ -111,6 +111,7 @@ public class ProblemPanel extends JPanel {
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
 			public void Timeout() {
+				frame.setSize(600,400);
 				frame.showPanel("difficulty");
 			}
 		});
