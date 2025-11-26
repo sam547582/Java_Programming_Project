@@ -38,8 +38,8 @@ public class ProblemManager {
 
         return list;
     }
-
-    public static Problem[] pickRandom(List<Problem> all,int size) {
+    
+    private static Problem[] pickRandom(List<Problem> all,int size) {
         Collections.shuffle(all);
         
         Problem[] selected = new Problem[size];
@@ -48,4 +48,40 @@ public class ProblemManager {
         }
         return selected;
     }
+    
+    public static Problem[] getProblem(String difficulty) {
+    	
+    	Problem[] problems = null;
+    	
+		if(difficulty.equals("easy")) {
+			List<Problem> all = ProblemManager.loadProblems("img/easy");
+			
+			int size = Math.min(all.size(), 20);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("normal")) {
+			List<Problem> all = ProblemManager.loadProblems("img/normal");
+			
+			int size = Math.min(all.size(), 20);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("hard")) {
+			List<Problem> all = ProblemManager.loadProblems("img/hard");
+			
+			int size = Math.min(all.size(), 10);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		else if(difficulty.equals("extreme")) {
+			List<Problem> all = ProblemManager.loadProblems("img/extreme");
+			
+			int size = Math.min(all.size(), 5);
+			
+			problems = ProblemManager.pickRandom(all,size);
+		}
+		
+		return problems;
+	}
 }
