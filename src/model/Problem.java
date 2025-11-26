@@ -11,7 +11,7 @@ public class Problem {
 		this.id = id;
 		this.path = path;
 		this.answer = answer;
-		playerAnswer = "";
+		playerAnswer = " ";
 	}
 	
 	public void setPlayerAnswer(String answer) {

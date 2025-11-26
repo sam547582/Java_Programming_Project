@@ -54,7 +54,7 @@ public class ImageUtils {
         
         Color panelBackgroundColor = panelColor;
         
-        Color textColor = getContrastColor(panelBackgroundColor);
+        Color textColor = ColorUtils.getContrastColor(panelBackgroundColor);
         
         int tr = textColor.getRed();
         int tg = textColor.getGreen();
@@ -85,11 +85,4 @@ public class ImageUtils {
         return inputImg;
     }
     
-    private static Color getContrastColor(Color bg) {
-        double brightness = bg.getRed() * 0.299
-                          + bg.getGreen() * 0.587
-                          + bg.getBlue() * 0.114;
-
-        return brightness > 128 ? Color.BLACK : Color.WHITE;
-    }
 }

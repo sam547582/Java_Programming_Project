@@ -56,7 +56,7 @@ public class ProblemPanel extends JPanel {
 		
 		finish = new JButton("FINISH");
 		finish.setFont(new Font("Arial",Font.BOLD,25));
-		finish.addActionListener(e -> {frame.showResult(problems); });
+		finish.addActionListener(e -> {timer.stop(); frame.showResult(problems); });
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
@@ -137,8 +137,7 @@ public class ProblemPanel extends JPanel {
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
 			public void Timeout() {
-				frame.setSize(600,400);
-				frame.showPanel("difficulty");
+				frame.showResult(problems);
 			}
 		});
 	}
