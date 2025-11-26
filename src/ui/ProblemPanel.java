@@ -16,11 +16,7 @@ public class ProblemPanel extends JPanel {
 	
 	MainFrame frame;
 	
-	private ImageUtils imgUtils;
-	
 	private BufferedImage img;
-	private BufferedImage removed_img;
-	private BufferedImage scaled_img;
 	
 	private JPanel topWrapper;
 	private JPanel top;
@@ -47,7 +43,6 @@ public class ProblemPanel extends JPanel {
 	
 	private String difficulty;
 	
-	private int size;
 	private int now_number;
 	
 	ProblemPanel(MainFrame frame,String difficulty) {
@@ -69,14 +64,13 @@ public class ProblemPanel extends JPanel {
 		timer = new problemTimer(timerLabel);
 		setTimer();
 		
-		getProblem();
+		problems = ProblemManager.getProblem(difficulty);
 		
-		imgUtils = new ImageUtils(null, problems);
+		img = ImageUtils.getImage(problems, now_number);
+		img = ImageUtils.removeBackground(img, new Color(255,255,255), 240);
+		img = ImageUtils.scaleImage(img, 500);
 		
-		img = imgUtils.getImage(now_number);
-		removed_img = imgUtils.removeBackground(240);
-		scaled_img = imgUtils.scaleImage(500);
-		timerLabel.setForeground(imgUtils.getTextColor());
+		timerLabel.setForeground(Color.BLACK);
 		
 		createProblemContentLabel();
 		
@@ -88,23 +82,14 @@ public class ProblemPanel extends JPanel {
 		black.setPreferredSize(new Dimension(30,30));
 		black.addActionListener(e -> {  
 										center.setBackground(Color.BLACK);
-										imgUtils.setPanel(center);
+										updateProblemContent();});
 										
-										removed_img = imgUtils.removeBackground(240);
-										scaled_img = imgUtils.scaleImage(500);
-										timerLabel.setForeground(imgUtils.getTextColor());
-										problemContentLabel.setIcon(new ImageIcon(scaled_img)); });
 		white = new ColorButton(Color.WHITE);
 		white.setBackground(Color.WHITE);
 		white.setPreferredSize(new Dimension(30,30));
 		white.addActionListener(e -> {  
 										center.setBackground(Color.WHITE);
-										imgUtils.setPanel(center);
-										
-										removed_img = imgUtils.removeBackground(240);
-										scaled_img = imgUtils.scaleImage(500);
-										timerLabel.setForeground(imgUtils.getTextColor());
-										problemContentLabel.setIcon(new ImageIcon(scaled_img)); });
+										updateProblemContent();});
 		
 		createJPanel();
 		
@@ -118,6 +103,17 @@ public class ProblemPanel extends JPanel {
 		frame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - (d.width + 400) / 2 , 0);
 		timer.start();
 		
+	}
+	
+	private void updateProblemContent() {
+		img = ImageUtils.getImage(problems, now_number);
+		img = ImageUtils.removeBackground(img, center.getBackground(), 240);
+		img = ImageUtils.scaleImage(img, 500);
+
+		if(center.getBackground() == Color.WHITE) timerLabel.setForeground(Color.BLACK);
+		else if(center.getBackground() == Color.BLACK) timerLabel.setForeground(Color.WHITE);
+		
+		problemContentLabel.setIcon(new ImageIcon(img));
 	}
 	
 	private void setTimer() {
@@ -148,33 +144,26 @@ public class ProblemPanel extends JPanel {
 	}
 	
 	private void createProblemNumberButton(MainFrame frame) {
-		problemNumberButton = new JButton[size];
-		for(int i=0;i<size;i++) {
+		problemNumberButton = new JButton[problems.length];
+		for(int i=0;i<problems.length;i++) {
 			int num = i;
 			
 			problemNumberButton[i] = new JButton(String.valueOf(i+1));
 			problemNumberButton[i].setFont(new Font("Arial", Font.BOLD, 28));
 			problemNumberButton[i].addActionListener(e -> { 
-													 now_number = num;
-													 imgUtils.setPanel(center);
+													 		 now_number = num;
+															 updateProblemContent();
 													 
-													 img = imgUtils.getImage(now_number); 
-													 removed_img = imgUtils.removeBackground(240);
-													 scaled_img = imgUtils.scaleImage(500);
-													 
-													 timerLabel.setForeground(imgUtils.getTextColor());
-													 problemContentLabel.setIcon(new ImageIcon(scaled_img));
-													 
-													 Dimension d = getPreferredSize();
-													 frame.setSize(d.width + 400,d.height + 100); });
+															 Dimension d = getPreferredSize();
+															 frame.setSize(d.width + 400,d.height + 100); });
 		}
 	}
 	
 	private void createProblemContentLabel() {
 		problemContentLabel = new JLabel();
 		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
-		problemContentLabel.setIcon(new ImageIcon(scaled_img));
-		problemContentLabel.setBounds(0, 0, scaled_img.getWidth(), scaled_img.getHeight());
+		problemContentLabel.setIcon(new ImageIcon(img));
+		problemContentLabel.setBounds(0, 0, img.getWidth(), img.getHeight());
 		problemContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 	
@@ -184,7 +173,7 @@ public class ProblemPanel extends JPanel {
 		top.setOpaque(false);
 		
 		top.add(Box.createHorizontalGlue());
-		for(int i=0;i<size;i++) {
+		for(int i=0;i<problems.length;i++) {
 			top.add(problemNumberButton[i]);
 			top.add(Box.createHorizontalStrut(20));
 		}
@@ -236,36 +225,5 @@ public class ProblemPanel extends JPanel {
 		submit = new JButton("Submit");
 		submit.setFont(new Font("Arial", Font.BOLD, 18));
 		submit.addActionListener(e -> problems[now_number].setPlayerAnswer(answerField.getText().trim()));	
-	}
-	
-	private void getProblem() {
-		if(difficulty.equals("easy")) {
-			List<Problem> all = ProblemManager.loadProblems("img/easy");
-			
-			size = Math.min(all.size(), 20);
-			
-			problems = ProblemManager.pickRandom(all,size);
-		}
-		else if(difficulty.equals("normal")) {
-			List<Problem> all = ProblemManager.loadProblems("img/normal");
-			
-			size = Math.min(all.size(), 20);
-			
-			problems = ProblemManager.pickRandom(all,size);
-		}
-		else if(difficulty.equals("hard")) {
-			List<Problem> all = ProblemManager.loadProblems("img/hard");
-			
-			size = Math.min(all.size(), 10);
-			
-			problems = ProblemManager.pickRandom(all,size);
-		}
-		else if(difficulty.equals("extreme")) {
-			List<Problem> all = ProblemManager.loadProblems("img/extreme");
-			
-			size = Math.min(all.size(), 5);
-			
-			problems = ProblemManager.pickRandom(all,size);
-		}
 	}
 }

@@ -11,33 +11,12 @@ import model.*;
 
 public class ImageUtils {
 	
-	private BufferedImage img;
-	private BufferedImage removed_img;
-	private BufferedImage scaled_img;
+	public ImageUtils() {}
 	
-	private Color textColor;
-	
-	private JPanel panel;
-	
-	private Problem[] problems;
-	
-	public ImageUtils(JPanel panel, Problem[] problems) {
-		this.panel = panel;
-		this.problems = problems;
-	}
-	
-	public void setPanel(JPanel panel) {
-		this.panel = panel;
-	}
-	
-	public Color getTextColor() {
-		return textColor;
-	}
-	
-	public BufferedImage getImage(int num) {
-		
+	public static BufferedImage getImage(Problem[] problems, int num) {
+		BufferedImage img = null;
 		try {
-			URL path = getClass().getClassLoader().getResource(problems[num].getPath());
+			URL path = ImageUtils.class.getClassLoader().getResource(problems[num].getPath());
 			if (path == null) {
 			    System.out.println("Can't find image" + problems[num].getPath());
 			}
@@ -50,41 +29,32 @@ public class ImageUtils {
 		return img;
 	}
 	
-	public BufferedImage scaleImage(int newWidth) {
-	    int orgWidth = removed_img.getWidth();
-	    int orgHeight = removed_img.getHeight();
+	public static BufferedImage scaleImage(BufferedImage img, int newWidth) {
+	    int orgWidth = img.getWidth();
+	    int orgHeight = img.getHeight();
 
 	    double ratio = (double)newWidth / orgWidth;
 	    int newHeight = (int)(orgHeight * ratio);
 
-	    Image tmp = removed_img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+	    Image tmp = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
 	    BufferedImage scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2 = scaled.createGraphics();
 	    g2.drawImage(tmp, 0, 0, null);
 	    g2.dispose();
 	    
-	    scaled_img = scaled;
-	    
-	    return scaled_img;
+	    return scaled;
 	}
 	
-    public BufferedImage removeBackground(int threshold) {
+    public static BufferedImage removeBackground(BufferedImage img, Color panelColor, int threshold) {
         int w = img.getWidth();
         int h = img.getHeight();
 
-        removed_img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage inputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         
-        Color panelBg;
+        Color panelBackgroundColor = panelColor;
         
-        if(panel != null) {
-        	panelBg = panel.getBackground();
-        }
-        else {
-        	panelBg = new Color(255,255,255);
-        }
-        
-        textColor = getContrastColor(panelBg);
+        Color textColor = getContrastColor(panelBackgroundColor);
         
         int tr = textColor.getRed();
         int tg = textColor.getGreen();
@@ -103,19 +73,19 @@ public class ImageUtils {
                 int brightness = (r + g + b) / 3;
 
                 if (brightness >= threshold) {
-                    removed_img.setRGB(x, y, 0x00000000);
+                    inputImg.setRGB(x, y, 0x00000000);
                 }
                 else {
-                    removed_img.setRGB(x, y, textRGB);
+                    inputImg.setRGB(x, y, textRGB);
                 }
             }
         }
         
         
-        return removed_img;
+        return inputImg;
     }
     
-    private Color getContrastColor(Color bg) {
+    private static Color getContrastColor(Color bg) {
         double brightness = bg.getRed() * 0.299
                           + bg.getGreen() * 0.587
                           + bg.getBlue() * 0.114;
