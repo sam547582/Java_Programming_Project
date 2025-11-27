@@ -13,7 +13,6 @@ public class ResultPanel extends JPanel {
 	private JPanel topLeftWrapper;
 	private JPanel topRightWrapper;
 	
-	private JScrollPane centerWrapper;
 	private JPanel center;
 	
 	private JPanel left;
@@ -27,7 +26,7 @@ public class ResultPanel extends JPanel {
 	
 	private MenuLabel menu;
 	
-	private JButton[] problemNumberButton;
+	private JLabel[] problemNumberLabel;
 	private JLabel resultLabel;
 	private JLabel correctLabel;
 	private JLabel wrongLabel;
@@ -38,7 +37,7 @@ public class ResultPanel extends JPanel {
 	
 	ResultPanel(MainFrame frame, Problem[] problems) {
 		this.problems = problems;
-		problemNumberButton = new JButton[problems.length];
+		problemNumberLabel = new JLabel[problems.length];
 		ox = new JLabel[problems.length];
 		
 		correct = wrong = 0;
@@ -57,18 +56,22 @@ public class ResultPanel extends JPanel {
 		
 		leftLabel1 = new JLabel("NUMBER");
 		leftLabel1.setFont(new Font("Arial",Font.BOLD,30));
+		leftLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 		leftLabel1.setForeground(ColorUtils.getContrastColor(getBackground()));
 		
 		leftLabel2 = new JLabel("YOUR ANSWER");
 		leftLabel2.setFont(new Font("Arial",Font.BOLD,30));
+		leftLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		leftLabel2.setForeground(ColorUtils.getContrastColor(getBackground()));
 		
 		leftLabel3 = new JLabel("ANSWER");
 		leftLabel3.setFont(new Font("Arial",Font.BOLD,30));
+		leftLabel3.setHorizontalAlignment(SwingConstants.CENTER);
 		leftLabel3.setForeground(ColorUtils.getContrastColor(getBackground()));
 		
 		leftLabel4 = new JLabel("O/X");
 		leftLabel4.setFont(new Font("Arial",Font.BOLD,30));
+		leftLabel4.setHorizontalAlignment(SwingConstants.CENTER);
 		leftLabel4.setForeground(ColorUtils.getContrastColor(getBackground()));
 		
 		menu = new MenuLabel("MENU");
@@ -105,29 +108,20 @@ public class ResultPanel extends JPanel {
 		top.add(topRightWrapper,BorderLayout.EAST);
 		
 		center = new JPanel();
-		center.setLayout(new BoxLayout(center,BoxLayout.X_AXIS));
+		center.setLayout(new BoxLayout(center,BoxLayout.Y_AXIS));
 		center.setOpaque(false);
-		for(int i=0;i<problems.length;i++) {
-			center.add(createSet(i));
-			center.add(Box.createHorizontalStrut(10));
+		
+		JPanel header = new JPanel(new GridLayout(1,4));
+		header.setOpaque(false);
+		header.add(leftLabel1);
+		header.add(leftLabel2);
+		header.add(leftLabel3);
+		header.add(leftLabel4);
+		center.add(header);
+		
+		for(int i=0;i<problems.length;i++){
+		    center.add(createSet(i));
 		}
-		
-		centerWrapper = new JScrollPane(center);
-		centerWrapper.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
-		left = new JPanel();
-		left.setLayout(new BoxLayout(left,BoxLayout.Y_AXIS));
-		left.setOpaque(false);
-		left.setBorder(BorderFactory.createEmptyBorder(0,10,0,20));
-		left.add(Box.createVerticalStrut(25));
-		left.add(leftLabel1);
-		left.add(Box.createVerticalStrut(32));
-		left.add(leftLabel2);
-		left.add(Box.createVerticalStrut(25));
-		left.add(leftLabel3);
-		left.add(Box.createVerticalStrut(25));
-		left.add(leftLabel4);
-		left.add(Box.createVerticalGlue());
 		
 		bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
 		bottom.setOpaque(false);
@@ -136,40 +130,38 @@ public class ResultPanel extends JPanel {
 		bottom.add(wrongLabel);
 		
 		add(top,BorderLayout.NORTH);
-		add(left,BorderLayout.WEST);
-		add(centerWrapper,BorderLayout.CENTER);
+		add(center,BorderLayout.CENTER);
 		add(bottom,BorderLayout.SOUTH);
 	}
 	
 	private JPanel createSet(int num) {
 		
-		problemNumberButton[num] = new JButton(String.valueOf(num+1));
-		problemNumberButton[num].setFont(new Font("Arial",Font.BOLD,30));
-		problemNumberButton[num].setHorizontalAlignment(SwingConstants.CENTER);
-		problemNumberButton[num].setAlignmentX(Component.CENTER_ALIGNMENT);
+		problemNumberLabel[num] = new JLabel(String.valueOf(num+1));
+		problemNumberLabel[num].setFont(new Font("Arial",Font.BOLD,30));
+		problemNumberLabel[num].setForeground(ColorUtils.getContrastColor(getBackground()));
+		problemNumberLabel[num].setHorizontalAlignment(SwingConstants.CENTER);
+		problemNumberLabel[num].setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		JLabel myAnswer = new JLabel(problems[num].getPlayerAnswer());
 		myAnswer.setFont(new Font("Arial",Font.BOLD,30));
+		myAnswer.setForeground(ColorUtils.getContrastColor(getBackground()));
 		myAnswer.setHorizontalAlignment(SwingConstants.CENTER);
 		myAnswer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		JLabel answer = new JLabel(problems[num].getAnswer());
 		answer.setFont(new Font("Arial",Font.BOLD,30));
+		answer.setForeground(ColorUtils.getContrastColor(getBackground()));
 		answer.setHorizontalAlignment(SwingConstants.CENTER);
 		answer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(problemNumberButton[num]);
-		panel.add(Box.createVerticalStrut(25));
-		panel.add(myAnswer);
-		panel.add(Box.createVerticalStrut(25));
-		panel.add(answer);
-		panel.add(Box.createVerticalStrut(25));
-		panel.add(ox[num]);
-		panel.add(Box.createVerticalStrut(25));
+		JPanel row = new JPanel(new GridLayout(1,4));
+		row.setOpaque(false);
+	    row.add(problemNumberLabel[num]);
+	    row.add(myAnswer);
+	    row.add(answer);
+	    row.add(ox[num]);
 		
-		return panel;
+		return row;
 	}
 	
 	private void checkAnswer() {
