@@ -223,6 +223,18 @@ public class ProblemPanel extends JPanel {
 		
 		submit = new JButton("Submit");
 		submit.setFont(new Font("Arial", Font.BOLD, 18));
-		submit.addActionListener(e -> problems[now_number].setPlayerAnswer(answerField.getText().trim()));	
+		submit.addActionListener(e -> { 
+										for(int i=0;i<answerField.getText().length();i++) {
+											int ascii = answerField.getText().charAt(i);
+											if (ascii < 48 || ascii > 57) {
+												JOptionPane.showConfirmDialog(null, "Please enter only numbers","X", JOptionPane.DEFAULT_OPTION);
+												return;
+											}
+										}
+										if (JOptionPane.showConfirmDialog(null, "Are you sure you want to submit this answer?","SUBMIT", JOptionPane.YES_NO_OPTION) == 0) {
+											problems[now_number].setPlayerAnswer(answerField.getText());
+											answerField.setText(""); 
+										}
+		});
 	}
 }
