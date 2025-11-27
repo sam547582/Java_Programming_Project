@@ -88,18 +88,32 @@ public class ResultPanel extends JPanel {
 		top.add(topLeftWrapper,BorderLayout.WEST);
 		top.add(topRightWrapper,BorderLayout.EAST);
 		
-        JPanel center = new JPanel(new GridLayout(1, setSize, 20, 0));
-        center.setOpaque(false);
-
-        for (int start = 0; start < problemSize; start += 5) {
-            int end = Math.min(start + 5, problemSize);
-            JPanel table = createTable(start, end);
+		JPanel center = new JPanel(new GridBagLayout());
+		center.setOpaque(false);
+        
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		
+		int gridx = 0;
+		
+        int start = 0;
+        while (start <= problemSize) {
+            JPanel table = createTable(start, start+5);
             table.setOpaque(false);
-
-            table.setPreferredSize(new Dimension(320, table.getPreferredSize().height));
-            table.setMaximumSize(new Dimension(320, table.getPreferredSize().height));
-
-            center.add(table);
+            
+            c.gridx = gridx++;
+            c.weightx = 1.0;         
+            center.add(table, c);
+            
+            start+=5;
+            
+            if (start < problemSize) {
+            	c.gridx = gridx++;
+                c.weightx = 0;   
+                center.add(createVerticalSeparator(), c);
+            }
         }
 
         add(center, BorderLayout.CENTER);
@@ -115,7 +129,16 @@ public class ResultPanel extends JPanel {
 		add(bottom,BorderLayout.SOUTH);
 	}
 	
+	private JPanel createVerticalSeparator() {
+	    JPanel sep = new JPanel();
+	    sep.setBackground(new Color(180,180,180));
+	    sep.setPreferredSize(new Dimension(2, 1));
+	    sep.setMaximumSize(new Dimension(2, Integer.MAX_VALUE));
+	    return sep;
+	}
+
     private JPanel createTable(int start, int end) {
+    	
         JPanel table = new JPanel(new GridBagLayout());
         table.setOpaque(false);
 
@@ -123,26 +146,38 @@ public class ResultPanel extends JPanel {
         base.fill = GridBagConstraints.BOTH;
         base.weighty = 0;
 
-        // ---------- HEADER ----------
-        addHeaderCell(table, "NUMBER",    0, 0, 0.1, base);
+        addHeaderCell(table, "NUM",    0, 0, 0.1, base);
         addSeparator(table, 0, 1, base);
-        addHeaderCell(table, "YOUR ANSWER", 0, 2, 0.4, base);
+        addHeaderCell(table, "YOUR ANSWER", 0, 2, 0.3, base);
         addSeparator(table, 0, 3, base);
-        addHeaderCell(table, "ANSWER",    0, 4, 0.4, base);
+        addHeaderCell(table, "ANSWER",    0, 4, 0.2, base);
         addSeparator(table, 0, 5, base);
         addHeaderCell(table, "O/X",       0, 6, 0.1, base);
 
-        // ---------- ROWS ----------
         for (int row = start; row < end; row++) {
-            int y = (row - start) + 1;
+        	int y = (row - start) + 1;
+        	
+        	if (row >= problemSize) {
+        		addRowCell(table, " ", y, 0, 0.1, base);
+                addSeparator(table, y, 1, base);
+
+                addRowCell(table, " ", y, 2, 0.3, base);
+                addSeparator(table, y, 3, base);
+
+                addRowCell(table, " ", y, 4, 0.2, base);
+                addSeparator(table, y, 5, base);
+
+                addRowCell(table, " ", y, 6, 0.1, base);
+                continue;
+        	}
 
             addRowCell(table, String.valueOf(row + 1), y, 0, 0.1, base);
             addSeparator(table, y, 1, base);
 
-            addRowCell(table, problems[row].getPlayerAnswer(), y, 2, 0.4, base);
+            addRowCell(table, problems[row].getPlayerAnswer(), y, 2, 0.3, base);
             addSeparator(table, y, 3, base);
 
-            addRowCell(table, problems[row].getAnswer(), y, 4, 0.4, base);
+            addRowCell(table, problems[row].getAnswer(), y, 4, 0.2, base);
             addSeparator(table, y, 5, base);
 
             addRowCell(table, ox[row].getText(), y, 6, 0.1, base);
@@ -151,20 +186,32 @@ public class ResultPanel extends JPanel {
         return table;
     }
     
+    private JPanel makeCellWrapper(JLabel label) {
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setOpaque(false);
+        wrap.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        wrap.setMinimumSize(new Dimension(0, 50));
+        wrap.setPreferredSize(new Dimension(0, 50));
+        wrap.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+
+        wrap.add(label);
+        return wrap;
+    }
+
     private void addHeaderCell(JPanel table, String text, int y, int x, double weightx, GridBagConstraints base) {
         GridBagConstraints c = (GridBagConstraints) base.clone();
         c.gridx = x;
         c.gridy = y;
         c.weightx = weightx;
-
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        c.weighty = 0;
+        
+        ResponsiveLabel label = new ResponsiveLabel(text, 0.035f, table);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(ColorUtils.getContrastColor(getBackground()));
-
-        JPanel wrap = new JPanel(new BorderLayout());
-        wrap.setOpaque(false);
-        wrap.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        wrap.add(label);
+        
+        JPanel wrap = makeCellWrapper(label);
 
         table.add(wrap, c);
     }
@@ -176,14 +223,19 @@ public class ResultPanel extends JPanel {
         c.weightx = weightx;
         c.weighty = 1;
 
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        ResponsiveLabel label = new ResponsiveLabel(text, 0.03f, table);
         label.setFont(new Font("Arial", Font.BOLD, 26));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setForeground(ColorUtils.getContrastColor(getBackground()));
-
-        JPanel wrap = new JPanel(new BorderLayout());
-        wrap.setOpaque(false);
-        wrap.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        wrap.add(label);
+        
+        if(text.equals("X")) {
+        	label.setForeground(Color.RED);
+        }
+        else if(text.equals("O")) {
+        	label.setForeground(Color.BLUE);
+        }
+        
+        JPanel wrap = makeCellWrapper(label);
 
         table.add(wrap, c);
     }
@@ -208,20 +260,12 @@ public class ResultPanel extends JPanel {
 		for(Problem p : problems) {
 			if(p.getPlayerAnswer().equals(p.getAnswer())) {
 				ox[cnt] = new JLabel("O");
-				ox[cnt].setFont(new Font("Arial",Font.BOLD,30));
-				ox[cnt].setForeground(Color.BLUE);
 				correct++;
 			}
 			else {
 				ox[cnt] = new JLabel("X");
-				ox[cnt].setFont(new Font("Arial",Font.BOLD,30));
-				ox[cnt].setForeground(Color.RED);
 				wrong++;
-			}
-			
-			ox[cnt].setHorizontalAlignment(SwingConstants.CENTER);
-			ox[cnt].setAlignmentX(Component.CENTER_ALIGNMENT);
-			
+			}		
 			cnt++;
 		}
 	}
