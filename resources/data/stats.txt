@@ -1,0 +1,3 @@
+totalPlayed=18
+correct=1
+wrong=17

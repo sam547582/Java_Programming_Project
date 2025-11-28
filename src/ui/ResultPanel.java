@@ -15,13 +15,10 @@ public class ResultPanel extends JPanel {
 	
 	private JPanel center;
 	
-	private JPanel left;
-	
 	private JPanel bottom;
 	
 	private MenuLabel menu;
 	
-	private JLabel[] problemNumberLabel;
 	private JLabel resultLabel;
 	private JLabel correctLabel;
 	private JLabel wrongLabel;
@@ -30,25 +27,20 @@ public class ResultPanel extends JPanel {
 	private int correct;
 	private int wrong;
 	private int problemSize;
-	private int setSize;
 	
 	ResultPanel(MainFrame frame, Problem[] problems) {
 		this.problems = problems;
 		problemSize = problems.length;
-		problemNumberLabel = new JLabel[problemSize];
 		ox = new JLabel[problemSize];
 		correct = wrong = 0;
-		
-		if(problemSize < 5) setSize = 1;
-		else if(problemSize >= 5 && problemSize < 10) setSize = 2;
-		else setSize = 3;
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(30,40,60));
 		frame.setSize(1000,550);
 		
 		checkAnswer();
-		
+		StatsManager.updateStats(correct, wrong);
+
 		resultLabel = new JLabel("RESULT");
 		resultLabel.setFont(new Font("Arial",Font.BOLD | Font.ITALIC ,60));
 		resultLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
@@ -88,7 +80,7 @@ public class ResultPanel extends JPanel {
 		top.add(topLeftWrapper,BorderLayout.WEST);
 		top.add(topRightWrapper,BorderLayout.EAST);
 		
-		JPanel center = new JPanel(new GridBagLayout());
+		center = new JPanel(new GridBagLayout());
 		center.setOpaque(false);
         
 		GridBagConstraints c = new GridBagConstraints();
