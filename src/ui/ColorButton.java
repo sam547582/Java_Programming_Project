@@ -5,7 +5,7 @@ import java.awt.*;
 
 class ColorButton extends JButton {
     private Color color;
-
+    
     public ColorButton(Color color) {
         this.color = color;
         setPreferredSize(new Dimension(30, 30));

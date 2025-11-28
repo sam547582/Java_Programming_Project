@@ -27,6 +27,8 @@ public class MainFrame extends JFrame {
 		
 		menuPanel = new MainMenuPanel(this);
 		difficultyPanel = new DifficultyPanel(this);
+		problemPanel = null;
+		resultPanel = null;
 		
 		mainPanel.add(menuPanel, "menu");
 		mainPanel.add(difficultyPanel, "difficulty");
@@ -45,11 +47,13 @@ public class MainFrame extends JFrame {
 		mainPanel.add(problemPanel, "problem");
 		cardLayout.show(mainPanel, "problem");
 		
-		mainPanel.remove(menuPanel);
-		mainPanel.remove(difficultyPanel);
 	}
 	
 	public void showResult(Problem[] problems) {
+		
+		if(resultPanel != null) {
+			mainPanel.remove(resultPanel);
+		}
 		
 		resultPanel = new ResultPanel(this, problems);
 		
