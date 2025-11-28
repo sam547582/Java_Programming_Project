@@ -28,6 +28,9 @@ public class MainMenuPanel extends JPanel {
 	        }
 	    });
 	    
+	    StatsManager.load();
+	    refreshStats();
+	    
 	    JPanel leftMenu = new JPanel();
 	    leftMenu.setLayout(new BoxLayout(leftMenu, BoxLayout.Y_AXIS));
 	    leftMenu.setOpaque(false);
@@ -45,8 +48,6 @@ public class MainMenuPanel extends JPanel {
 		        frame.showPanel("difficulty"); 
 		    }
 		});		
-		
-		StatsManager.load();
 
 		leftMenu.add(wrapLabel(start));
 		leftMenu.add(Box.createVerticalStrut(20));
@@ -92,9 +93,17 @@ public class MainMenuPanel extends JPanel {
 	
 	private void refreshStats() {
 	    played.setText("Solved : " + StatsManager.getTotalPlayed());
+	    played.setFont(new Font("Arial",Font.BOLD, 20));
+	    played.setForeground(ColorUtils.getContrastColor(getBackground()));
 	    accuracy.setText("Accuracy : " + String.format("%.2f", StatsManager.getAccuracy()) + "%");
+	    accuracy.setFont(new Font("Arial",Font.BOLD, 20));
+	    accuracy.setForeground(ColorUtils.getContrastColor(getBackground()));
 	    correct.setText("Correct : " + StatsManager.getCorrect());
+	    correct.setFont(new Font("Arial",Font.BOLD, 20));
+	    correct.setForeground(ColorUtils.getContrastColor(getBackground()));
 	    wrong.setText("Wrong : " + StatsManager.getWrong());
+	    wrong.setFont(new Font("Arial",Font.BOLD, 20));
+	    wrong.setForeground(ColorUtils.getContrastColor(getBackground()));
 	    revalidate();
 	    repaint();
 	}

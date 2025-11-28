@@ -26,6 +26,9 @@ public class ProblemPanel extends JPanel {
 	private JPanel bottomLeft;
 	private JPanel bottomCenter;
 	private JPanel bottomRight;
+	private CalcPanel calcPanel;
+	
+	private JTabbedPane toolTabs;
 	
 	private JButton[] problemNumberButton;
 	private JLabel problemContentLabel;
@@ -82,6 +85,7 @@ public class ProblemPanel extends JPanel {
 		black.setPreferredSize(new Dimension(30,30));
 		black.addActionListener(e -> {  
 										center.setBackground(Color.BLACK);
+										calcPanel.updateColor(Color.BLACK);
 										updateProblemContent();});
 										
 		white = new ColorButton(Color.WHITE);
@@ -89,6 +93,7 @@ public class ProblemPanel extends JPanel {
 		white.setPreferredSize(new Dimension(30,30));
 		white.addActionListener(e -> {  
 										center.setBackground(Color.WHITE);
+										calcPanel.updateColor(Color.WHITE);
 										updateProblemContent();});
 		
 		createJPanel();
@@ -118,8 +123,8 @@ public class ProblemPanel extends JPanel {
 	
 	private void setTimer() {
 		if(difficulty.equals("easy")) {
-			timer.setTime(30);
-			timerLabel.setText("00:30");
+			timer.setTime(300);
+			timerLabel.setText("05:00");
 		}
 		else if(difficulty.equals("normal")) {
 			timer.setTime(600);
@@ -164,6 +169,7 @@ public class ProblemPanel extends JPanel {
 		problemContentLabel.setIcon(new ImageIcon(img));
 		problemContentLabel.setBounds(0, 0, img.getWidth(), img.getHeight());
 		problemContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		problemContentLabel.setVerticalAlignment(SwingConstants.TOP);
 	}
 	
 	private void createJPanel() {
@@ -186,11 +192,38 @@ public class ProblemPanel extends JPanel {
 		timerLabelWrapper.setOpaque(false);
 		timerLabelWrapper.add(timerLabel);
 		
+		toolTabs = new JTabbedPane(JTabbedPane.RIGHT);
+		toolTabs.setPreferredSize(new Dimension(300, 500));
+		toolTabs.setOpaque(false);
+		toolTabs.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
+		    @Override
+		    protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
+		   
+		    }
+		});
+
+		
+		JPanel memoPanel = new JPanel();
+	    memoPanel.setBackground(new Color(240, 240, 255));
+	    memoPanel.add(new JLabel("Memo Panel"));
+
+	    calcPanel = new CalcPanel();
+	    calcPanel.setOpaque(false);
+	    
+	    JPanel drawPanel = new JPanel();
+	    drawPanel.setBackground(new Color(255, 240, 240));
+	    drawPanel.add(new JLabel("Draw Panel"));
+	    
+	    toolTabs.addTab("Memo", memoPanel);
+	    toolTabs.addTab("Calc", calcPanel);
+	    toolTabs.addTab("Draw", drawPanel);
+	    
 		center = new JPanel(new BorderLayout());
 		center.setOpaque(true);
 		center.setBackground(Color.WHITE);
 		center.add(problemContentLabel,BorderLayout.WEST);
 		center.add(timerLabelWrapper,BorderLayout.NORTH);
+		center.add(toolTabs);
 		
 		bottomCenter = new JPanel(new FlowLayout());
 		bottomCenter.setOpaque(false);
