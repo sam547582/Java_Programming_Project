@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame() {
 		setTitle("KICE MATH TRAINING");
-		setSize(600, 400);
+		setSize(900, 600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -27,19 +27,41 @@ public class MainFrame extends JFrame {
 		mainPanel = new JPanel(cardLayout);
 		
 		startPanel = new StartPanel(this);
-		menuPanel = new MainMenuPanel(this);
-		difficultyPanel = new DifficultyPanel(this);
+		menuPanel = null;
+		difficultyPanel = null;
 		problemPanel = null;
 		resultPanel = null;
 		
-		mainPanel.add(menuPanel, "menu");
-		mainPanel.add(difficultyPanel, "difficulty");
-		c.add(startPanel);
+		mainPanel.add(startPanel,"start");
+		
+		c.add(mainPanel);
+		cardLayout.show(mainPanel,  "start");
+		
 		setVisible(true);
 	}
 	
 	public void showPanel(String name) {
 		cardLayout.show(mainPanel, name);
+	}
+	
+	public void showMenu() {
+		menuPanel = new MainMenuPanel(this);
+		
+	    
+		mainPanel.add(menuPanel, "menu");
+		cardLayout.show(mainPanel, "menu");
+		
+		if(startPanel != null) {
+			mainPanel.remove(startPanel);
+		}
+		
+	}
+	
+	public void showDifficulty() {
+		difficultyPanel = new DifficultyPanel(this);
+		
+		mainPanel.add(difficultyPanel, "difficulty");
+		cardLayout.show(mainPanel, "difficulty");
 	}
 	
 	public void showProblem(String difficulty) {

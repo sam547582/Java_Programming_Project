@@ -3,6 +3,8 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 import model.*;
+import ui.component.MenuLabel;
+import ui.component.ResponsiveLabel;
 import util.*;
 
 public class ResultPanel extends JPanel {
@@ -39,7 +41,7 @@ public class ResultPanel extends JPanel {
 		frame.setSize(1000,550);
 		
 		checkAnswer();
-		StatsManager.updateStats(correct, wrong);
+		StatsManager.updateStats(correct , wrong);
 
 		resultLabel = new JLabel("RESULT");
 		resultLabel.setFont(new Font("Arial",Font.BOLD | Font.ITALIC ,60));

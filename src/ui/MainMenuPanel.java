@@ -1,6 +1,9 @@
 package ui;
 
 import javax.swing.*;
+
+import ui.component.MenuLabel;
+
 import java.awt.*;
 import util.*;
 import java.awt.event.*;
@@ -14,7 +17,8 @@ public class MainMenuPanel extends JPanel {
 	
 	public MainMenuPanel(MainFrame frame) {
 		setLayout(new BorderLayout());
-	    setBackground(new Color(30, 40, 60));
+		
+		setBackground(Color.BLACK);
 	    
 	    played = new JLabel();
 	    accuracy = new JLabel();
@@ -28,7 +32,6 @@ public class MainMenuPanel extends JPanel {
 	        }
 	    });
 	    
-	    StatsManager.load();
 	    refreshStats();
 	    
 	    JPanel leftMenu = new JPanel();
@@ -45,7 +48,7 @@ public class MainMenuPanel extends JPanel {
 		start.addMouseListener(new java.awt.event.MouseAdapter() {
 		    @Override
 		    public void mouseClicked(java.awt.event.MouseEvent e) {
-		        frame.showPanel("difficulty"); 
+		        frame.showDifficulty(); 
 		    }
 		});		
 

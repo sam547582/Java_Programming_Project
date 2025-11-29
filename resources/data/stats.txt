@@ -1,3 +1,4 @@
-totalPlayed=90
-correct=1
-wrong=89
+Name=dfgdfg
+totalPlayed=84
+correct=0
+wrong=84

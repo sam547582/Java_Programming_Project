@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import model.*;
+import ui.component.*;
 import controller.*;
 import util.*;
 

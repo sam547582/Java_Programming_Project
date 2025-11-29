@@ -1,19 +1,19 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class FadeTextField extends JComponent {
+public class FadeTextField extends JComponent {
 
     private float alpha = 0f;
     private String text = "";
-    private Font font = new Font("Arial", Font.PLAIN, 25);
+    private Font font = new Font("Arial", Font.PLAIN, 40);
     private Color borderColor;
     private Color fontColor;
     private Color backColor;
     
-    FadeTextField(int width, int height) {
+    public FadeTextField(int width, int height) {
     	
         setPreferredSize(new Dimension(width, height));
         setMaximumSize(new Dimension(width, height));

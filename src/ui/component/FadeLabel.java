@@ -1,18 +1,18 @@
-package ui;
+package ui.component;
 
 import java.awt.*;
 import javax.swing.*;
 
-class FadeLabel extends JComponent {
+public class FadeLabel extends JComponent {
 
     private float alpha = 0f;
     private String text;
     private Font font;
     private Color fontColor;
     
-    FadeLabel(String text) {
+    public FadeLabel(String text) {
         this.text = text;
-        this.font = new Font("Arial", Font.PLAIN, 40);
+        this.font = new Font("Arial", Font.BOLD, 50);
         
         setOpaque(false);
 
