@@ -1,3 +1,3 @@
-totalPlayed=84
+totalPlayed=90
 correct=1
-wrong=83
+wrong=89
