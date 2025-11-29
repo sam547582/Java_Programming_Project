@@ -9,6 +9,7 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 	
 	private JPanel mainPanel;
+	private JPanel startPanel;
 	private MainMenuPanel menuPanel;
 	private DifficultyPanel difficultyPanel;
 	private ProblemPanel problemPanel;
@@ -25,6 +26,7 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		
+		startPanel = new StartPanel(this);
 		menuPanel = new MainMenuPanel(this);
 		difficultyPanel = new DifficultyPanel(this);
 		problemPanel = null;
@@ -32,7 +34,7 @@ public class MainFrame extends JFrame {
 		
 		mainPanel.add(menuPanel, "menu");
 		mainPanel.add(difficultyPanel, "difficulty");
-		c.add(mainPanel);
+		c.add(startPanel);
 		setVisible(true);
 	}
 	
