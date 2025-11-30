@@ -1,9 +1,9 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 import java.awt.*;
 
-class ColorButton extends JButton {
+public class ColorButton extends JButton {
     private Color color;
     
     public ColorButton(Color color) {

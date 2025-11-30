@@ -6,9 +6,12 @@ import model.*;
 
 public class MainFrame extends JFrame {
 	
+	private BackgroundPanel bg;
+	
 	private CardLayout cardLayout;
 	
 	private JPanel mainPanel;
+	private JPanel startPanel;
 	private MainMenuPanel menuPanel;
 	private DifficultyPanel difficultyPanel;
 	private ProblemPanel problemPanel;
@@ -16,28 +19,56 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame() {
 		setTitle("KICE MATH TRAINING");
-		setSize(600, 400);
+		setSize(900, 600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		
+		bg = new BackgroundPanel();
+		bg.setLayout(new BorderLayout());
 		
 		Container c = getContentPane();
 		
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
+		mainPanel.setOpaque(false);
 		
-		menuPanel = new MainMenuPanel(this);
-		difficultyPanel = new DifficultyPanel(this);
+		startPanel = new StartPanel(this);
+		menuPanel = null;
+		difficultyPanel = null;
 		problemPanel = null;
 		resultPanel = null;
 		
-		mainPanel.add(menuPanel, "menu");
-		mainPanel.add(difficultyPanel, "difficulty");
-		c.add(mainPanel);
+		mainPanel.add(startPanel,"start");
+		bg.add(mainPanel, BorderLayout.CENTER);
+		setContentPane(bg);
+		
+		cardLayout.show(mainPanel,  "start");
+		
 		setVisible(true);
 	}
 	
 	public void showPanel(String name) {
 		cardLayout.show(mainPanel, name);
+	}
+	
+	public void showMenu() {
+		menuPanel = new MainMenuPanel(this);
+		
+	    
+		mainPanel.add(menuPanel, "menu");
+		cardLayout.show(mainPanel, "menu");
+		
+		if(startPanel != null) {
+			mainPanel.remove(startPanel);
+		}
+		
+	}
+	
+	public void showDifficulty() {
+		difficultyPanel = new DifficultyPanel(this);
+		
+		mainPanel.add(difficultyPanel, "difficulty");
+		cardLayout.show(mainPanel, "difficulty");
 	}
 	
 	public void showProblem(String difficulty) {
@@ -62,5 +93,7 @@ public class MainFrame extends JFrame {
 		
 		mainPanel.remove(problemPanel);
 	}
+	
+	
 
 }

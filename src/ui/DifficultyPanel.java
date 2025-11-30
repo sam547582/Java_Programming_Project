@@ -8,7 +8,8 @@ public class DifficultyPanel extends JPanel {
     public DifficultyPanel(MainFrame frame) {
         setLayout(new BorderLayout());
         setBackground(new Color(50, 60, 90));
-
+        setOpaque(false);
+        
         JPanel wrapper = new JPanel();
         wrapper.setOpaque(false);
         wrapper.setLayout(new BoxLayout(wrapper,BoxLayout.Y_AXIS));

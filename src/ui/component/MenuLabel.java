@@ -1,4 +1,4 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +11,8 @@ public class MenuLabel extends JLabel {
     public MenuLabel(String text) {
         super(text);
 
-        normalFont = new Font("Arial", Font.BOLD | Font.ITALIC, 28);
-        hoverFont = new Font("Arial", Font.BOLD | Font.ITALIC, 34);
+        normalFont = new Font("Arial", Font.BOLD | Font.ITALIC, 45);
+        hoverFont = new Font("Arial", Font.BOLD | Font.ITALIC, 55);
 
         setFont(normalFont);
         setForeground(Color.WHITE);
