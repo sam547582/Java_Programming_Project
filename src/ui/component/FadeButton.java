@@ -73,7 +73,11 @@ public class FadeButton extends JComponent {
             }
         });
     }
-
+    
+    public String getText() {
+        return text;
+    }
+    
     public void setButtonColor(Color color) {
         this.backgroundColor = color;
         this.currentColor = color;

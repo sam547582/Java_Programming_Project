@@ -6,6 +6,8 @@ import model.*;
 
 public class MainFrame extends JFrame {
 	
+	private BackgroundPanel bg;
+	
 	private CardLayout cardLayout;
 	
 	private JPanel mainPanel;
@@ -21,10 +23,14 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
+		bg = new BackgroundPanel();
+		bg.setLayout(new BorderLayout());
+		
 		Container c = getContentPane();
 		
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
+		mainPanel.setOpaque(false);
 		
 		startPanel = new StartPanel(this);
 		menuPanel = null;
@@ -33,8 +39,9 @@ public class MainFrame extends JFrame {
 		resultPanel = null;
 		
 		mainPanel.add(startPanel,"start");
+		bg.add(mainPanel, BorderLayout.CENTER);
+		setContentPane(bg);
 		
-		c.add(mainPanel);
 		cardLayout.show(mainPanel,  "start");
 		
 		setVisible(true);
@@ -86,5 +93,7 @@ public class MainFrame extends JFrame {
 		
 		mainPanel.remove(problemPanel);
 	}
+	
+	
 
 }

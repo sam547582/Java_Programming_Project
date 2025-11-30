@@ -1,5 +1,6 @@
 package ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import ui.component.MenuLabel;
@@ -7,6 +8,8 @@ import ui.component.MenuLabel;
 import java.awt.*;
 import util.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 public class MainMenuPanel extends JPanel {
 	
@@ -16,9 +19,12 @@ public class MainMenuPanel extends JPanel {
 	private JLabel wrong;
 	
 	public MainMenuPanel(MainFrame frame) {
-		setLayout(new BorderLayout());
 		
-		setBackground(Color.BLACK);
+		
+		setLayout(new BorderLayout());
+		setOpaque(false);
+		
+		setBackground(Color.GRAY);
 	    
 	    played = new JLabel();
 	    accuracy = new JLabel();
@@ -77,14 +83,15 @@ public class MainMenuPanel extends JPanel {
         JPanel emptyRight = new JPanel();
         emptyRight.setOpaque(false);
         add(emptyRight, BorderLayout.CENTER);
+        
 	}
 	
 	private JPanel wrapLabel(MenuLabel label) {
 	    JPanel panel = new JPanel(null);
 	    panel.setOpaque(false);
 	    
-	    panel.setPreferredSize(new Dimension(300, 60));
-	    panel.setMaximumSize(new Dimension(300,60));
+	    panel.setPreferredSize(new Dimension(500, 70));
+	    panel.setMaximumSize(new Dimension(500,70));
 	    
 	    Dimension d = label.getPreferredSize();
 	    label.setBounds(0,0,d.width+5,d.height);
@@ -98,18 +105,22 @@ public class MainMenuPanel extends JPanel {
 	    played.setText("Solved : " + StatsManager.getTotalPlayed());
 	    played.setFont(new Font("Arial",Font.BOLD, 20));
 	    played.setForeground(ColorUtils.getContrastColor(getBackground()));
+	    
 	    accuracy.setText("Accuracy : " + String.format("%.2f", StatsManager.getAccuracy()) + "%");
 	    accuracy.setFont(new Font("Arial",Font.BOLD, 20));
 	    accuracy.setForeground(ColorUtils.getContrastColor(getBackground()));
+	    
 	    correct.setText("Correct : " + StatsManager.getCorrect());
 	    correct.setFont(new Font("Arial",Font.BOLD, 20));
 	    correct.setForeground(ColorUtils.getContrastColor(getBackground()));
+	    
 	    wrong.setText("Wrong : " + StatsManager.getWrong());
 	    wrong.setFont(new Font("Arial",Font.BOLD, 20));
 	    wrong.setForeground(ColorUtils.getContrastColor(getBackground()));
 	    revalidate();
 	    repaint();
 	}
+	
 
 
 

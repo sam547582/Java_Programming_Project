@@ -57,6 +57,8 @@ public class StartPanel extends JPanel {
 		
         add(center,BorderLayout.CENTER);
         
+        StatsManager.load();
+        
 		labelName.fadeIn(500);
 		fieldName.fadeIn(500);
 		
@@ -64,9 +66,8 @@ public class StartPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                	
-                	StatsManager.load();
-                	StatsManager.updateStats(fieldName.getText());
+                	 	
+                	StatsManager.updateName(fieldName.getText());
                 	
                 	fieldName.fadeOut(500, () -> {
 
@@ -115,7 +116,9 @@ public class StartPanel extends JPanel {
 		
 		for(FadeButton b : elec) {
 			b.addActionListener(e -> {
-										
+				
+				StatsManager.updateElective(b.getText());
+				
 				labelElective.fadeOut(100, () -> {
 
             	    center.remove(wrapperElective);
@@ -163,6 +166,8 @@ public class StartPanel extends JPanel {
 		
 		for(FadeButton b : btn) {
 			b.addActionListener(e -> {
+				StatsManager.updateTargetGrade(Integer.parseInt(b.getText()));
+				
 				labelGrade.fadeOut(100, () -> {
 
             	    center.remove(wrapperGrade);

@@ -1,4 +1,6 @@
-Name=dfgdfg
-totalPlayed=84
+Name=sam547582
+Elective=Calculus
+TargetGrade=3
+totalPlayed=96
 correct=0
-wrong=84
+wrong=96
