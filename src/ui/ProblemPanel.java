@@ -29,6 +29,7 @@ public class ProblemPanel extends JPanel {
 	private JPanel bottomRight;
 	private CalcPanel calcPanel;
 	private MemoPanel memoPanel;
+	private DrawPanel drawPanel;
 	
 	private JTabbedPane toolTabs;
 	
@@ -37,7 +38,7 @@ public class ProblemPanel extends JPanel {
 	private JTextField answerField;
 	private JButton submit;
 	private JButton finish;
-	
+	private JButton drawToggleButton;
 	private problemTimer timer;
 	private JLabel timerLabel;
 	
@@ -63,6 +64,17 @@ public class ProblemPanel extends JPanel {
 		finish.setFont(new Font("Arial",Font.BOLD,25));
 		finish.addActionListener(e -> {timer.stop(); frame.showResult(problems); });
 		
+		drawToggleButton = new JButton("DRAW");
+		drawToggleButton.setFont(new Font("Arial", Font.BOLD, 20));
+		drawToggleButton.addActionListener(e -> {
+		    boolean now = drawPanel.isVisible();
+		    drawPanel.setVisible(!now);
+
+		    if (!now) {
+		        drawPanel.initCanvas(center.getBackground()); 
+		    }
+		});
+
 		setLayout(new BorderLayout());
 		setBackground(new Color(30, 40, 60));
 		
@@ -89,6 +101,7 @@ public class ProblemPanel extends JPanel {
 										center.setBackground(Color.BLACK);
 										calcPanel.updateColor(Color.BLACK);
 										memoPanel.updateColor(Color.BLACK);
+										drawPanel.updateColor(Color.BLACK);
 										updateProblemContent();});
 										
 		white = new ColorButton(Color.WHITE);
@@ -98,6 +111,7 @@ public class ProblemPanel extends JPanel {
 										center.setBackground(Color.WHITE);
 										calcPanel.updateColor(Color.WHITE);
 										memoPanel.updateColor(Color.WHITE);
+										drawPanel.updateColor(Color.WHITE);
 										updateProblemContent();});
 		
 		createJPanel();
@@ -169,6 +183,7 @@ public class ProblemPanel extends JPanel {
 	
 	private void createProblemContentLabel() {
 		problemContentLabel = new JLabel();
+		problemContentLabel.setOpaque(false);
 		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
 		problemContentLabel.setIcon(new ImageIcon(img));
 		problemContentLabel.setBounds(0, 0, img.getWidth(), img.getHeight());
@@ -191,6 +206,7 @@ public class ProblemPanel extends JPanel {
 		topWrapper = new JPanel(new BorderLayout());
 		topWrapper.setOpaque(false);
 		topWrapper.add(top,BorderLayout.CENTER);
+		topWrapper.add(drawToggleButton, BorderLayout.EAST);
 		
 		timerLabelWrapper = new JPanel(new FlowLayout());
 		timerLabelWrapper.setOpaque(false);
@@ -208,26 +224,39 @@ public class ProblemPanel extends JPanel {
 
 		
 		memoPanel = new MemoPanel();
-	    memoPanel.setBackground(new Color(240, 240, 255));
+		memoPanel.setOpaque(false);
 	    
 	    calcPanel = new CalcPanel();
 	    calcPanel.setOpaque(false);
 	    
-	    JPanel drawPanel = new JPanel();
-	    drawPanel.setBackground(new Color(255, 240, 240));
-	    drawPanel.add(new JLabel("Draw Panel"));
+	    drawPanel = new DrawPanel();
+	    drawPanel.setOpaque(false);
+	    drawPanel.setVisible(false);
 	    
 	    toolTabs.addTab("Memo", memoPanel);
 	    toolTabs.addTab("Calc", calcPanel);
-	    toolTabs.addTab("Draw", drawPanel);
 	    
-		center = new JPanel(new BorderLayout());
-		center.setOpaque(true);
-		center.setBackground(Color.WHITE);
-		center.add(problemContentLabel,BorderLayout.WEST);
-		center.add(timerLabelWrapper,BorderLayout.NORTH);
-		center.add(toolTabs);
-		
+	 // 기존 UI 묶음 subPanel
+	    JPanel subPanel = new JPanel(new BorderLayout());
+	    subPanel.setOpaque(false);
+	    subPanel.add(problemContentLabel, BorderLayout.WEST);
+	    subPanel.add(timerLabelWrapper, BorderLayout.NORTH);
+	    subPanel.add(toolTabs, BorderLayout.CENTER);
+
+	    // center = overlay 패널
+	    center = new JPanel();
+	    center.setOpaque(true);
+	    center.setBackground(Color.WHITE);
+	    center.setLayout(new OverlayLayout(center));
+
+	    // DrawPanel 생성 + OFF 상태로
+	    drawPanel = new DrawPanel();
+	    drawPanel.setVisible(false);
+
+	    // 순서: drawPanel 먼저 → 최상단
+	    center.add(drawPanel);
+	    center.add(subPanel);
+	    
 		bottomCenter = new JPanel(new FlowLayout());
 		bottomCenter.setOpaque(false);
 		bottomCenter.add(answerField);

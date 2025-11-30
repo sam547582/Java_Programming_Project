@@ -70,6 +70,12 @@ public class ImageUtils {
                 int g = (rgb >> 8) & 0xFF;
                 int b = rgb & 0xFF;
                 
+                int alpha = (rgb >> 24) & 0xFF;
+                if (alpha == 0) {
+                    inputImg.setRGB(x, y, 0x00000000);
+                    continue;
+                }
+                
                 int brightness = (r + g + b) / 3;
 
                 if (brightness >= threshold) {
@@ -84,5 +90,30 @@ public class ImageUtils {
         
         return inputImg;
     }
+    
+    public static BufferedImage invertColors(BufferedImage img, Color newColor) {
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        int nr = newColor.getRed();
+        int ng = newColor.getGreen();
+        int nb = newColor.getBlue();
+        int newRGB = (0xFF << 24) | (nr << 16) | (ng << 8) | nb;
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int rgb = img.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xFF;
+
+                if (alpha == 0) {
+                    out.setRGB(x, y, 0x00000000);
+                } else { // 그림
+                    out.setRGB(x, y, newRGB);
+                }
+            }
+        }
+        return out;
+    }
+
     
 }
