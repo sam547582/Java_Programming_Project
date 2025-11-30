@@ -28,6 +28,7 @@ public class ProblemPanel extends JPanel {
 	private JPanel bottomCenter;
 	private JPanel bottomRight;
 	private CalcPanel calcPanel;
+	private MemoPanel memoPanel;
 	
 	private JTabbedPane toolTabs;
 	
@@ -87,6 +88,7 @@ public class ProblemPanel extends JPanel {
 		black.addActionListener(e -> {  
 										center.setBackground(Color.BLACK);
 										calcPanel.updateColor(Color.BLACK);
+										memoPanel.updateColor(Color.BLACK);
 										updateProblemContent();});
 										
 		white = new ColorButton(Color.WHITE);
@@ -95,6 +97,7 @@ public class ProblemPanel extends JPanel {
 		white.addActionListener(e -> {  
 										center.setBackground(Color.WHITE);
 										calcPanel.updateColor(Color.WHITE);
+										memoPanel.updateColor(Color.WHITE);
 										updateProblemContent();});
 		
 		createJPanel();
@@ -194,7 +197,7 @@ public class ProblemPanel extends JPanel {
 		timerLabelWrapper.add(timerLabel);
 		
 		toolTabs = new JTabbedPane(JTabbedPane.RIGHT);
-		toolTabs.setPreferredSize(new Dimension(300, 500));
+		toolTabs.setPreferredSize(new Dimension(250, 500));
 		toolTabs.setOpaque(false);
 		toolTabs.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
 		    @Override
@@ -204,10 +207,9 @@ public class ProblemPanel extends JPanel {
 		});
 
 		
-		JPanel memoPanel = new JPanel();
+		memoPanel = new MemoPanel();
 	    memoPanel.setBackground(new Color(240, 240, 255));
-	    memoPanel.add(new JLabel("Memo Panel"));
-
+	    
 	    calcPanel = new CalcPanel();
 	    calcPanel.setOpaque(false);
 	    

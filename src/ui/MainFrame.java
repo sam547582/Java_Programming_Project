@@ -1,6 +1,8 @@
 package ui;
 
 import java.awt.*;
+import java.io.File;
+
 import javax.swing.*;
 import model.*;
 
@@ -38,11 +40,23 @@ public class MainFrame extends JFrame {
 		problemPanel = null;
 		resultPanel = null;
 		
-		mainPanel.add(startPanel,"start");
 		bg.add(mainPanel, BorderLayout.CENTER);
 		setContentPane(bg);
 		
-		cardLayout.show(mainPanel,  "start");
+		File file = new File("resources/data/stats.txt");
+        try {
+            if (!file.exists()) {
+            	mainPanel.add(startPanel,"start");
+            	cardLayout.show(mainPanel,  "start");
+            }
+            else {
+            	showMenu();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+		
 		
 		setVisible(true);
 	}

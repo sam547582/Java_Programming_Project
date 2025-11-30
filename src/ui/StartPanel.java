@@ -10,21 +10,36 @@ import util.*;
 
 public class StartPanel extends JPanel {
 	
+	private MainFrame frame;
+	
 	private JPanel wrapperName;
 	private JPanel wrapperGrade;
 	private JPanel wrapperElective;
-		
+	
+	private FadeLabel labelName;
+	private FadeLabel labelGrade;
+	private FadeLabel labelElective;
+	
+	private FadeTextField fieldName;
+	
+	private FadeButton[] btn;
+	private FadeButton[] elec;
+	
+	private JPanel center;
+	
 	StartPanel(MainFrame frame) {
+		this.frame = frame;
+		
 		setLayout(new BorderLayout());
 		setBackground(Color.BLACK);
 		
-		FadeLabel labelName = new FadeLabel("Enter your name");
-		FadeTextField fieldName = new FadeTextField(500, 50);
+		labelName = new FadeLabel("Enter your name");
+		fieldName = new FadeTextField(500, 50);
 		
 		wrapperName = makeFieldSet(labelName, fieldName);
 		
-		FadeLabel labelGrade = new FadeLabel("Choose your target grade");
-		FadeButton[] btn = new FadeButton[5];
+		labelGrade = new FadeLabel("Choose your target grade");
+		btn = new FadeButton[5];
 		
         btn[0] = new FadeButton("1",100,100);
         btn[0].setFont(new Font("Arial",Font.BOLD,35));
@@ -39,8 +54,8 @@ public class StartPanel extends JPanel {
         
         wrapperGrade = makeButtonSet(labelGrade, btn);
         
-        FadeLabel labelElective = new FadeLabel("Elective Subject");
-        FadeButton[] elec = new FadeButton[3];
+        labelElective = new FadeLabel("Elective Subject");
+        elec = new FadeButton[3];
         
         elec[0] = new FadeButton("Probability and Statistics",450,50);
         elec[0].setFont(new Font("Arial",Font.PLAIN,35));
@@ -51,14 +66,19 @@ public class StartPanel extends JPanel {
         
         wrapperElective = makeElectiveSet(labelElective, elec);
         
-        JPanel center = new JPanel(new GridBagLayout());
+        center = new JPanel(new GridBagLayout());
         center.setOpaque(false);
         center.add(wrapperName);
 		
         add(center,BorderLayout.CENTER);
         
         StatsManager.load();
-        
+		
+        animation();
+	}
+	
+	private void animation() {
+		
 		labelName.fadeIn(500);
 		fieldName.fadeIn(500);
 		
@@ -188,17 +208,7 @@ public class StartPanel extends JPanel {
 				
 			});
 		}
-		
-		
 	}
-		/*
-		new Timer(900, evt -> {
-            frame.showMenu();
-        }) {{
-            setRepeats(false);
-            start();
-        }}; */
-	
 	
 	private JPanel makeFieldSet(FadeLabel label, FadeTextField field) {
 	    JPanel w = new JPanel();
