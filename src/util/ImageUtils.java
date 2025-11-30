@@ -103,12 +103,33 @@ public class ImageUtils {
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int rgb = img.getRGB(x, y);
+                
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
+                int b = rgb & 0xFF;
                 int alpha = (rgb >> 24) & 0xFF;
-
+                int brightness = (r + g + b) / 3;
+                
                 if (alpha == 0) {
                     out.setRGB(x, y, 0x00000000);
-                } else { // 그림
-                    out.setRGB(x, y, newRGB);
+                } 
+                else {
+                	if(newColor == Color.BLACK) {
+                		if(brightness >= 240) {
+                			out.setRGB(x, y, newRGB);
+                		}
+                		else {
+                			out.setRGB(x, y, rgb);
+                		}
+                	}
+                	else if(newColor == Color.WHITE) {
+                		if(brightness <= 20) {
+                			out.setRGB(x, y, newRGB);
+                		}
+                		else {
+                			out.setRGB(x, y, rgb);
+                		}
+                	}
                 }
             }
         }
