@@ -177,7 +177,8 @@ public class ProblemPanel extends JPanel {
 															 updateProblemContent();
 													 
 															 Dimension d = getPreferredSize();
-															 frame.setSize(d.width + 400,d.height + 100); });
+															 frame.setSize(d.width + 400,d.height + 100);
+															 });
 		}
 	}
 	

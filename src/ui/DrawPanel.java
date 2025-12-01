@@ -124,7 +124,7 @@ public class DrawPanel extends JPanel {
 
         if (W <= 0 || H <= 0) return;
 
-        canvas = new BufferedImage(W, H, BufferedImage.TYPE_INT_ARGB);
+        canvas = new BufferedImage(W + 1000, H + 1000, BufferedImage.TYPE_INT_ARGB);
 
         g2 = canvas.createGraphics();
         g2.setStroke(new BasicStroke(2));
