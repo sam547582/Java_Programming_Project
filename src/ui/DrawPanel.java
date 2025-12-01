@@ -260,10 +260,11 @@ public class DrawPanel extends JPanel {
     public void updateColor(Color color) {
 
         if (canvas == null) initCanvas(backColor);
-
+        
         if (color.equals(backColor)) {
             return;
         }
+		
         backColor = color;
         penColor = ColorUtils.getContrastColor(color);
         
@@ -271,6 +272,32 @@ public class DrawPanel extends JPanel {
   
 
         canvas = ImageUtils.invertColors(canvas, penColor);
+        
+        Stack<BufferedImage> bf = new Stack<>();
+        while(!undo.isEmpty()) {
+        	BufferedImage img = undo.pop();
+            img = ImageUtils.invertColors(img, penColor);
+            bf.push(img);
+            
+        }
+        while(!bf.isEmpty()) {
+        	BufferedImage img = bf.pop();
+            img = ImageUtils.invertColors(img, penColor);
+            undo.push(img);
+        }
+        
+        while(!redo.isEmpty()) {
+        	BufferedImage img = redo.pop();
+            img = ImageUtils.invertColors(img, penColor);
+            bf.push(img);
+            
+        }
+        while(!bf.isEmpty()) {
+        	BufferedImage img = bf.pop();
+            img = ImageUtils.invertColors(img, penColor);
+            redo.push(img);
+        }
+        
 
         g2 = canvas.createGraphics();
         g2.setStroke(new BasicStroke(3));
