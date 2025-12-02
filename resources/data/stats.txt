@@ -1,6 +1,6 @@
-Name=sam547582
+Name=asdds
 Elective=Calculus
-TargetGrade=3
-totalPlayed=96
+TargetGrade=1
+totalPlayed=126
 correct=0
-wrong=96
+wrong=126

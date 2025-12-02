@@ -26,6 +26,8 @@ public class MainMenuPanel extends JPanel {
 		
 		setBackground(Color.GRAY);
 	    
+		StatsManager.load();
+		
 	    played = new JLabel();
 	    accuracy = new JLabel();
 	    correct = new JLabel();

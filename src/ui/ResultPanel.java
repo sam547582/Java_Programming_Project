@@ -37,7 +37,7 @@ public class ResultPanel extends JPanel {
 		correct = wrong = 0;
 		
 		setLayout(new BorderLayout());
-		setBackground(new Color(30,40,60));
+		setBackground(Color.GRAY);
 		frame.setSize(1000,550);
 		
 		checkAnswer();
