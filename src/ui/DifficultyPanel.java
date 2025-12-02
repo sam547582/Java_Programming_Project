@@ -9,10 +9,12 @@ import java.awt.*;
 public class DifficultyPanel extends JPanel {
 
 	private MainFrame frame;
-
-	public DifficultyPanel(MainFrame frame) {
+	private String subject;
+	
+	public DifficultyPanel(MainFrame frame,String subject) {
 		this.frame = frame;
-
+		this.subject = subject;
+		
 		setLayout(new BorderLayout());
 		setBackground(new Color(143,202,202,100));
 		setOpaque(true);
@@ -34,7 +36,7 @@ public class DifficultyPanel extends JPanel {
 
 		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), new Color(255,150,138,0), "BACK",
 				new Color(152,255,153), new Font("Arial", Font.BOLD, 25), 20);
-		back.getInner().addActionListener(e -> frame.showPanel("menu"));
+		back.getInner().addActionListener(e -> frame.showSubject());
 
 		backPanel.add(back);
 
@@ -126,7 +128,7 @@ public class DifficultyPanel extends JPanel {
 				dialog.dispose();
 
 				// 화면 전환 실행
-				frame.showProblem(difficulty); // 원하는 화면으로 이동
+				frame.showProblem(difficulty, subject); // 원하는 화면으로 이동
 			}
 		});
 

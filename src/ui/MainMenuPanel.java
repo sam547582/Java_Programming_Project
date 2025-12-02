@@ -58,7 +58,7 @@ public class MainMenuPanel extends JPanel {
 		start.addMouseListener(new java.awt.event.MouseAdapter() {
 		    @Override
 		    public void mouseClicked(java.awt.event.MouseEvent e) {
-		        frame.showDifficulty(); 
+		        frame.showSubject(); 
 		    }
 		});		
 

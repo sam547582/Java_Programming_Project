@@ -1,6 +1,6 @@
-resources/img/problem/1/easy/261101_3.png solve=0 wrong=2
-resources/img/problem/1/easy/261107_5.png solve=1 wrong=1
-resources/img/problem/1/easy/261108_2.png solve=0 wrong=2
-resources/img/problem/1/easy/261114_4.png solve=2 wrong=0
-resources/img/problem/1/easy/261122_80.png solve=0 wrong=2
-resources/img/problem/1/easy/261130_72.png solve=0 wrong=2
+resources/img/problem/math1/easy/261101_3.png solve=0 wrong=1
+resources/img/problem/math1/easy/261107_5.png solve=0 wrong=1
+resources/img/problem/math1/easy/261108_2.png solve=0 wrong=1
+resources/img/problem/math1/easy/261114_4.png solve=1 wrong=0
+resources/img/problem/math1/easy/261122_80.png solve=0 wrong=1
+resources/img/problem/math1/easy/261130_72.png solve=0 wrong=1

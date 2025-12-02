@@ -61,7 +61,7 @@ public class ProblemManager {
 
 		return selected;
 	}
-	
+
 	// algorithm 룰렛 휠 알고리즘
 	private static Problem pickOneWeighted(List<Problem> list) {
 
@@ -81,35 +81,25 @@ public class ProblemManager {
 		return list.get(list.size() - 1);
 	}
 
-	public static Problem[] getProblem(String difficulty) {
+	public static Problem[] getProblem(String difficulty, String subject) {
 
 		Problem[] problems = null;
+		int size = 0;
+		String path = "resources/img/problem" + "/" + subject + "/" + difficulty;
+
+		List<Problem> all = ProblemManager.loadProblems(path);
 
 		if (difficulty.equals("easy")) {
-			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/easy");
-
-			int size = Math.min(all.size(), 20);
-
-			problems = ProblemManager.pickWeightedRandom(all, size);
+			size = Math.min(all.size(), 20);
 		} else if (difficulty.equals("normal")) {
-			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/normal");
-
-			int size = Math.min(all.size(), 20);
-
-			problems = ProblemManager.pickWeightedRandom(all, size);
+			size = Math.min(all.size(), 20);
 		} else if (difficulty.equals("hard")) {
-			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/hard");
-
-			int size = Math.min(all.size(), 10);
-
-			problems = ProblemManager.pickWeightedRandom(all, size);
+			size = Math.min(all.size(), 10);
 		} else if (difficulty.equals("extreme")) {
-			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/extreme");
-
-			int size = Math.min(all.size(), 5);
-
-			problems = ProblemManager.pickWeightedRandom(all, size);
+			size = Math.min(all.size(), 5);
 		}
+
+		problems = ProblemManager.pickWeightedRandom(all, size);
 
 		return problems;
 	}

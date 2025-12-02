@@ -16,7 +16,7 @@ import util.*;
 
 public class ProblemPanel extends JPanel {
 
-	MainFrame frame;
+	private MainFrame frame;
 
 	private BufferedImage img;
 
@@ -50,12 +50,15 @@ public class ProblemPanel extends JPanel {
 	private Problem[] problems;
 
 	private String difficulty;
-
+	private String subject;
+	
 	private int now_number;
 
-	ProblemPanel(MainFrame frame, String difficulty) {
+	ProblemPanel(MainFrame frame, String difficulty, String subject) {
 		this.frame = frame;
 		this.difficulty = difficulty;
+		this.subject = subject;
+		
 		now_number = 0;
 		
 		timerLabel = new JLabel();
@@ -87,7 +90,7 @@ public class ProblemPanel extends JPanel {
 		timer = new problemTimer(timerLabel);
 		setTimer();
 
-		problems = ProblemManager.getProblem(difficulty);
+		problems = ProblemManager.getProblem(difficulty, subject);
 
 		img = ImageUtils.getImage(problems, now_number);
 		img = ImageUtils.removeBackground(img, new Color(255, 255, 255), 240);
@@ -100,7 +103,8 @@ public class ProblemPanel extends JPanel {
 		double rate = solve / all;
 		
 		rateLabel = new JLabel();
-		rateLabel.setText(String.valueOf(rate * 100) + "%");
+		if (all == 0) rateLabel.setText(String.valueOf(0) + "%");
+		else rateLabel.setText(String.valueOf(rate * 100) + "%");
 		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
 		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
 		
@@ -157,8 +161,9 @@ public class ProblemPanel extends JPanel {
 		double solve = problems[now_number].getSolveCount();	
 		double rate = solve / all;
 		
-		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
-		rateLabel.setText(String.valueOf(rate * 100) + "%");
+		if (all == 0) rateLabel.setText(String.valueOf(0) + "%");
+		else rateLabel.setText(String.valueOf(rate * 100) + "%");
+		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));;
 		rateLabel.repaint();
 		
 		problemContentLabel.setIcon(new ImageIcon(img));
