@@ -38,7 +38,7 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		add(inner, BorderLayout.CENTER);
 	}
 	
-	public RoundComponent(Class<T> cls, String layout, Color bgColor,int radius) {
+	public RoundComponent(Class<T> cls, Dimension d, Color bgColor,int radius) {
 		try {
 			this.inner = cls.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
@@ -48,7 +48,28 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		this.bgColor = bgColor;
 		this.radius = radius;
 		
-		((JPanel) inner).setLayout(new OverlayLayout(inner));
+		setPreferredSize(d);
+		setMaximumSize(d);
+		setMinimumSize(d);
+		
+		createInner();
+		
+		setLayout(new BorderLayout());
+		setOpaque(false);
+
+		add(inner, BorderLayout.CENTER);
+	}
+	
+	public RoundComponent(Class<T> cls, Color bgColor,int radius) {
+		try {
+			this.inner = cls.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		this.bgColor = bgColor;
+		this.radius = radius;
+		
 		createInner();
 		
 		setLayout(new BorderLayout());
@@ -128,7 +149,7 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g2.setColor(fontColor);
+		g2.setColor(new Color(0,0,0,0));
 		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
 
 		g2.dispose();

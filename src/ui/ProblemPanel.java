@@ -61,7 +61,7 @@ public class ProblemPanel extends JPanel {
 		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
-		finish = new RoundComponent<>(JButton.class, new Dimension(150, 30), Color.BLACK, "FINISH", Color.WHITE,
+		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), Color.BLACK, "FINISH", Color.WHITE,
 				new Font("Arial", Font.BOLD, 30), 20);
 		finish.getInner().addActionListener(e -> {
 			timer.stop();
@@ -253,8 +253,8 @@ public class ProblemPanel extends JPanel {
 		subPanel.add(toolTabs, BorderLayout.CENTER);
 
 		// center = overlay 패널
-		center = new RoundComponent<>(JPanel.class, "OverlayLayout" , Color.WHITE, 30);
-
+		center = new RoundComponent<>(JPanel.class, Color.WHITE, 30);
+		center.getInner().setLayout(new OverlayLayout(center.getInner()));
 		// DrawPanel 생성 + OFF 상태로
 		drawPanel = new DrawPanel();
 		drawPanel.setVisible(false);
@@ -277,7 +277,7 @@ public class ProblemPanel extends JPanel {
 		bottomRight = new JPanel(new FlowLayout());
 		bottomRight.setOpaque(false);
 		bottomRight.setAlignmentY(CENTER_ALIGNMENT);
-		bottomRight.setBorder(BorderFactory.createEmptyBorder(15, 0, 5, 0));
+		bottomRight.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
 		bottomRight.add(finish);
 
 		bottomWrapper = new JPanel(new BorderLayout());
