@@ -42,7 +42,8 @@ public class ProblemPanel extends JPanel {
 	private RoundComponent<JButton> drawToggleButton;
 	private problemTimer timer;
 	private JLabel timerLabel;
-
+	private JLabel rateLabel;
+	
 	private RoundComponent<JButton> black;
 	private RoundComponent<JButton> white;
 
@@ -56,7 +57,7 @@ public class ProblemPanel extends JPanel {
 		this.frame = frame;
 		this.difficulty = difficulty;
 		now_number = 0;
-
+		
 		timerLabel = new JLabel();
 		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
@@ -93,7 +94,16 @@ public class ProblemPanel extends JPanel {
 		img = ImageUtils.scaleImage(img, 500);
 
 		timerLabel.setForeground(Color.BLACK);
-
+		
+		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
+		double solve = problems[now_number].getSolveCount();	
+		double rate = solve / all;
+		
+		rateLabel = new JLabel();
+		rateLabel.setText(String.valueOf(rate * 100) + "%");
+		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
+		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
+		
 		createProblemContentLabel();
 
 		createProblemNumberButton(this.frame);
@@ -141,11 +151,16 @@ public class ProblemPanel extends JPanel {
 		img = ImageUtils.removeBackground(img, center.getBackground(), 240);
 		img = ImageUtils.scaleImage(img, 500);
 
-		if (center.getBackground() == Color.WHITE)
-			timerLabel.setForeground(Color.BLACK);
-		else if (center.getBackground() == Color.BLACK)
-			timerLabel.setForeground(Color.WHITE);
-
+		timerLabel.setForeground(ColorUtils.getContrastColor(center.getBackground()));
+		
+		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
+		double solve = problems[now_number].getSolveCount();	
+		double rate = solve / all;
+		
+		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
+		rateLabel.setText(String.valueOf(rate * 100) + "%");
+		rateLabel.repaint();
+		
 		problemContentLabel.setIcon(new ImageIcon(img));
 	}
 
@@ -218,9 +233,10 @@ public class ProblemPanel extends JPanel {
 		topWrapper.add(top, BorderLayout.CENTER);
 		topWrapper.add(drawToggleButton, BorderLayout.EAST);
 
-		timerLabelWrapper = new JPanel(new FlowLayout());
+		timerLabelWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER,20,0));
 		timerLabelWrapper.setOpaque(false);
 		timerLabelWrapper.add(timerLabel);
+		timerLabelWrapper.add(rateLabel);
 
 		toolTabs = new JTabbedPane(JTabbedPane.RIGHT);
 		toolTabs.setPreferredSize(new Dimension(250, 500));

@@ -6,82 +6,112 @@ import java.util.*;
 
 public class ProblemManager {
 
-    public static List<Problem> loadProblems(String folderPath) {
-    	URL folderURL = ProblemManager.class.getClassLoader().getResource(folderPath);
-    	if (folderURL == null) {
-    	    throw new RuntimeException("폴더를 찾을 수 없습니다: " + folderPath);
-    	}
+	public static List<Problem> loadProblems(String folderPath) {
 
-    	File folder = new File(folderURL.getFile());
-    	File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
+		File folder = new File(folderPath);
+		File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
 
-
-        if (files == null || files.length == 0) {
-            throw new RuntimeException("문제 이미지가 없습니다!");
-        }
-
-        List<Problem> list = new ArrayList<>();
-
-        for (File f : files) {
-            String fileName = f.getName(); 
-
-            String[] parts = fileName.split("_");
-
-            if (parts.length < 2) continue;
-
-            String answerPart = parts[1].replace(".png", "");
-
-            Problem p = new Problem(Integer.parseInt(parts[0]),folderPath + "/" + fileName,answerPart);
-
-            list.add(p);
-        }
-
-        return list;
-    }
-    
-    private static Problem[] pickRandom(List<Problem> all,int size) {
-        Collections.shuffle(all);
-        
-        Problem[] selected = new Problem[size];
-        for (int i = 0; i < size; i++) {
-            selected[i] = all.get(i);
-        }
-        return selected;
-    }
-    
-    public static Problem[] getProblem(String difficulty) {
-    	
-    	Problem[] problems = null;
-    	
-		if(difficulty.equals("easy")) {
-			List<Problem> all = ProblemManager.loadProblems("img/easy");
-			
-			int size = Math.min(all.size(), 20);
-			
-			problems = ProblemManager.pickRandom(all,size);
+		if (files == null || files.length == 0) {
+			throw new RuntimeException("문제 이미지가 없습니다!");
 		}
-		else if(difficulty.equals("normal")) {
-			List<Problem> all = ProblemManager.loadProblems("img/normal");
-			
-			int size = Math.min(all.size(), 20);
-			
-			problems = ProblemManager.pickRandom(all,size);
+
+		Map<String, int[]> stats = ProblemStatsManager.loadProblemStats();
+
+		List<Problem> list = new ArrayList<>();
+
+		for (File f : files) {
+			String fileName = f.getName();
+
+			String[] parts = fileName.split("_");
+
+			if (parts.length < 2)
+				continue;
+
+			String relativePath = folderPath + "/" + fileName;
+			String answerPart = parts[1].replace(".png", "");
+
+			Problem p = new Problem(Integer.parseInt(parts[0]), relativePath, answerPart);
+
+			if (stats.containsKey(relativePath)) {
+				int[] sw = stats.get(relativePath);
+				p.setSolveCount(sw[0]);
+				p.setWrongCount(sw[1]);
+			} else {
+				// 새 문제라면 기본값
+				p.setSolveCount(0);
+				p.setWrongCount(0);
+			}
+
+			list.add(p);
 		}
-		else if(difficulty.equals("hard")) {
-			List<Problem> all = ProblemManager.loadProblems("img/hard");
-			
+
+		return list;
+	}
+
+	private static Problem[] pickWeightedRandom(List<Problem> all, int size) {
+
+		List<Problem> copy = new ArrayList<>(all);
+		Problem[] selected = new Problem[size];
+
+		for (int i = 0; i < size; i++) {
+			Problem p = pickOneWeighted(copy);
+			selected[i] = p;
+			copy.remove(p); // 중복 제거
+		}
+
+		return selected;
+	}
+	
+	// algorithm 룰렛 휠 알고리즘
+	private static Problem pickOneWeighted(List<Problem> list) {
+
+		double sum = 0;
+		for (Problem p : list) {
+			sum += p.getWeight();
+		}
+
+		double r = Math.random() * sum;
+
+		for (Problem p : list) {
+			r -= p.getWeight();
+			if (r <= 0)
+				return p;
+		}
+
+		return list.get(list.size() - 1);
+	}
+
+	public static Problem[] getProblem(String difficulty) {
+
+		Problem[] problems = null;
+
+		if (difficulty.equals("easy")) {
+			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/easy");
+
+			int size = Math.min(all.size(), 20);
+
+			problems = ProblemManager.pickWeightedRandom(all, size);
+		} else if (difficulty.equals("normal")) {
+			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/normal");
+
+			int size = Math.min(all.size(), 20);
+
+			problems = ProblemManager.pickWeightedRandom(all, size);
+		} else if (difficulty.equals("hard")) {
+			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/hard");
+
 			int size = Math.min(all.size(), 10);
-			
-			problems = ProblemManager.pickRandom(all,size);
-		}
-		else if(difficulty.equals("extreme")) {
-			List<Problem> all = ProblemManager.loadProblems("img/extreme");
-			
+
+			problems = ProblemManager.pickWeightedRandom(all, size);
+		} else if (difficulty.equals("extreme")) {
+			List<Problem> all = ProblemManager.loadProblems("resources/img/problem/1/extreme");
+
 			int size = Math.min(all.size(), 5);
-			
-			problems = ProblemManager.pickRandom(all,size);
+
+			problems = ProblemManager.pickWeightedRandom(all, size);
 		}
-		
+
 		return problems;
 	}
+
 }

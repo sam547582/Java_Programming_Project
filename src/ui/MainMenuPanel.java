@@ -10,6 +10,7 @@ import util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import model.*;
 
 public class MainMenuPanel extends JPanel {
 	
@@ -26,6 +27,7 @@ public class MainMenuPanel extends JPanel {
 		
 		setBackground(Color.GRAY);
 	    
+		ProblemStatsManager.syncStats();
 		StatsManager.load();
 		
 	    played = new JLabel();

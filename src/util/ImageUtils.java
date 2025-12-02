@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -16,11 +17,7 @@ public class ImageUtils {
 	public static BufferedImage getImage(Problem[] problems, int num) {
 		BufferedImage img = null;
 		try {
-			URL path = ImageUtils.class.getClassLoader().getResource(problems[num].getPath());
-			if (path == null) {
-			    System.out.println("Can't find image" + problems[num].getPath());
-			}
-			img = ImageIO.read(path);
+			img = ImageIO.read(new File(problems[num].getPath()));
 		}
 		catch(IOException e) {
 		    JOptionPane.showMessageDialog(null,"Error" + e.getMessage());
