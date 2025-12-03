@@ -65,14 +65,14 @@ public class ProblemPanel extends JPanel {
 		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
-		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), Color.BLACK, "FINISH", Color.WHITE,
+		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0,0,0,0), Color.BLACK, "FINISH", Color.WHITE,
 				new Font("Arial", Font.BOLD, 30), 20);
 		finish.getInner().addActionListener(e -> {
 			timer.stop();
 			frame.showResult(problems);
 		});
 
-		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), Color.BLACK, "DRAW", Color.WHITE,
+		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), new Color(0,0,0,0), Color.BLACK, "DRAW", Color.WHITE,
 				new Font("Arial", Font.BOLD, 30), 20);
 		drawToggleButton.setFont(new Font("Arial", Font.BOLD, 20));
 		drawToggleButton.getInner().addActionListener(e -> {
@@ -114,7 +114,7 @@ public class ProblemPanel extends JPanel {
 
 		createAnswerPanel();
 
-		black = new RoundComponent<>(JButton.class, new Dimension(70, 70), Color.BLACK, "B", Color.WHITE,
+		black = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0,0,0,0), Color.BLACK, "B", Color.WHITE,
 				new Font("Arial", Font.BOLD, 35), 70);
 
 		black.getInner().addActionListener(e -> {
@@ -125,7 +125,7 @@ public class ProblemPanel extends JPanel {
 			updateProblemContent();
 		});
 
-		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), Color.WHITE, "W", Color.BLACK,
+		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0,0,0,0), Color.WHITE, "W", Color.BLACK,
 				new Font("Arial", Font.BOLD, 35), 70);
 		
 		white.getInner().addActionListener(e -> {
@@ -198,7 +198,7 @@ public class ProblemPanel extends JPanel {
 		for (int i = 0; i < problems.length; i++) {
 			int num = i;
 
-			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), Color.BLACK,
+			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0,0,0,0), Color.BLACK,
 					String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
@@ -274,7 +274,7 @@ public class ProblemPanel extends JPanel {
 		subPanel.add(toolTabs, BorderLayout.CENTER);
 
 		// center = overlay 패널
-		center = new RoundComponent<>(JPanel.class, Color.WHITE, 30);
+		center = new RoundComponent<>(JPanel.class, new Color(0,0,0,0), Color.WHITE, 30);
 		center.getInner().setLayout(new OverlayLayout(center.getInner()));
 		// DrawPanel 생성 + OFF 상태로
 		drawPanel = new DrawPanel();
@@ -311,10 +311,10 @@ public class ProblemPanel extends JPanel {
 	}
 
 	private void createAnswerPanel() {
-		answerField = new RoundComponent<>(JTextField.class, new Dimension(300, 40), Color.WHITE, "", Color.BLACK,
+		answerField = new RoundComponent<>(JTextField.class, new Dimension(300, 40), new Color(0,0,0,0), Color.WHITE, "", Color.BLACK,
 				new Font("Arial", Font.PLAIN, 20), 20);
 
-		submit = new RoundComponent<>(JButton.class, new Dimension(150, 40), Color.BLACK, "SUBMIT", Color.WHITE,
+		submit = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0,0,0,0), Color.BLACK, "SUBMIT", Color.WHITE,
 				new Font("Arial", Font.BOLD, 25), 20);
 		
 		submit.getInner().addActionListener(e -> {

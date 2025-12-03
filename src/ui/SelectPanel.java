@@ -14,7 +14,7 @@ public class SelectPanel extends JPanel {
 		this.frame = frame;
 
 		setLayout(new BorderLayout());
-		setBackground(new Color(143, 202, 202, 100));
+		setBackground(Color.BLACK);
 		setOpaque(true);
 
 		JPanel wrapper = new JPanel();
@@ -32,7 +32,7 @@ public class SelectPanel extends JPanel {
 
 		titlePanel.add(title);
 
-		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30),
+		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), Color.BLACK,
 				new Color(255, 150, 138, 0), "BACK", new Color(152, 255, 153), new Font("Arial", Font.BOLD, 25), 20);
 		back.getInner().addActionListener(e -> frame.showPanel("menu"));
 
@@ -44,53 +44,58 @@ public class SelectPanel extends JPanel {
 
 		add(wrapper, BorderLayout.NORTH);
 
-		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0), 20);
-		center.getInner().setLayout(new GridBagLayout());
+		RoundComponent<Carousel> center = new RoundComponent<>(Carousel.class, Color.BLACK, Color.GRAY, 20);
+		center.getInner().setAlignmentX(CENTER_ALIGNMENT);
+		// center.getInner().setLayout(new GridBagLayout());
 
-		GridBagConstraints c = new GridBagConstraints();
+		// GridBagConstraints c = new GridBagConstraints();
 
-		RoundComponent<JButton> math1 = new RoundComponent<>(JButton.class, new Dimension(250, 70),
-				new Color(255, 150, 138), "MATH I", new Color(152, 255, 153), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> math1 = new RoundComponent<>(JButton.class, new Dimension(250, 250), Color.BLACK,
+				new Color(255, 150, 138), "MATH I", new Color(152, 255, 153), new Font("Arial", Font.BOLD, 35), 500);
 		math1.getInner().addActionListener(e -> frame.showDifficulty("math1"));
 
-		RoundComponent<JButton> math2 = new RoundComponent<>(JButton.class, new Dimension(250, 70),
-				new Color(255, 150, 138), "MATH II", new Color(85, 203, 205), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> math2 = new RoundComponent<>(JButton.class, new Dimension(250, 250), Color.BLACK,
+				new Color(255, 150, 138), "MATH II", new Color(85, 203, 205), new Font("Arial", Font.BOLD, 35), 500);
 		math2.getInner().addActionListener(e -> frame.showDifficulty("math2"));
 
-		RoundComponent<JButton> probability = new RoundComponent<>(JButton.class, new Dimension(250, 70),
+		RoundComponent<JButton> probability = new RoundComponent<>(JButton.class, new Dimension(250, 250), Color.BLACK,
 				new Color(255, 150, 138), "Prob & Stats", new Color(246, 234, 194), new Font("Arial", Font.BOLD, 35),
-				20);
+				500);
 		probability.getInner().addActionListener(e -> frame.showDifficulty("probability"));
 
-		RoundComponent<JButton> calculus = new RoundComponent<>(JButton.class, new Dimension(250, 70),
-				new Color(255, 150, 138), "Calculus", new Color(255, 15, 13), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> calculus = new RoundComponent<>(JButton.class, new Dimension(250, 250), Color.BLACK,
+				new Color(255, 150, 138), "Calculus", new Color(255, 15, 13), new Font("Arial", Font.BOLD, 35), 500);
 		calculus.getInner().addActionListener(e -> frame.showDifficulty("calculus"));
 
-		RoundComponent<JButton> geometry = new RoundComponent<>(JButton.class, new Dimension(250, 70),
-				new Color(255, 150, 138), "Geometry", new Color(255, 15, 13), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> geometry = new RoundComponent<>(JButton.class, new Dimension(250, 250), Color.BLACK,
+				new Color(255, 150, 138), "Geometry", new Color(255, 15, 13), new Font("Arial", Font.BOLD, 35), 500);
 		geometry.getInner().addActionListener(e -> frame.showDifficulty("geometry"));
 
-		c.gridx = 0;
-		c.gridy = 0;
-		c.insets = new Insets(30, 30, 30, 30);
-
-		center.getInner().add(math1, c);
-
-		c.gridx = 0;
-		c.gridy = 1;
-		center.getInner().add(math2, c);
-
-		c.gridx = 0;
-		c.gridy = 2;
-		center.getInner().add(probability, c);
-
-		c.gridx = 0;
-		c.gridy = 3;
-		center.getInner().add(calculus, c);
-
-		c.gridx = 0;
-		c.gridy = 4;
-		center.getInner().add(geometry, c);
+		/*
+		 * c.gridx = 0; c.gridy = 0; c.insets = new Insets(30, 30, 30, 30);
+		 * 
+		 * center.getInner().add(math1, c);
+		 * 
+		 * c.gridx = 0; c.gridy = 1; center.getInner().add(math2, c);
+		 * 
+		 * c.gridx = 0; c.gridy = 2; center.getInner().add(probability, c);
+		 * 
+		 * c.gridx = 0; c.gridy = 3; center.getInner().add(calculus, c);
+		 * 
+		 * c.gridx = 0; c.gridy = 4; center.getInner().add(geometry, c);
+		 */
+		
+		center.getInner().addCard(math1);
+		center.getInner().addCard(math2);
+		center.getInner().addCard(probability);
+		center.getInner().addCard(calculus);
+		center.getInner().addCard(geometry);
+		
+		center.getInner().initializeStartPosition();
+		
+		add(Box.createRigidArea(new Dimension(100, 100)), BorderLayout.EAST);
+		add(Box.createRigidArea(new Dimension(100, 100)), BorderLayout.WEST);
+		add(Box.createRigidArea(new Dimension(100, 70)), BorderLayout.SOUTH);
 
 		add(center, BorderLayout.CENTER);
 	}

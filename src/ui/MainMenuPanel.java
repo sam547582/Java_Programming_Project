@@ -23,7 +23,7 @@ public class MainMenuPanel extends JPanel {
 		
 		
 		setLayout(new BorderLayout());
-		setOpaque(false);
+		setOpaque(true);
 		
 		setBackground(Color.GRAY);
 	    

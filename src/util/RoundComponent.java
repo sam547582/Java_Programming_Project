@@ -6,20 +6,22 @@ import java.awt.*;
 public class RoundComponent<T extends JComponent> extends JComponent {
 
 	private T inner;
-
+	
+	private Color borderColor;
 	private Color bgColor;
 	private Color fontColor;
 	private String text;
 	private Font font;
 	private int radius;
 
-	public RoundComponent(Class<T> cls, Dimension d, Color bgColor, String text, Color fontColor, Font font, int radius) {
+	public RoundComponent(Class<T> cls, Dimension d, Color borderColor, Color bgColor, String text, Color fontColor, Font font, int radius) {
 		try {
 			this.inner = cls.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		this.borderColor = borderColor;
 		this.bgColor = bgColor;
 		this.fontColor = fontColor;
 		this.text = text;
@@ -38,13 +40,36 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		add(inner, BorderLayout.CENTER);
 	}
 	
-	public RoundComponent(Class<T> cls, Dimension d, Color bgColor,int radius) {
+	public RoundComponent(Class<T> cls, Color borderColor, Color bgColor, String text, Color fontColor, Font font, int radius) {
 		try {
 			this.inner = cls.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		
+		this.borderColor = borderColor;
+		this.bgColor = bgColor;
+		this.fontColor = fontColor;
+		this.text = text;
+		this.font = font;
+		this.radius = radius;
+		
+		createInner();
+		
+		setLayout(new BorderLayout());
+		setOpaque(false); // 직접 배경 그릴 거라 false
 
+		add(inner, BorderLayout.CENTER);
+	}
+	
+	public RoundComponent(Class<T> cls, Dimension d, Color borderColor, Color bgColor,int radius) {
+		try {
+			this.inner = cls.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		this.borderColor = borderColor;
 		this.bgColor = bgColor;
 		this.radius = radius;
 		
@@ -60,13 +85,14 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		add(inner, BorderLayout.CENTER);
 	}
 	
-	public RoundComponent(Class<T> cls, Color bgColor,int radius) {
+	public RoundComponent(Class<T> cls, Color borderColor, Color bgColor,int radius) {
 		try {
 			this.inner = cls.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		this.borderColor = borderColor;
 		this.bgColor = bgColor;
 		this.radius = radius;
 		
@@ -149,7 +175,7 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g2.setColor(new Color(0,0,0,0));
+		g2.setColor(borderColor);
 		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
 
 		g2.dispose();
