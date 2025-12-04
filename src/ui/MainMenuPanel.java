@@ -14,13 +14,15 @@ import model.*;
 
 public class MainMenuPanel extends JPanel {
 	
+	private MainFrame frame;
+	
 	private JLabel played ;
 	private JLabel accuracy;
 	private JLabel correct;
 	private JLabel wrong;
 	
 	public MainMenuPanel(MainFrame frame) {
-		
+		this.frame = frame;
 		
 		setLayout(new BorderLayout());
 		setOpaque(true);
@@ -28,6 +30,7 @@ public class MainMenuPanel extends JPanel {
 		setBackground(new Color(32, 44, 53));
 	    
 		ProblemStatsManager.syncStats();
+		TestStatsManager.syncStats();
 		StatsManager.load();
 		
 	    played = new JLabel();
@@ -69,6 +72,12 @@ public class MainMenuPanel extends JPanel {
 		
 		MenuLabel test = new MenuLabel("Test");
 		test.setForeground(new Color(190, 45, 60));
+		test.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+		    public void mouseClicked(java.awt.event.MouseEvent e) {
+		        showCountdownDialog();
+		    }
+		});	
 		
 		leftMenu.add(wrapLabel(test));
 		leftMenu.add(Box.createVerticalStrut(20));
@@ -137,6 +146,54 @@ public class MainMenuPanel extends JPanel {
 		g2.setPaint(gp);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		g2.dispose();
+	}
+	
+	private void showCountdownDialog() {
+
+		// 모달 다이얼로그 (부모 Frame 고정)
+		JDialog dialog = new JDialog(frame, "Start", true);
+		dialog.setSize(300, 150);
+		dialog.setLocationRelativeTo(frame); // 화면 가운데
+		dialog.setLayout(new BorderLayout());
+
+		JLabel label = new JLabel("Starts in 10 seconds", SwingConstants.CENTER);
+		label.setFont(new Font("Arial", Font.BOLD, 20));
+		dialog.add(label, BorderLayout.CENTER);
+
+		// 5초 카운트다운 변수 / 배열 선언 원인 체크하기
+		int[] time = { 10 };
+
+		// 1초마다 실행되는 Swing Timer
+		Timer timer = new Timer(1000, null);
+
+		dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				timer.stop();
+				// 필요하면 “취소됨” 표시도 가능
+				// JOptionPane.showMessageDialog(frame, "취소되었습니다.");
+			}
+		});
+
+		timer.addActionListener(e -> {
+
+			time[0]--;
+
+			if (time[0] > 0) {
+				label.setText("Starts in " + time[0] + " seconds");
+			} else {
+				// 타이머 종료 + 다이얼로그 종료
+				timer.stop();
+				dialog.dispose();
+
+				// 화면 전환 실행
+				frame.showTest(StatsManager.getElective()); // 원하는 화면으로 이동
+			}
+		});
+
+		timer.start();
+		dialog.setVisible(true); // 다이얼로그 표시 (모달)
 	}
 
 
