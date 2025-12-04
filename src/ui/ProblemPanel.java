@@ -199,7 +199,7 @@ public class ProblemPanel extends JPanel {
 			int num = i;
 
 			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0,0,0,0), Color.BLACK,
-					String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+					String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 100);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;

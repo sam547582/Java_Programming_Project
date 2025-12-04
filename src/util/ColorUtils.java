@@ -10,7 +10,7 @@ public class ColorUtils {
 
 		return brightness > 128 ? Color.BLACK : Color.WHITE;
 	}
-	
+
 	// 선형 보간 알고리즘
 	public static Color getAccuracyColor(double rate) {
 		// 0~1 사이로 제한
@@ -32,6 +32,18 @@ public class ColorUtils {
 			int b = (int) (255 * t); // 0 → 255
 			return new Color(r, g, b);
 		}
+	}
+
+	public static Color getShadowColor(Color base) {
+		// 1) base 색을 30% 어둡게 만들기
+		int r = (int) (base.getRed() * 0.8);
+		int g = (int) (base.getGreen() * 0.8);
+		int b = (int) (base.getBlue() * 0.8);
+
+		// 2) 투명도 80 정도로 설정 (조절 가능)
+		int a = 255;
+
+		return new Color(r, g, b, a);
 	}
 
 }
