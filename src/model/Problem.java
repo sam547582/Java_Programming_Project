@@ -6,17 +6,26 @@ public class Problem {
 	private String answer;
 	private String playerAnswer;
 	private int id;
+	
+	private int score = 0;
+	private int solveCount = 0;
+	private int wrongCount = 0;
 
-	private int solveCount;
-	private int wrongCount;
-
+	public Problem(int id, String path, String answer, int score) {
+		this.id = id;
+		this.path = path;
+		this.answer = answer;
+		this.score = score;
+		playerAnswer = " ";
+	}
+	
 	public Problem(int id, String path, String answer) {
 		this.id = id;
 		this.path = path;
 		this.answer = answer;
 		playerAnswer = " ";
 	}
-
+	
 	public void setPlayerAnswer(String answer) {
 		playerAnswer = answer;
 	}
@@ -27,6 +36,10 @@ public class Problem {
 
 	public void setWrongCount(int wrongCount) {
 		this.wrongCount = wrongCount;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	public int getId() {
@@ -44,7 +57,11 @@ public class Problem {
 	public String getPlayerAnswer() {
 		return playerAnswer;
 	}
-
+	
+	public int getScore() {
+		return score;
+	}
+	
 	public int getSolveCount() {
 		return solveCount;
 	}

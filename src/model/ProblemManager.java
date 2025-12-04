@@ -16,7 +16,7 @@ public class ProblemManager {
 		}
 
 		Map<String, int[]> stats = ProblemStatsManager.loadProblemStats();
-
+		
 		List<Problem> list = new ArrayList<>();
 
 		for (File f : files) {
@@ -29,7 +29,7 @@ public class ProblemManager {
 
 			String relativePath = folderPath + "/" + fileName;
 			String answerPart = parts[1].replace(".png", "");
-
+			
 			Problem p = new Problem(Integer.parseInt(parts[0]), relativePath, answerPart);
 
 			if (stats.containsKey(relativePath)) {

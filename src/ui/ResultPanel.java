@@ -27,12 +27,14 @@ public class ResultPanel extends JPanel {
 	private JLabel wrongLabel;
 	private JLabel[] ox;
 
+	private String what;
 	private int correct;
 	private int wrong;
 	private int problemSize;
 
-	ResultPanel(MainFrame frame, Problem[] problems) {
+	ResultPanel(MainFrame frame, Problem[] problems, String what) {
 		this.problems = problems;
+		this.what = what;
 		problemSize = problems.length;
 		ox = new JLabel[problemSize];
 		correct = wrong = 0;
@@ -250,7 +252,14 @@ public class ResultPanel extends JPanel {
 
 	private void checkAnswer() {
 
-		Map<String, int[]> stats = ProblemStatsManager.loadProblemStats();
+		Map<String, int[]> stats = null;
+		int score = 0;
+		
+		if (what.equals("problem"))
+			stats = ProblemStatsManager.loadProblemStats();
+		else if (what.equals("test")) 
+			stats = TestStatsManager.loadTestStats();
+		
 		int cnt = 0;
 
 		for (Problem p : problems) {
@@ -258,19 +267,38 @@ public class ResultPanel extends JPanel {
 			int cr = p.getSolveCount();
 			int wr = p.getWrongCount();
 
-			if (p.getPlayerAnswer().equals(p.getAnswer())) {
+			if (p.getPlayerAnswer().equals(p.getAnswer())) {		
 				ox[cnt] = new JLabel("O");
-				p.setSolveCount(cr + 1);
-				stats.get(key)[0] = p.getSolveCount();
+				
+				if (what.equals("problem")) {
+					p.setSolveCount(cr + 1);
+					stats.get(key)[0] = p.getSolveCount();
+				}
+				else if (what.equals("test")) score+= p.getScore();
 				correct++;
 			} else {
 				ox[cnt] = new JLabel("X");
-				p.setWrongCount(wr + 1);
-				stats.get(key)[1] = p.getWrongCount();
+				
+				if (what.equals("problem")) {
+					p.setWrongCount(wr + 1);
+					stats.get(key)[1] = p.getWrongCount();
+				}
 				wrong++;
 			}
 			cnt++;
 		}
-		ProblemStatsManager.saveProblemStats(stats);
+		
+		if (what.equals("test")) {
+			stats.get(TestManager.getSelectedName())[0]++;
+			stats.get(TestManager.getSelectedName())[1] = score;
+			
+			TestStatsManager.saveTestStats(stats);
+		}
+		else if (what.equals("problem")) {
+			ProblemStatsManager.saveProblemStats(stats);
+		}
+		
+		
+		
 	}
 }
