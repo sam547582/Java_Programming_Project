@@ -10,6 +10,7 @@ import util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import model.*;
 
 public class MainMenuPanel extends JPanel {
 	
@@ -22,10 +23,11 @@ public class MainMenuPanel extends JPanel {
 		
 		
 		setLayout(new BorderLayout());
-		setOpaque(false);
+		setOpaque(true);
 		
-		setBackground(Color.GRAY);
+		setBackground(new Color(32, 44, 53));
 	    
+		ProblemStatsManager.syncStats();
 		StatsManager.load();
 		
 	    played = new JLabel();
@@ -52,18 +54,23 @@ public class MainMenuPanel extends JPanel {
 		title.setFont(new Font("Arial", Font.BOLD, 26));
 		title.setForeground(Color.WHITE);
 		
-		MenuLabel start = new MenuLabel("Start");
+		MenuLabel start = new MenuLabel("Training");
+		start.setForeground(new Color(60, 150, 210));
+		
 		start.addMouseListener(new java.awt.event.MouseAdapter() {
 		    @Override
 		    public void mouseClicked(java.awt.event.MouseEvent e) {
-		        frame.showDifficulty(); 
+		        frame.showSubject(); 
 		    }
 		});		
 
 		leftMenu.add(wrapLabel(start));
 		leftMenu.add(Box.createVerticalStrut(20));
 		
-		leftMenu.add(wrapLabel(new MenuLabel("Shop")));
+		MenuLabel test = new MenuLabel("Test");
+		test.setForeground(new Color(190, 45, 60));
+		
+		leftMenu.add(wrapLabel(test));
 		leftMenu.add(Box.createVerticalStrut(20));
 
 		leftMenu.add(wrapLabel(new MenuLabel("Settings")));
@@ -123,7 +130,14 @@ public class MainMenuPanel extends JPanel {
 	    repaint();
 	}
 	
-
+	@Override
+	protected void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g.create();
+		GradientPaint gp = new GradientPaint(0, 0, new Color(35,45,65), 0, getHeight(), new Color(20,25,40));
+		g2.setPaint(gp);
+		g2.fillRect(0, 0, getWidth(), getHeight());
+		g2.dispose();
+	}
 
 
 }

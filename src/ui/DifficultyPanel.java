@@ -9,12 +9,14 @@ import java.awt.*;
 public class DifficultyPanel extends JPanel {
 
 	private MainFrame frame;
-
-	public DifficultyPanel(MainFrame frame) {
+	private String subject;
+	
+	public DifficultyPanel(MainFrame frame,String subject) {
 		this.frame = frame;
-
+		this.subject = subject;
+		
 		setLayout(new BorderLayout());
-		setBackground(new Color(143,202,202,100));
+		//setBackground(new Color(143,202,202,100));
 		setOpaque(true);
 
 		JPanel wrapper = new JPanel();
@@ -32,9 +34,9 @@ public class DifficultyPanel extends JPanel {
 
 		titlePanel.add(title);
 
-		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), new Color(255,150,138,0), "BACK",
+		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), Color.BLACK, new Color(255,150,138,0), "BACK",
 				new Color(152,255,153), new Font("Arial", Font.BOLD, 25), 20);
-		back.getInner().addActionListener(e -> frame.showPanel("menu"));
+		back.getInner().addActionListener(e -> frame.showSubject());
 
 		backPanel.add(back);
 
@@ -44,24 +46,24 @@ public class DifficultyPanel extends JPanel {
 		
 		add(wrapper, BorderLayout.NORTH);
 
-		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, new Color(0,0,0,0), 20);
+		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, Color.BLACK, new Color(0,0,0,0), 20);
 		center.getInner().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		RoundComponent<JButton> easy = new RoundComponent<>(JButton.class, new Dimension(250, 70), new Color(255,150,138), "EASY",
+		RoundComponent<JButton> easy = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138), "EASY",
 				new Color(152,255,153), new Font("Arial", Font.BOLD, 35), 20);
 		easy.getInner().addActionListener(e -> showCountdownDialog("easy"));
 
-		RoundComponent<JButton> normal = new RoundComponent<>(JButton.class, new Dimension(250, 70), new Color(255,150,138),
+		RoundComponent<JButton> normal = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138),
 				"NORMAL", new Color(85,203,205), new Font("Arial", Font.BOLD, 35), 20);
 		normal.getInner().addActionListener(e -> showCountdownDialog("normal"));
 
-		RoundComponent<JButton> hard = new RoundComponent<>(JButton.class, new Dimension(250, 70), new Color(255,150,138), "HARD",
+		RoundComponent<JButton> hard = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138), "HARD",
 				new Color(246,234,194), new Font("Arial", Font.BOLD, 35), 20);
 		hard.getInner().addActionListener(e -> showCountdownDialog("hard"));
 
-		RoundComponent<JButton> extreme = new RoundComponent<>(JButton.class, new Dimension(250, 70), new Color(255,150,138),
+		RoundComponent<JButton> extreme = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138),
 				"KILLER", new Color(255,15,13), new Font("Arial", Font.BOLD, 35), 20);
 		extreme.getInner().addActionListener(e -> showCountdownDialog("extreme"));
 		
@@ -126,7 +128,7 @@ public class DifficultyPanel extends JPanel {
 				dialog.dispose();
 
 				// 화면 전환 실행
-				frame.showProblem(difficulty); // 원하는 화면으로 이동
+				frame.showProblem(difficulty, subject); // 원하는 화면으로 이동
 			}
 		});
 
