@@ -27,8 +27,8 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
-		bg = new BackgroundPanel();
-		bg.setLayout(new BorderLayout());
+		//bg = new BackgroundPanel();
+		//bg.setLayout(new BorderLayout());
 
 		Container c = getContentPane();
 
@@ -44,8 +44,8 @@ public class MainFrame extends JFrame {
 		testPanel = null;
 		resultPanel = null;
 
-		bg.add(mainPanel, BorderLayout.CENTER);
-		setContentPane(bg);
+		c.add(mainPanel, BorderLayout.CENTER);
+		//setContentPane(bg);
 
 		File file = new File("resources/data/stats.txt");
 		try {
