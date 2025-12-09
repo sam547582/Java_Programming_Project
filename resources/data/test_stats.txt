@@ -1,1 +1,1 @@
-2611 cnt=3 score=7
+2611 cnt=59 score=0

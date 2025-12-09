@@ -167,7 +167,7 @@ public class MainMenuPanel extends JPanel {
 		dialog.add(label, BorderLayout.CENTER);
 
 		// 5초 카운트다운 변수 / 배열 선언 원인 체크하기
-		int[] time = { 10 };
+		int[] time = { 1 };
 
 		// 1초마다 실행되는 Swing Timer
 		Timer timer = new Timer(1000, null);
