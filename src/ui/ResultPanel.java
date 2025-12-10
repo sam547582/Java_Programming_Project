@@ -9,7 +9,9 @@ import util.*;
 import java.util.*;
 
 public class ResultPanel extends JPanel {
-
+	
+	private MainFrame frame;
+	
 	private Problem[] problems;
 
 	private JPanel top;
@@ -35,6 +37,7 @@ public class ResultPanel extends JPanel {
 	private int problemSize;
 
 	ResultPanel(MainFrame frame, Problem[] problems, String what) {
+		this.frame = frame;
 		this.problems = problems;
 		this.what = what;
 		rowPanels = new ArrayList<>();
@@ -46,7 +49,7 @@ public class ResultPanel extends JPanel {
 		setBackground(Color.GRAY);
 		
 		if(what.equals("test")) {
-			frame.setSize(1000, 800);
+			frame.setSize(1200, 800);
 		}
 		else if(what.equals("problem")) {
 			frame.setSize(1000, 550);
@@ -75,11 +78,13 @@ public class ResultPanel extends JPanel {
 		correctLabel = new JLabel("CORRECT : " + String.valueOf(correct));
 		correctLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		correctLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
+		correctLabel.setVisible(false);
 
 		wrongLabel = new JLabel("WRONG : " + String.valueOf(wrong));
 		wrongLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		wrongLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
-
+		wrongLabel.setVisible(false);
+		
 		topLeftWrapper = new JPanel(new FlowLayout());
 		topLeftWrapper.setOpaque(false);
 		topLeftWrapper.add(resultLabel);
@@ -131,7 +136,7 @@ public class ResultPanel extends JPanel {
 				sepC.weighty = 0;
 				sepC.fill = GridBagConstraints.NONE;
 
-				center.add(createVerticalSeparator(table.getPreferredSize().height + 50), sepC);
+				center.add(createVerticalSeparator(table.getPreferredSize().height + 30), sepC);
 			}
 		}
 
@@ -140,6 +145,9 @@ public class ResultPanel extends JPanel {
 		bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
 		bottom.setOpaque(false);
 		bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		bottom.setPreferredSize(new Dimension(300,80));
+		bottom.setMaximumSize(new Dimension(300,80));
+		bottom.setMinimumSize(new Dimension(300,80));
 		bottom.add(correctLabel);
 		bottom.add(wrongLabel);
 
@@ -163,6 +171,8 @@ public class ResultPanel extends JPanel {
 				row.repaint();
 				index[0]++;
 			} else {
+				correctLabel.setVisible(true);
+				wrongLabel.setVisible(true);
 				((javax.swing.Timer) e.getSource()).stop();
 			}
 		});

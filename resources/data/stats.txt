@@ -1,6 +1,6 @@
 Name=asdds
 Elective=Calculus
 TargetGrade=1
-totalPlayed=1984
+totalPlayed=2260
 correct=9
-wrong=1975
+wrong=2251
