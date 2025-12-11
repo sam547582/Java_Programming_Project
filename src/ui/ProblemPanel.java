@@ -34,7 +34,7 @@ public class ProblemPanel extends JPanel {
 
 	private JTabbedPane toolTabs;
 	private JScrollPane scrollPane;
-	
+
 	private RoundComponent<JButton>[] problemNumberButton;
 	private JLabel problemContentLabel;
 	private RoundComponent<JTextField> answerField;
@@ -44,7 +44,7 @@ public class ProblemPanel extends JPanel {
 	private problemTimer timer;
 	private JLabel timerLabel;
 	private JLabel rateLabel;
-	
+
 	private RoundComponent<JButton> black;
 	private RoundComponent<JButton> white;
 
@@ -52,29 +52,31 @@ public class ProblemPanel extends JPanel {
 
 	private String difficulty;
 	private String subject;
-	
+
 	private int now_number;
 
 	ProblemPanel(MainFrame frame, String difficulty, String subject) {
 		this.frame = frame;
 		this.difficulty = difficulty;
 		this.subject = subject;
-		
+
 		now_number = 0;
-		
+
 		timerLabel = new JLabel();
 		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
-		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0,0,0,0), Color.BLACK, "FINISH", Color.WHITE,
-				new Font("Arial", Font.BOLD, 30), 20);
+		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"FINISH", Color.WHITE, new Font("Arial", Font.BOLD, 30), 20);
 		finish.getInner().addActionListener(e -> {
-			timer.stop();
-			frame.showResult(problems,"problem");
+			if (JOptionPane.showConfirmDialog(frame, "Real Finish?", "FINISH", JOptionPane.DEFAULT_OPTION) == 0) {
+				timer.stop();
+				frame.showResult(problems, "problem");
+			}
 		});
 
-		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), new Color(0,0,0,0), Color.BLACK, "DRAW", Color.WHITE,
-				new Font("Arial", Font.BOLD, 30), 20);
+		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), new Color(0, 0, 0, 0),
+				Color.BLACK, "DRAW", Color.WHITE, new Font("Arial", Font.BOLD, 30), 20);
 		drawToggleButton.setFont(new Font("Arial", Font.BOLD, 20));
 		drawToggleButton.getInner().addActionListener(e -> {
 			boolean now = drawPanel.isVisible();
@@ -98,25 +100,27 @@ public class ProblemPanel extends JPanel {
 		img = ImageUtils.scaleImage(img, 500);
 
 		timerLabel.setForeground(Color.BLACK);
-		
+
 		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
-		double solve = problems[now_number].getSolveCount();	
+		double solve = problems[now_number].getSolveCount();
 		double rate = solve / all;
-		
+
 		rateLabel = new JLabel();
-		if (all == 0) rateLabel.setText(String.valueOf(0) + "%");
-		else rateLabel.setText(String.valueOf(rate * 100) + "%");
+		if (all == 0)
+			rateLabel.setText(String.valueOf(0) + "%");
+		else
+			rateLabel.setText(String.valueOf(rate * 100) + "%");
 		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
 		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
-		
+
 		createProblemContentLabel();
 
 		createProblemNumberButton(this.frame);
 
 		createAnswerPanel();
 
-		black = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0,0,0,0), Color.BLACK, "B", Color.WHITE,
-				new Font("Arial", Font.BOLD, 35), 70);
+		black = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0, 0, 0, 0), Color.BLACK, "B",
+				Color.WHITE, new Font("Arial", Font.BOLD, 35), 70);
 
 		black.getInner().addActionListener(e -> {
 			center.setBackground(Color.BLACK);
@@ -126,9 +130,9 @@ public class ProblemPanel extends JPanel {
 			updateProblemContent();
 		});
 
-		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0,0,0,0), Color.WHITE, "W", Color.BLACK,
-				new Font("Arial", Font.BOLD, 35), 70);
-		
+		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0, 0, 0, 0), Color.WHITE, "W",
+				Color.BLACK, new Font("Arial", Font.BOLD, 35), 70);
+
 		white.getInner().addActionListener(e -> {
 			center.setBackground(Color.WHITE);
 			calcPanel.updateColor(Color.WHITE);
@@ -157,16 +161,19 @@ public class ProblemPanel extends JPanel {
 		img = ImageUtils.scaleImage(img, 500);
 
 		timerLabel.setForeground(ColorUtils.getContrastColor(center.getBackground()));
-		
+
 		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
-		double solve = problems[now_number].getSolveCount();	
+		double solve = problems[now_number].getSolveCount();
 		double rate = solve / all;
-		
-		if (all == 0) rateLabel.setText(String.valueOf(0) + "%");
-		else rateLabel.setText(String.valueOf(rate * 100) + "%");
-		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));;
+
+		if (all == 0)
+			rateLabel.setText(String.valueOf(0) + "%");
+		else
+			rateLabel.setText(String.valueOf(rate * 100) + "%");
+		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
+		;
 		rateLabel.repaint();
-		
+
 		problemContentLabel.setIcon(new ImageIcon(img));
 	}
 
@@ -188,7 +195,10 @@ public class ProblemPanel extends JPanel {
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
 			public void Timeout() {
-				frame.showResult(problems,"problem");
+				int check = JOptionPane.showConfirmDialog(frame, "FINISH", "FINISH", JOptionPane.DEFAULT_OPTION);
+				if (check == 0 || check == -1) {
+					frame.showResult(problems, "problem");
+				}
 			}
 		});
 	}
@@ -199,8 +209,8 @@ public class ProblemPanel extends JPanel {
 		for (int i = 0; i < problems.length; i++) {
 			int num = i;
 
-			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0,0,0,0), Color.BLACK,
-					String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 100);
+			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0, 0, 0, 0),
+					Color.BLACK, String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 100);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;
@@ -234,7 +244,7 @@ public class ProblemPanel extends JPanel {
 		scrollPane.setOpaque(false);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(null);
-		
+
 		scrollPane.setPreferredSize(new Dimension(300, 90));
 		scrollPane.setMaximumSize(new Dimension(300, 90));
 		scrollPane.setMinimumSize(new Dimension(300, 90));
@@ -247,7 +257,7 @@ public class ProblemPanel extends JPanel {
 		topWrapper.add(top, BorderLayout.CENTER);
 		topWrapper.add(drawToggleButton, BorderLayout.EAST);
 
-		timerLabelWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER,20,0));
+		timerLabelWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		timerLabelWrapper.setOpaque(false);
 		timerLabelWrapper.add(timerLabel);
 		timerLabelWrapper.add(rateLabel);
@@ -283,7 +293,7 @@ public class ProblemPanel extends JPanel {
 		subPanel.add(toolTabs, BorderLayout.CENTER);
 
 		// center = overlay 패널
-		center = new RoundComponent<>(JPanel.class, new Color(0,0,0,0), Color.WHITE, 30);
+		center = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0), Color.WHITE, 30);
 		center.getInner().setLayout(new OverlayLayout(center.getInner()));
 		// DrawPanel 생성 + OFF 상태로
 		drawPanel = new DrawPanel();
@@ -320,13 +330,19 @@ public class ProblemPanel extends JPanel {
 	}
 
 	private void createAnswerPanel() {
-		answerField = new RoundComponent<>(JTextField.class, new Dimension(300, 40), new Color(0,0,0,0), Color.WHITE, "", Color.BLACK,
-				new Font("Arial", Font.PLAIN, 20), 20);
+		answerField = new RoundComponent<>(JTextField.class, new Dimension(300, 40), new Color(0, 0, 0, 0), Color.WHITE,
+				"", Color.BLACK, new Font("Arial", Font.PLAIN, 20), 20);
 
-		submit = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0,0,0,0), Color.BLACK, "SUBMIT", Color.WHITE,
-				new Font("Arial", Font.BOLD, 25), 20);
-		
+		submit = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"SUBMIT", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20);
+
 		submit.getInner().addActionListener(e -> {
+			
+			if (answerField.getInner().getText().equals("")) {
+				JOptionPane.showConfirmDialog(null, "Enter your answer", "X", JOptionPane.DEFAULT_OPTION);
+				return;
+			}
+			
 			for (int i = 0; i < answerField.getInner().getText().length(); i++) {
 				int ascii = answerField.getInner().getText().charAt(i);
 				if (ascii < 48 || ascii > 57) {
@@ -337,6 +353,7 @@ public class ProblemPanel extends JPanel {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to submit this answer?", "SUBMIT",
 					JOptionPane.YES_NO_OPTION) == 0) {
 				problems[now_number].setPlayerAnswer(answerField.getInner().getText());
+				problemNumberButton[now_number].setBackground(Color.DARK_GRAY);
 				answerField.getInner().setText("");
 			}
 		});

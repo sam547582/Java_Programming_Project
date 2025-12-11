@@ -6,7 +6,9 @@ import model.*;
 import ui.component.MenuLabel;
 import ui.component.ResponsiveLabel;
 import util.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ResultPanel extends JPanel {
 	
@@ -163,7 +165,7 @@ public class ResultPanel extends JPanel {
 
 		final int[] index = { 0 };
 
-		javax.swing.Timer timer = new javax.swing.Timer(delay, e -> {
+		Timer timer = new Timer(delay, e -> {
 			if (index[0] < rowPanels.size()) {
 				JPanel row = rowPanels.get(index[0]);
 				row.setVisible(true);
@@ -173,7 +175,7 @@ public class ResultPanel extends JPanel {
 			} else {
 				correctLabel.setVisible(true);
 				wrongLabel.setVisible(true);
-				((javax.swing.Timer) e.getSource()).stop();
+				((Timer) e.getSource()).stop();
 			}
 		});
 

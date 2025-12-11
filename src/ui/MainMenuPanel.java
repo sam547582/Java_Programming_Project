@@ -27,7 +27,7 @@ public class MainMenuPanel extends JPanel {
 		setLayout(new BorderLayout());
 		setOpaque(true);
 
-		setBackground(new Color(60, 45, 85));
+		setBackground(Color.DARK_GRAY);
 
 		ProblemStatsManager.syncStats();
 		TestStatsManager.syncStats();

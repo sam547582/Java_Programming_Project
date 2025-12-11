@@ -67,8 +67,10 @@ public class TestPanel extends JPanel {
 		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0, 0, 0, 0), Color.BLACK,
 				"FINISH", Color.WHITE, new Font("Arial", Font.BOLD, 30), 20);
 		finish.getInner().addActionListener(e -> {
-			timer.stop();
-			frame.showResult(problems, "test");
+			if (JOptionPane.showConfirmDialog(frame, "Real Finish?", "FINISH", JOptionPane.DEFAULT_OPTION) == 0) {
+				timer.stop();
+				frame.showResult(problems, "test");
+			}
 		});
 
 		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), new Color(0, 0, 0, 0),
@@ -156,7 +158,10 @@ public class TestPanel extends JPanel {
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
 			public void Timeout() {
-				frame.showResult(problems, "test");
+				int check = JOptionPane.showConfirmDialog(frame, "FINISH", "FINISH", JOptionPane.DEFAULT_OPTION);
+				if (check == 0 || check == -1) {
+					frame.showResult(problems, "test");
+				}
 			}
 		});
 	}
@@ -295,6 +300,11 @@ public class TestPanel extends JPanel {
 				"SUBMIT", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20);
 
 		submit.getInner().addActionListener(e -> {
+			if (answerField.getInner().getText().equals("")) {
+				JOptionPane.showConfirmDialog(null, "Enter your answer", "X", JOptionPane.DEFAULT_OPTION);
+				return;
+			}
+			
 			for (int i = 0; i < answerField.getInner().getText().length(); i++) {
 				int ascii = answerField.getInner().getText().charAt(i);
 				if (ascii < 48 || ascii > 57) {
@@ -305,6 +315,7 @@ public class TestPanel extends JPanel {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to submit this answer?", "SUBMIT",
 					JOptionPane.YES_NO_OPTION) == 0) {
 				problems[now_number].setPlayerAnswer(answerField.getInner().getText());
+				problemNumberButton[now_number].setBackground(Color.DARK_GRAY);
 				answerField.getInner().setText("");
 			}
 		});
