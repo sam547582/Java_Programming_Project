@@ -65,7 +65,14 @@ public class TestManager {
 		for (File folder : folders) {
             String name = folder.getName();
             int count = stats.get(name)[0];
-
+            
+            String[] parts = name.split("_");
+            String compare = parts[1];
+            
+            if (!compare.equals(elective)) {
+            	continue;
+            }
+            
             if (count == minCount) {
                 candidates.add(folder);
             }
