@@ -6,10 +6,14 @@ import model.*;
 import ui.component.MenuLabel;
 import ui.component.ResponsiveLabel;
 import util.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ResultPanel extends JPanel {
-
+	
+	private MainFrame frame;
+	
 	private Problem[] problems;
 
 	private JPanel top;
@@ -17,6 +21,8 @@ public class ResultPanel extends JPanel {
 	private JPanel topRightWrapper;
 
 	private JPanel center;
+
+	private ArrayList<JPanel> rowPanels;
 
 	private JPanel bottom;
 
@@ -27,19 +33,29 @@ public class ResultPanel extends JPanel {
 	private JLabel wrongLabel;
 	private JLabel[] ox;
 
+	private String what;
 	private int correct;
 	private int wrong;
 	private int problemSize;
 
-	ResultPanel(MainFrame frame, Problem[] problems) {
+	ResultPanel(MainFrame frame, Problem[] problems, String what) {
+		this.frame = frame;
 		this.problems = problems;
+		this.what = what;
+		rowPanels = new ArrayList<>();
 		problemSize = problems.length;
 		ox = new JLabel[problemSize];
 		correct = wrong = 0;
 
 		setLayout(new BorderLayout());
 		setBackground(Color.GRAY);
-		frame.setSize(1000, 550);
+		
+		if(what.equals("test")) {
+			frame.setSize(1200, 800);
+		}
+		else if(what.equals("problem")) {
+			frame.setSize(1000, 550);
+		}
 
 		checkAnswer();
 		StatsManager.updateStats(correct, wrong);
@@ -57,18 +73,20 @@ public class ResultPanel extends JPanel {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				frame.showPanel("menu");
-				frame.setSize(600, 400);
+				frame.setSize(900, 600);
 			}
 		});
 
 		correctLabel = new JLabel("CORRECT : " + String.valueOf(correct));
 		correctLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		correctLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
+		correctLabel.setVisible(false);
 
 		wrongLabel = new JLabel("WRONG : " + String.valueOf(wrong));
 		wrongLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		wrongLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
-
+		wrongLabel.setVisible(false);
+		
 		topLeftWrapper = new JPanel(new FlowLayout());
 		topLeftWrapper.setOpaque(false);
 		topLeftWrapper.add(resultLabel);
@@ -87,27 +105,40 @@ public class ResultPanel extends JPanel {
 		center.setOpaque(false);
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 0;
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
 
 		int gridx = 0;
 
+		int cnt = 0;
 		int start = 0;
-		while (start <= problemSize) {
-			JPanel table = createTable(start, start + 5);
+
+		if (what.equals("problem")) {
+			cnt = 5;
+		} else if (what.equals("test")) {
+			cnt = 10;
+		}
+
+		while (start < problemSize) {
+			JPanel table = createTable(start, start + cnt);
 			table.setOpaque(false);
 
 			c.gridx = gridx++;
+			c.gridy = 0;
 			c.weightx = 1.0;
+			c.fill = GridBagConstraints.BOTH;
+			c.weighty = 1.0;
 			center.add(table, c);
 
-			start += 5;
+			start += cnt;
 
 			if (start < problemSize) {
-				c.gridx = gridx++;
-				c.weightx = 0;
-				center.add(createVerticalSeparator(), c);
+				GridBagConstraints sepC = new GridBagConstraints();
+				sepC.gridx = gridx++;
+				sepC.gridy = 0;
+				sepC.weightx = 0;
+				sepC.weighty = 0;
+				sepC.fill = GridBagConstraints.NONE;
+
+				center.add(createVerticalSeparator(table.getPreferredSize().height + 30), sepC);
 			}
 		}
 
@@ -116,20 +147,58 @@ public class ResultPanel extends JPanel {
 		bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
 		bottom.setOpaque(false);
 		bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		bottom.setPreferredSize(new Dimension(300,80));
+		bottom.setMaximumSize(new Dimension(300,80));
+		bottom.setMinimumSize(new Dimension(300,80));
 		bottom.add(correctLabel);
 		bottom.add(wrongLabel);
 
 		add(top, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
 		add(bottom, BorderLayout.SOUTH);
+
+		SwingUtilities.invokeLater(() -> startRowAnimation());
 	}
 
-	private JPanel createVerticalSeparator() {
+	private void startRowAnimation() {
+		final int delay = 150;
+
+		final int[] index = { 0 };
+
+		Timer timer = new Timer(delay, e -> {
+			if (index[0] < rowPanels.size()) {
+				JPanel row = rowPanels.get(index[0]);
+				row.setVisible(true);
+				row.revalidate();
+				row.repaint();
+				index[0]++;
+			} else {
+				correctLabel.setVisible(true);
+				wrongLabel.setVisible(true);
+				((Timer) e.getSource()).stop();
+			}
+		});
+
+		timer.start();
+	}
+
+	private JPanel createVerticalSeparator(int height) {
+
+		JPanel wrapper = new JPanel();
+		wrapper.setOpaque(false);
+		wrapper.setPreferredSize(new Dimension(2, height));
+		wrapper.setMinimumSize(new Dimension(2, height));
+		wrapper.setMaximumSize(new Dimension(2, height));
+
 		JPanel sep = new JPanel();
 		sep.setBackground(new Color(180, 180, 180));
-		sep.setPreferredSize(new Dimension(2, 1));
-		sep.setMaximumSize(new Dimension(2, Integer.MAX_VALUE));
-		return sep;
+		sep.setPreferredSize(new Dimension(2, height));
+		sep.setMinimumSize(new Dimension(2, height));
+		sep.setMaximumSize(new Dimension(2, height));
+
+		wrapper.add(sep);
+
+		return wrapper;
 	}
 
 	private JPanel createTable(int start, int end) {
@@ -139,43 +208,86 @@ public class ResultPanel extends JPanel {
 
 		GridBagConstraints base = new GridBagConstraints();
 		base.fill = GridBagConstraints.BOTH;
+		base.gridx = 0;
+		base.gridy = 0;
 		base.weighty = 0;
 
-		addHeaderCell(table, "NUM", 0, 0, 0.1, base);
-		addSeparator(table, 0, 1, base);
-		addHeaderCell(table, "YOUR ANSWER", 0, 2, 0.3, base);
-		addSeparator(table, 0, 3, base);
-		addHeaderCell(table, "ANSWER", 0, 4, 0.2, base);
-		addSeparator(table, 0, 5, base);
-		addHeaderCell(table, "O/X", 0, 6, 0.1, base);
+		JPanel header = new JPanel(new GridBagLayout());
+		header.setOpaque(false);
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 0;
+
+		addHeaderCell(header, "NUM", 0, 0, 0.2, c);
+		addSeparator(header, 0, 1, c);
+		addHeaderCell(header, "YOUR ANS", 0, 2, 0.3, c);
+		addSeparator(header, 0, 3, c);
+		addHeaderCell(header, "ANS", 0, 4, 0.2, c);
+		addSeparator(header, 0, 5, c);
+		addHeaderCell(header, "O/X", 0, 6, 0.2, c);
+
+		table.add(header, base);
 
 		for (int row = start; row < end; row++) {
 			int y = (row - start) + 1;
 
+			JPanel wrapper = new JPanel(new BorderLayout());
+			wrapper.setOpaque(false);
+			wrapper.setMinimumSize(new Dimension(0, 50));
+			wrapper.setPreferredSize(new Dimension(0, 50));
+			wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+
+			JPanel rowPanel = new JPanel(new GridBagLayout());
+			rowPanel.setOpaque(false);
+			rowPanel.setVisible(false);
+
 			if (row >= problemSize) {
-				addRowCell(table, " ", y, 0, 0.1, base);
-				addSeparator(table, y, 1, base);
+				addRowCell(rowPanel, " ", 0, 0, 0.2, c);
+				addSeparator(rowPanel, 0, 1, c);
 
-				addRowCell(table, " ", y, 2, 0.3, base);
-				addSeparator(table, y, 3, base);
+				addRowCell(rowPanel, " ", 0, 2, 0.3, c);
+				addSeparator(rowPanel, 0, 3, c);
 
-				addRowCell(table, " ", y, 4, 0.2, base);
-				addSeparator(table, y, 5, base);
+				addRowCell(rowPanel, " ", 0, 4, 0.2, c);
+				addSeparator(rowPanel, 0, 5, c);
 
-				addRowCell(table, " ", y, 6, 0.1, base);
+				addRowCell(rowPanel, " ", 0, 6, 0.2, c);
+				
+				wrapper.add(rowPanel, BorderLayout.CENTER);
+
+				rowPanels.add(rowPanel);
+
+				GridBagConstraints r = new GridBagConstraints();
+				r.fill = GridBagConstraints.BOTH;
+				r.gridx = 0;
+				r.weightx = 1.0;
+				r.gridy = y;
+				table.add(wrapper, r);
 				continue;
 			}
 
-			addRowCell(table, String.valueOf(row + 1), y, 0, 0.1, base);
-			addSeparator(table, y, 1, base);
+			addRowCell(rowPanel, String.valueOf(row + 1), 0, 0, 0.2, c);
+			addSeparator(rowPanel, 0, 1, c);
 
-			addRowCell(table, problems[row].getPlayerAnswer(), y, 2, 0.3, base);
-			addSeparator(table, y, 3, base);
+			addRowCell(rowPanel, problems[row].getPlayerAnswer(), 0, 2, 0.3, c);
+			addSeparator(rowPanel, 0, 3, c);
 
-			addRowCell(table, problems[row].getAnswer(), y, 4, 0.2, base);
-			addSeparator(table, y, 5, base);
+			addRowCell(rowPanel, problems[row].getAnswer(), 0, 4, 0.2, c);
+			addSeparator(rowPanel, 0, 5, c);
 
-			addRowCell(table, ox[row].getText(), y, 6, 0.1, base);
+			addRowCell(rowPanel, ox[row].getText(), 0, 6, 0.2, c);
+
+			wrapper.add(rowPanel, BorderLayout.CENTER);
+
+			rowPanels.add(rowPanel);
+
+			GridBagConstraints r = new GridBagConstraints();
+			r.fill = GridBagConstraints.BOTH;
+			r.gridx = 0;
+			r.weightx = 1.0;
+			r.gridy = y;
+			table.add(wrapper, r);
 		}
 
 		return table;
@@ -201,7 +313,7 @@ public class ResultPanel extends JPanel {
 		c.weightx = weightx;
 		c.weighty = 0;
 
-		ResponsiveLabel label = new ResponsiveLabel(text, 0.035f, table);
+		ResponsiveLabel label = new ResponsiveLabel(text, 0.05f, table);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Arial", Font.BOLD, 30));
 		label.setForeground(ColorUtils.getContrastColor(getBackground()));
@@ -218,7 +330,7 @@ public class ResultPanel extends JPanel {
 		c.weightx = weightx;
 		c.weighty = 1;
 
-		ResponsiveLabel label = new ResponsiveLabel(text, 0.03f, table);
+		ResponsiveLabel label = new ResponsiveLabel(text, 0.04f, table);
 		label.setFont(new Font("Arial", Font.BOLD, 26));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setForeground(ColorUtils.getContrastColor(getBackground()));
@@ -250,7 +362,14 @@ public class ResultPanel extends JPanel {
 
 	private void checkAnswer() {
 
-		Map<String, int[]> stats = ProblemStatsManager.loadProblemStats();
+		Map<String, int[]> stats = null;
+		int score = 0;
+
+		if (what.equals("problem"))
+			stats = ProblemStatsManager.loadProblemStats();
+		else if (what.equals("test"))
+			stats = TestStatsManager.loadTestStats();
+
 		int cnt = 0;
 
 		for (Problem p : problems) {
@@ -260,17 +379,33 @@ public class ResultPanel extends JPanel {
 
 			if (p.getPlayerAnswer().equals(p.getAnswer())) {
 				ox[cnt] = new JLabel("O");
-				p.setSolveCount(cr + 1);
-				stats.get(key)[0] = p.getSolveCount();
+
+				if (what.equals("problem")) {
+					p.setSolveCount(cr + 1);
+					stats.get(key)[0] = p.getSolveCount();
+				} else if (what.equals("test"))
+					score += p.getScore();
 				correct++;
 			} else {
 				ox[cnt] = new JLabel("X");
-				p.setWrongCount(wr + 1);
-				stats.get(key)[1] = p.getWrongCount();
+
+				if (what.equals("problem")) {
+					p.setWrongCount(wr + 1);
+					stats.get(key)[1] = p.getWrongCount();
+				}
 				wrong++;
 			}
 			cnt++;
 		}
-		ProblemStatsManager.saveProblemStats(stats);
+
+		if (what.equals("test")) {
+			stats.get(TestManager.getSelectedName())[0]++;
+			stats.get(TestManager.getSelectedName())[1] = score;
+
+			TestStatsManager.saveTestStats(stats);
+		} else if (what.equals("problem")) {
+			ProblemStatsManager.saveProblemStats(stats);
+		}
+
 	}
 }

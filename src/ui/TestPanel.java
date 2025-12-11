@@ -8,13 +8,14 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.awt.event.*;
 
 import model.*;
 import ui.component.*;
 import controller.*;
 import util.*;
 
-public class ProblemPanel extends JPanel {
+public class TestPanel extends JPanel {
 
 	private MainFrame frame;
 
@@ -43,7 +44,6 @@ public class ProblemPanel extends JPanel {
 	private RoundComponent<JButton> drawToggleButton;
 	private problemTimer timer;
 	private JLabel timerLabel;
-	private JLabel rateLabel;
 
 	private RoundComponent<JButton> black;
 	private RoundComponent<JButton> white;
@@ -55,10 +55,8 @@ public class ProblemPanel extends JPanel {
 
 	private int now_number;
 
-	ProblemPanel(MainFrame frame, String difficulty, String subject) {
+	TestPanel(MainFrame frame, String elective) {
 		this.frame = frame;
-		this.difficulty = difficulty;
-		this.subject = subject;
 
 		now_number = 0;
 
@@ -71,7 +69,7 @@ public class ProblemPanel extends JPanel {
 		finish.getInner().addActionListener(e -> {
 			if (JOptionPane.showConfirmDialog(frame, "Real Finish?", "FINISH", JOptionPane.DEFAULT_OPTION) == 0) {
 				timer.stop();
-				frame.showResult(problems, "problem");
+				frame.showResult(problems, "test");
 			}
 		});
 
@@ -93,25 +91,13 @@ public class ProblemPanel extends JPanel {
 		timer = new problemTimer(timerLabel);
 		setTimer();
 
-		problems = ProblemManager.getProblem(difficulty, subject);
+		problems = TestManager.getTest(elective);
 
 		img = ImageUtils.getImage(problems, now_number);
 		img = ImageUtils.removeBackground(img, new Color(255, 255, 255), 240);
 		img = ImageUtils.scaleImage(img, 500);
 
 		timerLabel.setForeground(Color.BLACK);
-
-		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
-		double solve = problems[now_number].getSolveCount();
-		double rate = solve / all;
-
-		rateLabel = new JLabel();
-		if (all == 0)
-			rateLabel.setText(String.valueOf(0) + "%");
-		else
-			rateLabel.setText(String.valueOf(rate * 100) + "%");
-		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
-		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
 		createProblemContentLabel();
 
@@ -162,42 +148,19 @@ public class ProblemPanel extends JPanel {
 
 		timerLabel.setForeground(ColorUtils.getContrastColor(center.getBackground()));
 
-		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
-		double solve = problems[now_number].getSolveCount();
-		double rate = solve / all;
-
-		if (all == 0)
-			rateLabel.setText(String.valueOf(0) + "%");
-		else
-			rateLabel.setText(String.valueOf(rate * 100) + "%");
-		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
-		;
-		rateLabel.repaint();
-
 		problemContentLabel.setIcon(new ImageIcon(img));
 	}
 
 	private void setTimer() {
-		if (difficulty.equals("easy")) {
-			timer.setTime(300);
-			timerLabel.setText("05:00");
-		} else if (difficulty.equals("normal")) {
-			timer.setTime(600);
-			timerLabel.setText("10:00");
-		} else if (difficulty.equals("normal")) {
-			timer.setTime(900);
-			timerLabel.setText("15:00");
-		} else {
-			timer.setTime(1800);
-			timerLabel.setText("30:00");
-		}
+		timer.setTime(6000);
+		timerLabel.setText("100:00");
 
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
 			public void Timeout() {
 				int check = JOptionPane.showConfirmDialog(frame, "FINISH", "FINISH", JOptionPane.DEFAULT_OPTION);
 				if (check == 0 || check == -1) {
-					frame.showResult(problems, "problem");
+					frame.showResult(problems, "test");
 				}
 			}
 		});
@@ -205,12 +168,13 @@ public class ProblemPanel extends JPanel {
 
 	@SuppressWarnings("unchecked")
 	private void createProblemNumberButton(MainFrame frame) {
+
 		problemNumberButton = new RoundComponent[problems.length];
 		for (int i = 0; i < problems.length; i++) {
 			int num = i;
 
-			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0, 0, 0, 0),
-					Color.BLACK, String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 100);
+			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(60, 60), new Color(0, 0, 0, 0),
+					Color.BLACK, String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 120);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;
@@ -233,7 +197,7 @@ public class ProblemPanel extends JPanel {
 	}
 
 	private void createJPanel() {
-		top = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+		top = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
 		top.setOpaque(false);
 
 		scrollPane = new JScrollPane(top);
@@ -244,7 +208,7 @@ public class ProblemPanel extends JPanel {
 		scrollPane.setOpaque(false);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(null);
-
+		
 		scrollPane.setPreferredSize(new Dimension(300, 90));
 		scrollPane.setMaximumSize(new Dimension(300, 90));
 		scrollPane.setMinimumSize(new Dimension(300, 90));
@@ -254,13 +218,12 @@ public class ProblemPanel extends JPanel {
 
 		topWrapper = new JPanel(new BorderLayout());
 		topWrapper.setOpaque(false);
-		topWrapper.add(top, BorderLayout.CENTER);
+		topWrapper.add(scrollPane, BorderLayout.CENTER);
 		topWrapper.add(drawToggleButton, BorderLayout.EAST);
 
 		timerLabelWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		timerLabelWrapper.setOpaque(false);
 		timerLabelWrapper.add(timerLabel);
-		timerLabelWrapper.add(rateLabel);
 
 		toolTabs = new JTabbedPane(JTabbedPane.RIGHT);
 		toolTabs.setPreferredSize(new Dimension(250, 500));
@@ -337,7 +300,6 @@ public class ProblemPanel extends JPanel {
 				"SUBMIT", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20);
 
 		submit.getInner().addActionListener(e -> {
-			
 			if (answerField.getInner().getText().equals("")) {
 				JOptionPane.showConfirmDialog(null, "Enter your answer", "X", JOptionPane.DEFAULT_OPTION);
 				return;

@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
 	private SelectPanel subjectPanel;
 	private DifficultyPanel difficultyPanel;
 	private ProblemPanel problemPanel;
+	private TestPanel testPanel;
 	private ResultPanel resultPanel;
 
 	public MainFrame() {
@@ -26,8 +27,8 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
-		bg = new BackgroundPanel();
-		bg.setLayout(new BorderLayout());
+		//bg = new BackgroundPanel();
+		//bg.setLayout(new BorderLayout());
 
 		Container c = getContentPane();
 
@@ -40,10 +41,11 @@ public class MainFrame extends JFrame {
 		subjectPanel = null;
 		difficultyPanel = null;
 		problemPanel = null;
+		testPanel = null;
 		resultPanel = null;
 
-		bg.add(mainPanel, BorderLayout.CENTER);
-		setContentPane(bg);
+		c.add(mainPanel, BorderLayout.CENTER);
+		//setContentPane(bg);
 
 		File file = new File("resources/data/stats.txt");
 		try {
@@ -106,19 +108,34 @@ public class MainFrame extends JFrame {
 		cardLayout.show(mainPanel, "problem");
 
 	}
+	
+	public void showTest(String elective) {
 
-	public void showResult(Problem[] problems) {
+		testPanel = new TestPanel(this, elective);
+
+		mainPanel.add(testPanel, "test");
+		cardLayout.show(mainPanel, "test");
+
+	}
+
+	public void showResult(Problem[] problems, String what) {
 
 		if (resultPanel != null) {
 			mainPanel.remove(resultPanel);
 		}
-
-		resultPanel = new ResultPanel(this, problems);
+		
+		resultPanel = new ResultPanel(this, problems, what);
 
 		mainPanel.add(resultPanel, "result");
 		cardLayout.show(mainPanel, "result");
-
-		mainPanel.remove(problemPanel);
+		
+		if (testPanel != null) {
+			mainPanel.remove(testPanel);
+		}
+		
+		if (problemPanel != null) {
+			mainPanel.remove(problemPanel);
+		}
 	}
 
 }
