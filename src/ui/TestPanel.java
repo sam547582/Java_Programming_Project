@@ -143,7 +143,7 @@ public class TestPanel extends JPanel {
 
 	private void updateProblemContent() {
 		img = ImageUtils.getImage(problems, now_number);
-		img = ImageUtils.removeBackground(img, center.getBackground(), 240);
+		img = ImageUtils.removeBackground(img, center.getBackground(), 200);
 		img = ImageUtils.scaleImage(img, 500);
 
 		timerLabel.setForeground(ColorUtils.getContrastColor(center.getBackground()));

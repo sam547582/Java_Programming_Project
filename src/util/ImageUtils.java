@@ -112,7 +112,7 @@ public class ImageUtils {
                 } 
                 else {
                 	if(newColor == Color.BLACK) {
-                		if(brightness >= 240) {
+                		if(brightness >= 200) {
                 			out.setRGB(x, y, newRGB);
                 		}
                 		else {
@@ -120,7 +120,7 @@ public class ImageUtils {
                 		}
                 	}
                 	else if(newColor == Color.WHITE) {
-                		if(brightness <= 20) {
+                		if(brightness <= 30) {
                 			out.setRGB(x, y, newRGB);
                 		}
                 		else {
