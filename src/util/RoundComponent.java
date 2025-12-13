@@ -11,6 +11,9 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 	private Color borderColor;
 	private Color bgColor;
 	private Color fontColor;
+	private Color hoverBgColor;
+	private Color hoverFontColor;
+	
 	private String text;
 	private Font font;
 	private int radius;
@@ -28,10 +31,12 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		this.borderColor = borderColor;
 		this.bgColor = bgColor;
 		this.fontColor = fontColor;
+		hoverBgColor = ColorUtils.getShadowColor(bgColor);
+		hoverFontColor = ColorUtils.getShadowColor(fontColor);
 		this.text = text;
 		this.font = font;
 		this.radius = radius;
-
+		
 		setPreferredSize(d);
 		setMaximumSize(d);
 		setMinimumSize(d);
@@ -59,6 +64,8 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		this.borderColor = borderColor;
 		this.bgColor = bgColor;
 		this.fontColor = fontColor;
+		hoverBgColor = ColorUtils.getShadowColor(bgColor);
+		hoverFontColor = ColorUtils.getShadowColor(fontColor);
 		this.text = text;
 		this.font = font;
 		this.radius = radius;
@@ -80,6 +87,7 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 
 		this.borderColor = borderColor;
 		this.bgColor = bgColor;
+		hoverBgColor = ColorUtils.getShadowColor(bgColor);
 		this.radius = radius;
 
 		setPreferredSize(d);
@@ -107,6 +115,7 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 
 		this.borderColor = borderColor;
 		this.bgColor = bgColor;
+		hoverBgColor = ColorUtils.getShadowColor(bgColor);
 		this.radius = radius;
 
 		createInner();
@@ -131,6 +140,16 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 
 	public void setBackground(Color color) {
 		bgColor = color;
+		repaint();
+	}
+	
+	public void setHoverBackground(Color color) {
+		hoverBgColor = color;
+		repaint();
+	}
+	
+	public void setHoverForeground(Color color) {
+		hoverFontColor = color;
 		repaint();
 	}
 
@@ -194,8 +213,8 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		if (hover) {
-			g2.setColor(ColorUtils.getShadowColor(bgColor));
-			inner.setForeground(ColorUtils.getShadowColor(fontColor));
+			g2.setColor(hoverBgColor);
+			inner.setForeground(hoverFontColor);
 			g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
 		} else {
 			g2.setColor(bgColor);
