@@ -52,7 +52,7 @@ public class MainMenuPanel extends JPanel {
 
 		refreshStats();
 
-		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 550),
+		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 575),
 				new Color(0, 0, 0, 0), new Color(0, 0, 0, 140), 20);
 		leftMenu.getInner().setLayout(new BoxLayout(leftMenu.getInner(), BoxLayout.Y_AXIS));
 
@@ -172,7 +172,7 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	private void createChartPanel() {
-		rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 300), new Color(0, 0, 0, 0),
+		rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 400), new Color(0, 0, 0, 0),
 				new Color(0, 0, 0, 140), 20);
 		rightBottom.getInner().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();

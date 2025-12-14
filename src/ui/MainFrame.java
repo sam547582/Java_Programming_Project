@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
 
 	public MainFrame() {
 		setTitle("KICE MATH TRAINING");
-		setSize(900, 600);
+		setSize(900, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
