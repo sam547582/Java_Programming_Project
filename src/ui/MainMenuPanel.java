@@ -24,6 +24,7 @@ public class MainMenuPanel extends JPanel {
 	private JPanel rightWrapper;
 
 	private RoundComponent<JPanel> rightTop;
+	private RoundComponent<JPanel> rightBottom;
 
 	public MainMenuPanel(MainFrame frame) {
 		this.frame = frame;
@@ -110,8 +111,7 @@ public class MainMenuPanel extends JPanel {
 
 		rightWrapper.add(rightTop, gbcR);
 
-		RoundComponent<JPanel> rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 300),
-				new Color(0, 0, 0, 0), new Color(0, 0, 0, 140), 20);
+		createChartPanel();
 
 		gbcR.gridy = 1;
 		rightWrapper.add(rightBottom, gbcR);
@@ -161,7 +161,7 @@ public class MainMenuPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 1;
 		c.anchor = GridBagConstraints.WEST;
-		
+
 		rightTop.getInner().add(played, c);
 		c.gridy = 2;
 		rightTop.getInner().add(accuracy, c);
@@ -169,6 +169,31 @@ public class MainMenuPanel extends JPanel {
 		rightTop.getInner().add(correct, c);
 		c.gridy = 4;
 		rightTop.getInner().add(wrong, c);
+	}
+
+	private void createChartPanel() {
+		rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 300), new Color(0, 0, 0, 0),
+				new Color(0, 0, 0, 140), 20);
+		rightBottom.getInner().setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.CENTER;
+
+		JLabel label = new JLabel("TEST");
+		label.setFont(new Font("Arial", Font.BOLD, 30));
+		label.setForeground(Color.WHITE);
+
+		LineChartPanel chart = new LineChartPanel();
+
+		rightBottom.getInner().add(label, c);
+		c.gridx = 0;
+		c.gridy = 1;
+
+		rightBottom.getInner().add(chart, c);
 	}
 
 	private void refreshStats() {
