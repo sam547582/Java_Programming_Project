@@ -21,13 +21,17 @@ public class MainMenuPanel extends JPanel {
 	private JLabel correct;
 	private JLabel wrong;
 
+	private JPanel rightWrapper;
+
+	private RoundComponent<JPanel> rightTop;
+
 	public MainMenuPanel(MainFrame frame) {
 		this.frame = frame;
 
 		setLayout(new BorderLayout());
 		setOpaque(true);
 
-		setBackground(Color.DARK_GRAY);
+		setBackground(new Color(45, 50, 58));
 
 		ProblemStatsManager.syncStats();
 		TestStatsManager.syncStats();
@@ -56,17 +60,17 @@ public class MainMenuPanel extends JPanel {
 		JPanel westWrapper = new JPanel(new GridBagLayout());
 		westWrapper.setOpaque(false);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTH;
-		gbc.weighty = 1.0;
-		westWrapper.add(leftMenu,gbc);
+		GridBagConstraints gbcL = new GridBagConstraints();
+		gbcL.anchor = GridBagConstraints.NORTH;
+		gbcL.weighty = 1.0;
+		westWrapper.add(leftMenu, gbcL);
 
 		JLabel title = new JLabel("KICE MATH TRAINING", SwingConstants.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD, 35));
 		title.setForeground(Color.WHITE);
 
 		MenuLabel start = new MenuLabel("Training");
-		start.setForeground(new Color(60, 150, 210));
+		start.setHoverColor(new Color(60, 150, 210));
 
 		start.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
@@ -79,7 +83,7 @@ public class MainMenuPanel extends JPanel {
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
 
 		MenuLabel test = new MenuLabel("Test");
-		test.setForeground(new Color(190, 45, 60));
+		test.setHoverColor(new Color(190, 45, 60));
 		test.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -93,18 +97,28 @@ public class MainMenuPanel extends JPanel {
 		leftMenu.getInner().add(wrapLabel(new MenuLabel("Settings")));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
 
-		JPanel right = new JPanel();
-		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.setOpaque(false);
-		right.add(Box.createVerticalStrut(60));
-		right.add(played);
-		right.add(accuracy);
-		right.add(correct);
-		right.add(wrong);
+		rightWrapper = new JPanel(new GridBagLayout());
+		rightWrapper.setOpaque(false);
+
+		GridBagConstraints gbcR = new GridBagConstraints();
+		gbcR.gridx = 0;
+		gbcR.gridy = 0;
+		gbcR.anchor = GridBagConstraints.NORTH;
+		gbcR.weighty = 1.0;
+
+		createStatisticsPanel();
+
+		rightWrapper.add(rightTop, gbcR);
+
+		RoundComponent<JPanel> rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 300),
+				new Color(0, 0, 0, 0), new Color(0, 0, 0, 140), 20);
+
+		gbcR.gridy = 1;
+		rightWrapper.add(rightBottom, gbcR);
 
 		add(title, BorderLayout.NORTH);
 		add(westWrapper, BorderLayout.WEST);
-		add(right, BorderLayout.EAST);
+		add(rightWrapper, BorderLayout.EAST);
 
 		JPanel emptyRight = new JPanel();
 		emptyRight.setOpaque(false);
@@ -125,6 +139,36 @@ public class MainMenuPanel extends JPanel {
 		panel.add(label);
 
 		return panel;
+	}
+
+	private void createStatisticsPanel() {
+		rightTop = new RoundComponent<>(JPanel.class, new Dimension(450, 150), new Color(0, 0, 0, 0),
+				new Color(0, 0, 0, 140), 20);
+		rightTop.getInner().setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.CENTER;
+
+		JLabel label = new JLabel("Statistics");
+		label.setFont(new Font("Arial", Font.BOLD, 30));
+		label.setForeground(Color.WHITE);
+
+		rightTop.getInner().add(label, c);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.WEST;
+		
+		rightTop.getInner().add(played, c);
+		c.gridy = 2;
+		rightTop.getInner().add(accuracy, c);
+		c.gridy = 3;
+		rightTop.getInner().add(correct, c);
+		c.gridy = 4;
+		rightTop.getInner().add(wrong, c);
 	}
 
 	private void refreshStats() {

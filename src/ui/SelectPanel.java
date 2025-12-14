@@ -23,24 +23,27 @@ public class SelectPanel extends JPanel {
 
 		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		titlePanel.setOpaque(false);
-		JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 15));
+		JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
 		backPanel.setOpaque(false);
 
 		JLabel title = new JLabel("Select Subject");
 		title.setFont(new Font("Arial", Font.BOLD, 45));
-		title.setForeground(Color.WHITE);
+		title.setForeground(new Color(235, 238, 245));
 
 		titlePanel.add(title);
 
-		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), Color.BLACK,
-				new Color(255, 150, 138, 0), "BACK", new Color(152, 255, 153), new Font("Arial", Font.BOLD, 25), 20);
+		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30),
+				new Color(0, 0, 0, 0), new Color(55, 65, 85), "BACK", new Color(235, 240, 245),
+				new Font("Arial", Font.BOLD, 25), 20);
 		back.getInner().addActionListener(e -> frame.showPanel("menu"));
-
+		back.setHoverBackground(new Color(75, 90, 120));
+		back.setHoverForeground(new Color(245, 248, 252));
+		
 		backPanel.add(back);
 
 		wrapper.add(titlePanel, BorderLayout.CENTER);
 		wrapper.add(backPanel, BorderLayout.WEST);
-		wrapper.add(Box.createRigidArea(new Dimension(back.getPreferredSize())), BorderLayout.EAST);
+		wrapper.add(Box.createRigidArea(new Dimension(backPanel.getPreferredSize())), BorderLayout.EAST);
 
 		add(wrapper, BorderLayout.NORTH);
 

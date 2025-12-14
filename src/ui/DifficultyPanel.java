@@ -10,13 +10,13 @@ public class DifficultyPanel extends JPanel {
 
 	private MainFrame frame;
 	private String subject;
-	
-	public DifficultyPanel(MainFrame frame,String subject) {
+
+	public DifficultyPanel(MainFrame frame, String subject) {
 		this.frame = frame;
 		this.subject = subject;
-		
+
 		setLayout(new BorderLayout());
-		//setBackground(new Color(143,202,202,100));
+		setBackground(new Color(28, 28, 30));
 		setOpaque(true);
 
 		JPanel wrapper = new JPanel();
@@ -25,66 +25,84 @@ public class DifficultyPanel extends JPanel {
 
 		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		titlePanel.setOpaque(false);
-		JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,15));
+		JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
 		backPanel.setOpaque(false);
-        
+
 		JLabel title = new JLabel("Select Difficulty");
 		title.setFont(new Font("Arial", Font.BOLD, 45));
-		title.setForeground(Color.WHITE);
+		title.setForeground(new Color(200, 210, 220));
 
 		titlePanel.add(title);
 
-		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30), Color.BLACK, new Color(255,150,138,0), "BACK",
-				new Color(152,255,153), new Font("Arial", Font.BOLD, 25), 20);
+		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30),
+				new Color(0, 0, 0, 0), new Color(60, 70, 78), "BACK", new Color(220, 225, 230),
+				new Font("Arial", Font.BOLD, 25), 20);
 		back.getInner().addActionListener(e -> frame.showSubject());
-
+		back.setHoverBackground(new Color(75, 90, 120));
+		back.setHoverForeground(new Color(245, 248, 252));
 		backPanel.add(back);
 
-		wrapper.add(titlePanel,BorderLayout.CENTER);
-		wrapper.add(backPanel,BorderLayout.WEST);
-		wrapper.add(Box.createRigidArea(new Dimension(back.getPreferredSize())),BorderLayout.EAST);
-		
+		wrapper.add(titlePanel, BorderLayout.CENTER);
+		wrapper.add(backPanel, BorderLayout.WEST);
+		wrapper.add(Box.createRigidArea(new Dimension(backPanel.getPreferredSize())), BorderLayout.EAST);
+
 		add(wrapper, BorderLayout.NORTH);
 
-		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, Color.BLACK, new Color(0,0,0,0), 20);
+		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0),
+				new Color(240, 242, 245), 20);
 		center.getInner().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		RoundComponent<JButton> easy = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138), "EASY",
-				new Color(152,255,153), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> easy = new RoundComponent<>(JButton.class, new Dimension(250, 70),
+				new Color(0, 0, 0, 0), new Color(230, 240, 233), "EASY", new Color(46, 94, 78),
+				new Font("Arial", Font.BOLD, 35), 20);
 		easy.getInner().addActionListener(e -> showCountdownDialog("easy"));
+		easy.setHoverBackground(new Color(86, 168, 128));
+		easy.setHoverForeground(new Color(245, 248, 246));
 
-		RoundComponent<JButton> normal = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138),
-				"NORMAL", new Color(85,203,205), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> normal = new RoundComponent<>(JButton.class, new Dimension(250, 70),
+				new Color(0, 0, 0, 0), new Color(232, 237, 245), "NORMAL", new Color(42, 63, 96),
+				new Font("Arial", Font.BOLD, 35), 20);
 		normal.getInner().addActionListener(e -> showCountdownDialog("normal"));
+		normal.setHoverBackground(new Color(90, 130, 200));
+		normal.setHoverForeground(new Color(245, 247, 250));
 
-		RoundComponent<JButton> hard = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138), "HARD",
-				new Color(246,234,194), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> hard = new RoundComponent<>(JButton.class, new Dimension(250, 70),
+				new Color(0, 0, 0, 0), new Color(245, 240, 230), "HARD", new Color(110, 82, 50),
+				new Font("Arial", Font.BOLD, 35), 20);
 		hard.getInner().addActionListener(e -> showCountdownDialog("hard"));
+		hard.setHoverBackground(new Color(180, 130, 80));
+		hard.setHoverForeground(new Color(255, 250, 240));
 
-		RoundComponent<JButton> extreme = new RoundComponent<>(JButton.class, new Dimension(250, 70), Color.BLACK, new Color(255,150,138),
-				"KILLER", new Color(255,15,13), new Font("Arial", Font.BOLD, 35), 20);
+		RoundComponent<JButton> extreme = new RoundComponent<>(JButton.class, new Dimension(250, 70),
+				new Color(0, 0, 0, 0), new Color(245, 235, 235), "KILLER", new Color(120, 30, 40),
+				new Font("Arial", Font.BOLD, 35), 20);
 		extreme.getInner().addActionListener(e -> showCountdownDialog("extreme"));
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.insets = new Insets(30,30,30,30);
-		
-		center.getInner().add(easy,c);
-		
-		c.gridx = 1;
-		c.gridy = 0;
-		center.getInner().add(normal,c);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		center.getInner().add(hard,c);
-		
-		c.gridx = 1;
-		c.gridy = 1;
-		center.getInner().add(extreme,c);
+		extreme.setHoverBackground(new Color(180, 50, 60));
+		extreme.setHoverForeground(new Color(255, 240, 240));
 
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(30, 30, 30, 30);
+
+		center.getInner().add(easy, c);
+
+		c.gridx = 1;
+		c.gridy = 0;
+		center.getInner().add(normal, c);
+
+		c.gridx = 0;
+		c.gridy = 1;
+		center.getInner().add(hard, c);
+
+		c.gridx = 1;
+		c.gridy = 1;
+		center.getInner().add(extreme, c);
+
+		add(Box.createRigidArea(new Dimension(100, 100)), BorderLayout.EAST);
+		add(Box.createRigidArea(new Dimension(100, 100)), BorderLayout.WEST);
+		add(Box.createRigidArea(new Dimension(100, 70)), BorderLayout.SOUTH);
 		add(center, BorderLayout.CENTER);
 	}
 

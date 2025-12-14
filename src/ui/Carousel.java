@@ -164,7 +164,7 @@ public class Carousel extends JPanel {
 		animTargetX = targetX;
 		animStartTime = System.currentTimeMillis();
 
-		animTimer = new Timer(16, e -> { // 약 60 FPS(1000ms/16 = 60fps)
+		animTimer = new Timer(5, e -> { 
 			long elapsed = System.currentTimeMillis() - animStartTime;
 			float t = Math.min(1f, (float) elapsed / ANIM_DURATION);
 

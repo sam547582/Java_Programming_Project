@@ -11,14 +11,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ResultPanel extends JPanel {
-	
+
 	private MainFrame frame;
-	
+
 	private Problem[] problems;
 
 	private JPanel top;
 	private JPanel topLeftWrapper;
 	private JPanel topRightWrapper;
+	private JPanel topBottomWrapper;
 
 	private JPanel center;
 
@@ -26,11 +27,12 @@ public class ResultPanel extends JPanel {
 
 	private JPanel bottom;
 
-	private MenuLabel menu;
+	private JLabel menu;
 
 	private JLabel resultLabel;
 	private JLabel correctLabel;
 	private JLabel wrongLabel;
+	private JLabel scoreLabel;
 	private JLabel[] ox;
 
 	private String what;
@@ -49,11 +51,10 @@ public class ResultPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 		setBackground(Color.GRAY);
-		
-		if(what.equals("test")) {
-			frame.setSize(1200, 800);
-		}
-		else if(what.equals("problem")) {
+
+		if (what.equals("test")) {
+			frame.setSize(1200, 850);
+		} else if (what.equals("problem")) {
 			frame.setSize(1000, 550);
 		}
 
@@ -61,19 +62,34 @@ public class ResultPanel extends JPanel {
 		StatsManager.updateStats(correct, wrong);
 
 		resultLabel = new JLabel("RESULT");
-		resultLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 60));
+		resultLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 50));
 		resultLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
 		Dimension d = resultLabel.getPreferredSize();
 		resultLabel.setPreferredSize(new Dimension(d.width + 10, d.height));
 
-		menu = new MenuLabel("MENU");
-		menu.setFont(new Font("Arial", Font.BOLD, 30));
+		menu = new JLabel("MENU");
+		menu.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 50));
 		menu.setForeground(ColorUtils.getContrastColor(getBackground()));
+		d = menu.getPreferredSize();
+		menu.setPreferredSize(new Dimension(d.width + 10, d.height));
 		menu.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
+				frame.setLocationRelativeTo(null);
 				frame.showPanel("menu");
 				frame.setSize(900, 600);
+			}
+
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent e) {
+				menu.setForeground(Color.BLACK);
+				menu.repaint();
+			}
+
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent e) {
+				menu.setForeground(Color.WHITE);
+				menu.repaint();
 			}
 		});
 
@@ -86,7 +102,16 @@ public class ResultPanel extends JPanel {
 		wrongLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		wrongLabel.setForeground(ColorUtils.getContrastColor(getBackground()));
 		wrongLabel.setVisible(false);
-		
+
+		JLabel label = new JLabel("SCORE");
+		label.setFont(new Font("Arial", Font.BOLD, 50));
+		label.setForeground(Color.WHITE);
+
+		scoreLabel = new JLabel(String.valueOf(TestStatsManager.getScore(TestManager.getSelectedName())));
+		scoreLabel.setFont(new Font("Arial", Font.BOLD, 50));
+		scoreLabel.setForeground(Color.GREEN);
+		scoreLabel.setVisible(false);
+
 		topLeftWrapper = new JPanel(new FlowLayout());
 		topLeftWrapper.setOpaque(false);
 		topLeftWrapper.add(resultLabel);
@@ -95,11 +120,19 @@ public class ResultPanel extends JPanel {
 		topRightWrapper.setOpaque(false);
 		topRightWrapper.add(menu);
 
+		topBottomWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+		topBottomWrapper.setOpaque(false);
+		if (what.equals("test")) {
+			topBottomWrapper.add(label);
+			topBottomWrapper.add(scoreLabel);
+		}
+
 		top = new JPanel(new BorderLayout());
 		top.setOpaque(false);
-		top.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+		top.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		top.add(topLeftWrapper, BorderLayout.WEST);
 		top.add(topRightWrapper, BorderLayout.EAST);
+		top.add(topBottomWrapper, BorderLayout.SOUTH);
 
 		center = new JPanel(new GridBagLayout());
 		center.setOpaque(false);
@@ -138,7 +171,7 @@ public class ResultPanel extends JPanel {
 				sepC.weighty = 0;
 				sepC.fill = GridBagConstraints.NONE;
 
-				center.add(createVerticalSeparator(table.getPreferredSize().height + 30), sepC);
+				center.add(createVerticalSeparator(table.getPreferredSize().height + 15), sepC);
 			}
 		}
 
@@ -146,17 +179,18 @@ public class ResultPanel extends JPanel {
 
 		bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
 		bottom.setOpaque(false);
-		bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-		bottom.setPreferredSize(new Dimension(300,80));
-		bottom.setMaximumSize(new Dimension(300,80));
-		bottom.setMinimumSize(new Dimension(300,80));
+		bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+		bottom.setPreferredSize(new Dimension(300, 80));
+		bottom.setMaximumSize(new Dimension(300, 80));
+		bottom.setMinimumSize(new Dimension(300, 80));
 		bottom.add(correctLabel);
 		bottom.add(wrongLabel);
 
 		add(top, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
 		add(bottom, BorderLayout.SOUTH);
-
+		
+		frame.setLocationRelativeTo(null);
 		SwingUtilities.invokeLater(() -> startRowAnimation());
 	}
 
@@ -175,6 +209,7 @@ public class ResultPanel extends JPanel {
 			} else {
 				correctLabel.setVisible(true);
 				wrongLabel.setVisible(true);
+				scoreLabel.setVisible(true);
 				((Timer) e.getSource()).stop();
 			}
 		});
@@ -253,7 +288,7 @@ public class ResultPanel extends JPanel {
 				addSeparator(rowPanel, 0, 5, c);
 
 				addRowCell(rowPanel, " ", 0, 6, 0.2, c);
-				
+
 				wrapper.add(rowPanel, BorderLayout.CENTER);
 
 				rowPanels.add(rowPanel);
