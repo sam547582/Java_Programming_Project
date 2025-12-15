@@ -2,6 +2,8 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import util.*;
 
 public class SettingPanel extends JPanel {
@@ -22,14 +24,41 @@ public class SettingPanel extends JPanel {
 
 		add(scrollPane, BorderLayout.CENTER);
 		
-		int row = 0;
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		gbc.insets = new Insets(10, 15, 10, 15);
+		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1;
-		gbc.gridy = row;
+		gbc.gridy = 0;
 		
 		panel.add(createRow("name"),gbc);
+		
+		List<RoundComponent<JButton>> btnElective = new ArrayList<>();
+		List<RoundComponent<JButton>> btnGrade = new ArrayList<>();
+		
+		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(200, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"Prob & Stats", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnElective.add( new RoundComponent<>(JButton.class, new Dimension(200, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"Calculus", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(200, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"Geometry", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"1", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"2", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"3", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"4", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), Color.BLACK,
+				"5", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20));
+		
+		gbc.gridy = 1;
+		panel.add(createRow("elective",btnElective),gbc);
+		
+		gbc.gridy = 2;
+		panel.add(createRow("TargetGrade",btnGrade),gbc);
 	}
 
 	private RoundComponent<JPanel> createRow(String label) {
@@ -44,7 +73,7 @@ public class SettingPanel extends JPanel {
 		
 	    
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 40, 10, 40);
+		gbc.insets = new Insets(10, 30, 10, 30);
 
 		gbc.gridx = 0;
 		gbc.weightx = 0;
@@ -53,6 +82,38 @@ public class SettingPanel extends JPanel {
 		gbc.gridx = 1;
 		gbc.weightx = 0;
 		wrapper.add(field, gbc);
+		
+		rowPanel.add(wrapper,BorderLayout.CENTER);
+
+		return rowPanel;
+	}
+	
+	private RoundComponent<JPanel> createRow(String label, List<RoundComponent<JButton>> button) {
+		RoundComponent<JPanel> rowPanel = new RoundComponent<>(JPanel.class,new Color(0, 0, 0, 0),
+				new Color(0, 0, 0, 180), 30);
+		rowPanel.setLayout(new BorderLayout());
+		
+		JPanel wrapper = new JPanel(new GridBagLayout());
+		wrapper.setOpaque(false);
+		
+	    
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 30, 10, 10);
+
+		gbc.gridx = 0;
+		gbc.weightx = 0;
+		wrapper.add(createLabel(label), gbc);
+		
+		int row = 1;
+		gbc.insets = new Insets(10, 10, 10, 10);
+		for (RoundComponent<JButton> btn : button) {
+			if(row == button.size()) gbc.insets = new Insets(10, 10, 10, 30);
+			gbc.gridx = row;
+			gbc.weightx = 0;
+			wrapper.add(btn, gbc);
+			row++;
+		}
+		
 		
 		rowPanel.add(wrapper,BorderLayout.CENTER);
 		
