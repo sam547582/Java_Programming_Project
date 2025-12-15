@@ -11,7 +11,7 @@ public class LineChartPanel extends JPanel {
 	private List<Integer> scores;
 
 	public LineChartPanel() {
-		this.scores = List.of(10, 63);
+		this.scores = StatsManager.getScore();
 		setBackground(new Color(0, 0, 0, 0));
 		setPreferredSize(new Dimension(400, 350));
 	}
@@ -25,15 +25,15 @@ public class LineChartPanel extends JPanel {
 		int bottom = h - p;
 
 		FontMetrics fm = g2.getFontMetrics();
-		
+
 		int labelCenterX = p - 20;
 		// Y축
 		g2.setColor(Color.GRAY);
-		//g2.drawLine(p, p, p, bottom);
+		// g2.drawLine(p, p, p, bottom);
 
 		g2.setStroke(new BasicStroke(0.5f));
 
-		g2.setColor(new Color(180, 180, 180));
+		g2.setColor(new Color(180, 180, 180, 100));
 
 		// 10점 단위 가로 점선
 		for (int score = 0; score <= 100; score += 10) {
@@ -41,20 +41,20 @@ public class LineChartPanel extends JPanel {
 			g2.drawLine(p, y, w - p, y);
 
 			// 점수 라벨
-			g2.setColor(Color.LIGHT_GRAY);
+			g2.setColor(new Color(180, 180, 180, 150));
 			g2.setFont(new Font("Arial", Font.BOLD, 15));
-			
+
 			int textWidth = fm.stringWidth(String.valueOf(score));
 			int x = labelCenterX - textWidth / 2;
 			int yText = y + fm.getAscent() / 2 - 2;
 			g2.drawString(String.valueOf(score), x, yText);
-			
-			g2.setColor(new Color(180, 180, 180));
+
+			g2.setColor(new Color(180, 180, 180, 100));
 		}
 	}
 
 	private void drawLine(Graphics2D g2) {
-		if (scores.size() < 2)
+		if (scores.isEmpty())
 			return;
 
 		int p = 30;
@@ -69,6 +69,22 @@ public class LineChartPanel extends JPanel {
 		g2.setColor(new Color(90, 160, 220));
 		g2.setStroke(new BasicStroke(2.5f));
 
+		if (scores.size() == 1) {
+			int x = p;
+			int y = h - p - (chartH * scores.get(0)) / maxScore;
+
+			g2.setColor(new Color(90, 160, 220));
+			g2.fillOval(x - 3, y - 3, 6, 6);
+
+			g2.setColor(new Color(230, 230, 230));
+			if(scores.get(0) == 0) 
+				g2.drawString(String.valueOf(scores.get(0)), x - 5, y - 10);
+			else
+				g2.drawString(String.valueOf(scores.get(0)), x - 10, y - 10);
+			
+			return;
+		}
+		
 		for (int i = 0; i < scores.size() - 1; i++) {
 			int x1 = p + (chartW * i) / (scores.size() - 1);
 			int y1 = h - p - (chartH * scores.get(i)) / maxScore;
@@ -76,21 +92,31 @@ public class LineChartPanel extends JPanel {
 			int x2 = p + (chartW * (i + 1)) / (scores.size() - 1);
 			int y2 = h - p - (chartH * scores.get(i + 1)) / maxScore;
 
+			g2.setColor(new Color(90, 160, 220));
 			g2.drawLine(x1, y1, x2, y2);
 
 			// 점 찍기
 			g2.fillOval(x1 - 3, y1 - 3, 6, 6);
 
 			g2.setFont(new Font("Arial", Font.BOLD, 15));
-			g2.setColor(new Color(230, 230, 230)); // 완전 흰색 X
+			g2.setColor(new Color(230, 230, 230));
 
-			g2.drawString(String.valueOf(scores.get(i)), x1 - 10, y1 - 10);
+			if(scores.get(i) == 0) 
+				g2.drawString(String.valueOf(scores.get(i)), x1 - 5, y1 - 10);
+			else
+				g2.drawString(String.valueOf(scores.get(i)), x1 - 10, y1 - 10);
 		}
 
 		int last = scores.size() - 1;
 		int x = p + (chartW * last) / (scores.size() - 1);
 		int y = h - p - (chartH * scores.get(last)) / maxScore;
+		g2.setColor(new Color(90, 160, 220));
 		g2.fillOval(x - 3, y - 3, 6, 6);
+
+		g2.setFont(new Font("Arial", Font.BOLD, 15));
+		g2.setColor(new Color(230, 230, 230));
+
+		g2.drawString(String.valueOf(scores.get(last)), x - 10, y - 10);
 	}
 
 	@Override
