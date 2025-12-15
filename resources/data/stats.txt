@@ -1,6 +1,7 @@
-Name=asdds
-Elective=Calculus
-TargetGrade=1
-totalPlayed=3550
-correct=9
-wrong=3541
+Name asdds
+Elective Calculus
+TargetGrade 1
+totalPlayed 3610
+correct 11
+wrong 3599
+score 20 40 60 10 0

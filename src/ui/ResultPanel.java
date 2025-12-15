@@ -436,7 +436,8 @@ public class ResultPanel extends JPanel {
 		if (what.equals("test")) {
 			stats.get(TestManager.getSelectedName())[0]++;
 			stats.get(TestManager.getSelectedName())[1] = score;
-
+			
+			StatsManager.updateScore(score);
 			TestStatsManager.saveTestStats(stats);
 		} else if (what.equals("problem")) {
 			ProblemStatsManager.saveProblemStats(stats);

@@ -285,21 +285,18 @@ public class ProblemPanel extends JPanel {
 		toolTabs.addTab("Memo", memoPanel);
 		toolTabs.addTab("Calc", calcPanel);
 
-		// 기존 UI 묶음 subPanel
 		JPanel subPanel = new JPanel(new BorderLayout());
 		subPanel.setOpaque(false);
 		subPanel.add(problemContentLabel, BorderLayout.WEST);
 		subPanel.add(timerLabelWrapper, BorderLayout.NORTH);
 		subPanel.add(toolTabs, BorderLayout.CENTER);
 
-		// center = overlay 패널
 		center = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0), Color.WHITE, 30);
 		center.getInner().setLayout(new OverlayLayout(center.getInner()));
-		// DrawPanel 생성 + OFF 상태로
+
 		drawPanel = new DrawPanel();
 		drawPanel.setVisible(false);
 
-		// 순서: drawPanel 먼저 → 최상단
 		center.getInner().add(drawPanel);
 		center.getInner().add(subPanel);
 
