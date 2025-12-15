@@ -116,7 +116,10 @@ public class LineChartPanel extends JPanel {
 		g2.setFont(new Font("Arial", Font.BOLD, 15));
 		g2.setColor(new Color(230, 230, 230));
 
-		g2.drawString(String.valueOf(scores.get(last)), x - 10, y - 10);
+		if(scores.get(last) == 0) 
+			g2.drawString(String.valueOf(scores.get(last)), x - 5, y - 10);
+		else
+			g2.drawString(String.valueOf(scores.get(last)), x - 10, y - 10);
 	}
 
 	@Override

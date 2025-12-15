@@ -94,8 +94,15 @@ public class MainMenuPanel extends JPanel {
 
 		leftMenu.getInner().add(wrapLabel(test));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
-
-		leftMenu.getInner().add(wrapLabel(new MenuLabel("Settings")));
+		
+		MenuLabel setting = new MenuLabel("Settings");
+		setting.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				frame.showPanel("setting");
+			}
+		});
+		leftMenu.getInner().add(wrapLabel(setting));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
 
 		rightWrapper = new JPanel(new GridBagLayout());

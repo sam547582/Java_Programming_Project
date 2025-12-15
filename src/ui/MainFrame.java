@@ -15,6 +15,7 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel;
 	private JPanel startPanel;
 	private MainMenuPanel menuPanel;
+	private SettingPanel settingPanel;
 	private SelectPanel subjectPanel;
 	private DifficultyPanel difficultyPanel;
 	private ProblemPanel problemPanel;
@@ -38,6 +39,7 @@ public class MainFrame extends JFrame {
 
 		startPanel = new StartPanel(this);
 		menuPanel = null;
+		settingPanel = new SettingPanel(this);
 		subjectPanel = null;
 		difficultyPanel = null;
 		problemPanel = null;
@@ -58,7 +60,8 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		mainPanel.add(settingPanel, "setting");
 		setVisible(true);
 	}
 
