@@ -1,6 +1,6 @@
-Name asdds
+Name Song Jong Heon
 Elective Calculus
-TargetGrade 1
+TargetGrade 3
 totalPlayed 3610
 correct 11
 wrong 3599

@@ -41,6 +41,10 @@ public class StatsManager {
 					switch (key) {
 					case "Name":
 						name = val;
+						for (int i = 2; i < parts.length; i++) {
+							name += " ";
+							name += (parts[i].trim());
+						}
 						break;
 					case "Elective":
 						elective = val;

@@ -143,6 +143,11 @@ public class RoundComponent<T extends JComponent> extends JComponent {
 		repaint();
 	}
 	
+	public void setForeground(Color color) {
+		fontColor = color;
+		repaint();
+	}
+	
 	public void setHoverBackground(Color color) {
 		hoverBgColor = color;
 		repaint();
