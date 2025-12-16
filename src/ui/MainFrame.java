@@ -1,8 +1,10 @@
 package ui;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import model.*;
 
@@ -28,10 +30,9 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
-		//bg = new BackgroundPanel();
-		//bg.setLayout(new BorderLayout());
-
-		Container c = getContentPane();
+		bg = new BackgroundPanel();
+		bg.setLayout(new BorderLayout());
+		setContentPane(bg);
 
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
@@ -46,8 +47,7 @@ public class MainFrame extends JFrame {
 		testPanel = null;
 		resultPanel = null;
 
-		c.add(mainPanel, BorderLayout.CENTER);
-		//setContentPane(bg);
+		bg.add(mainPanel, BorderLayout.CENTER);
 
 		File file = new File("resources/data/stats.txt");
 		try {
@@ -60,11 +60,15 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		mainPanel.add(settingPanel, "setting");
 		setVisible(true);
 	}
-
+	
+	public void setBackgroundImage(String path) {
+		bg.setImage(path);
+	}
+	
 	public void showPanel(String name) {
 		cardLayout.show(mainPanel, name);
 	}
@@ -85,7 +89,7 @@ public class MainFrame extends JFrame {
 		if (subjectPanel != null) {
 			mainPanel.remove(subjectPanel);
 		}
-		
+
 		subjectPanel = new SelectPanel(this);
 
 		mainPanel.add(subjectPanel, "subject");
@@ -103,7 +107,7 @@ public class MainFrame extends JFrame {
 		cardLayout.show(mainPanel, "difficulty");
 	}
 
-	public void showProblem(String difficulty,String subject) {
+	public void showProblem(String difficulty, String subject) {
 
 		problemPanel = new ProblemPanel(this, difficulty, subject);
 
@@ -111,7 +115,7 @@ public class MainFrame extends JFrame {
 		cardLayout.show(mainPanel, "problem");
 
 	}
-	
+
 	public void showTest(String elective) {
 
 		testPanel = new TestPanel(this, elective);
@@ -126,16 +130,16 @@ public class MainFrame extends JFrame {
 		if (resultPanel != null) {
 			mainPanel.remove(resultPanel);
 		}
-		
+
 		resultPanel = new ResultPanel(this, problems, what);
 
 		mainPanel.add(resultPanel, "result");
 		cardLayout.show(mainPanel, "result");
-		
+
 		if (testPanel != null) {
 			mainPanel.remove(testPanel);
 		}
-		
+
 		if (problemPanel != null) {
 			mainPanel.remove(problemPanel);
 		}

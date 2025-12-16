@@ -1,12 +1,20 @@
 package ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import util.*;
 
 public class SettingPanel extends JPanel {
+
+	private BufferedImage selectedBackground;
+
+	private String selectedBackgroundPath;
 
 	private JPanel panel;
 
@@ -16,24 +24,25 @@ public class SettingPanel extends JPanel {
 	private JPanel settingWrapper;
 	private JPanel backWrapper;
 	private JPanel applyWrapper;
-	
+
 	private RoundComponent<JTextField> fieldName;
-	
+
 	private String name;
 	private String elective;
 	private int targetGrade;
 
 	private String[] elecSet;
 	private String[] gradeSet;
+	private String[] path;
 
 	SettingPanel(MainFrame frame) {
 		setLayout(new BorderLayout());
-		setBackground(new Color(30, 34, 40));
-		
+		setBackground(new Color(26, 31, 38));
+
 		name = StatsManager.getName();
 		elective = StatsManager.getElective();
 		targetGrade = StatsManager.getTargetGrade();
-		
+
 		elecSet = new String[] { "Prob&Stats", "Calculus", "Geometry" };
 		gradeSet = new String[] { "1", "2", "3", "4", "5" };
 
@@ -70,13 +79,13 @@ public class SettingPanel extends JPanel {
 		apply.getInner().addActionListener(e -> {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to apply?", "APPLY",
 					JOptionPane.YES_NO_OPTION) == 0) {
-				setApply(); 
+				setApply();
 			}
-		
+
 		});
 		apply.setHoverBackground(new Color(75, 90, 120));
 		apply.setHoverForeground(new Color(245, 248, 252));
-		
+
 		applyWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
 		applyWrapper.setOpaque(false);
 		applyWrapper.add(apply);
@@ -113,23 +122,21 @@ public class SettingPanel extends JPanel {
 				new Color(55, 60, 70), "Calculus", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
 		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(190, 40), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "Geometry", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		
+
 		if (elective.equals("Prob&Stats")) {
 			btnElective.get(0).setBackground(new Color(90, 155, 255));
 			btnElective.get(0).setForeground(Color.WHITE);
 			btnElective.get(0).setHoverBackground(ColorUtils.getShadowColor(new Color(90, 155, 255)));
-		}
-		else if (elective.equals("Calculus")) {
+		} else if (elective.equals("Calculus")) {
 			btnElective.get(1).setBackground(new Color(90, 155, 255));
 			btnElective.get(1).setForeground(Color.WHITE);
 			btnElective.get(1).setHoverBackground(ColorUtils.getShadowColor(new Color(90, 155, 255)));
-		}
-		else {
+		} else {
 			btnElective.get(2).setBackground(new Color(90, 155, 255));
 			btnElective.get(2).setForeground(Color.WHITE);
 			btnElective.get(2).setHoverBackground(ColorUtils.getShadowColor(new Color(90, 155, 255)));
 		}
-		
+
 		for (int i = 0; i < 3; i++) {
 			final int idx = i;
 			btnElective.get(i).getInner().addActionListener(e -> {
@@ -148,21 +155,21 @@ public class SettingPanel extends JPanel {
 			});
 		}
 
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), new Color(55, 60, 70), "1",
-				new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), new Color(55, 60, 70), "2",
-				new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), new Color(55, 60, 70), "3",
-				new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), new Color(55, 60, 70), "4",
-				new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0), new Color(55, 60, 70), "5",
-				new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		
-		btnGrade.get(targetGrade-1).setBackground(new Color(90, 155, 255));
-		btnGrade.get(targetGrade-1).setForeground(Color.WHITE);
-		btnGrade.get(targetGrade-1).setHoverBackground(ColorUtils.getShadowColor(new Color(90, 155, 255)));
-		
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+				new Color(55, 60, 70), "1", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+				new Color(55, 60, 70), "2", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+				new Color(55, 60, 70), "3", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+				new Color(55, 60, 70), "4", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+				new Color(55, 60, 70), "5", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
+
+		btnGrade.get(targetGrade - 1).setBackground(new Color(90, 155, 255));
+		btnGrade.get(targetGrade - 1).setForeground(Color.WHITE);
+		btnGrade.get(targetGrade - 1).setHoverBackground(ColorUtils.getShadowColor(new Color(90, 155, 255)));
+
 		for (int i = 0; i < 5; i++) {
 			final int idx = i;
 			btnGrade.get(i).getInner().addActionListener(e -> {
@@ -187,6 +194,23 @@ public class SettingPanel extends JPanel {
 
 		gbc.gridy = 2;
 		panel.add(createRow("TargetGrade", btnGrade), gbc);
+
+		List<BufferedImage> bgImages = new ArrayList<>();
+		path = new String[] { "resources/img/background/grid.png", "resources/img/background/IU.jpg",
+				"resources/img/background/test1.png" };
+
+		try {
+			for (String p : path) {
+				BufferedImage original = ImageIO.read(new File(p));
+
+				bgImages.add(ImageUtils.scaleImage(original, 200));
+			}
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Error" + e.getMessage());
+		}
+
+		gbc.gridy = 3;
+		panel.add(createRow("Select Images", bgImages, frame), gbc);
 	}
 
 	private void setApply() {
@@ -202,8 +226,8 @@ public class SettingPanel extends JPanel {
 
 		JPanel wrapper = new JPanel(new GridBagLayout());
 		wrapper.setOpaque(false);
-		fieldName = new RoundComponent<>(JTextField.class, new Dimension(400, 40),
-				new Color(0, 0, 0, 0), Color.WHITE, "", Color.BLACK, new Font("Arial", Font.PLAIN, 20), 20);
+		fieldName = new RoundComponent<>(JTextField.class, new Dimension(400, 40), new Color(0, 0, 0, 0), Color.WHITE,
+				"", Color.BLACK, new Font("Arial", Font.PLAIN, 20), 20);
 		fieldName.getInner().setText(name);
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -251,6 +275,65 @@ public class SettingPanel extends JPanel {
 		rowPanel.add(wrapper, BorderLayout.CENTER);
 
 		return rowPanel;
+	}
+
+	private RoundComponent<JPanel> createRow(String label, List<BufferedImage> images, MainFrame frame) {
+		RoundComponent<JPanel> rowPanel = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0),
+				new Color(20, 24, 30, 190), 30);
+
+		rowPanel.setLayout(new BorderLayout());
+
+		JPanel wrapper = new JPanel(new GridBagLayout());
+		wrapper.setOpaque(false);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 30, 10, 10);
+
+		gbc.gridx = 0;
+		wrapper.add(createLabel(label), gbc);
+
+		JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+		imagePanel.setOpaque(false);
+
+		List<RoundComponent<JButton>> imageButtons = new ArrayList<>();
+		
+		int cnt = 0;
+		for (BufferedImage img : images) {
+			RoundComponent<JButton> btn = createImageButton(img, frame, imageButtons, cnt);
+			imageButtons.add(btn);
+			imagePanel.add(btn);
+			cnt++;
+		}
+
+		gbc.gridx = 1;
+		wrapper.add(imagePanel, gbc);
+
+		rowPanel.add(wrapper, BorderLayout.CENTER);
+		return rowPanel;
+	}
+
+	private RoundComponent<JButton> createImageButton(BufferedImage img, MainFrame frame,
+			List<RoundComponent<JButton>> buttons, int cnt) {
+		RoundComponent<JButton> btn = new RoundComponent<>(JButton.class, new Dimension(140, 90), new Color(0, 0, 0, 0),
+				new Color(40, 45, 55), "", Color.WHITE, new Font("Arial", Font.PLAIN, 12), 15);
+
+		JButton inner = btn.getInner();
+		inner.setIcon(new ImageIcon(img));
+		inner.setBorderPainted(false);
+		inner.setContentAreaFilled(false);
+		inner.setFocusPainted(false);
+
+		inner.addActionListener(e -> {
+			for (RoundComponent<JButton> b : buttons) {
+				b.setBackground(new Color(40, 45, 55));
+			}
+
+			btn.setBackground(new Color(120, 170, 240));
+
+			frame.setBackgroundImage(path[cnt]);
+		});
+
+		return btn;
 	}
 
 	private JLabel createLabel(String text) {

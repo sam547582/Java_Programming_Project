@@ -25,7 +25,14 @@ public class BackgroundPanel extends JPanel {
         });
         timer.start();
     }
-
+    
+    public void setImage(String path) {
+    	bgPath = path;
+        try {
+            bgImage = ImageIO.read(new File(bgPath));
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
