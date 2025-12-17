@@ -99,7 +99,7 @@ public class StatsManager {
 		fw.write("totalPlayed 0\n");
 		fw.write("correct 0\n");
 		fw.write("wrong 0\n");
-		fw.write("score 0\n");
+		fw.write("score \n");
 		fw.write("TodayDate " + LocalDate.now() + "\n");
 		fw.write("TodayTraining 0\n");
 		fw.close();
