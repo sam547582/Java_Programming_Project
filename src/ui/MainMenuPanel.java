@@ -52,7 +52,7 @@ public class MainMenuPanel extends JPanel {
 
 		refreshStats();
 
-		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 575),
+		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 594),
 				new Color(0, 0, 0, 0), new Color(0, 0, 0, 140), 20);
 		leftMenu.getInner().setLayout(new BoxLayout(leftMenu.getInner(), BoxLayout.Y_AXIS));
 
@@ -104,7 +104,20 @@ public class MainMenuPanel extends JPanel {
 		});
 		leftMenu.getInner().add(wrapLabel(setting));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
-
+		
+		MenuLabel exit = new MenuLabel("Exit");
+		exit.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (JOptionPane.showConfirmDialog(null, "Real Exit?", "EXIT",
+						JOptionPane.YES_NO_OPTION) == 0) {
+					System.exit(0);
+				}
+			}
+		});
+		leftMenu.getInner().add(wrapLabel(exit));
+		leftMenu.getInner().add(Box.createVerticalStrut(20));
+		
 		rightWrapper = new JPanel(new GridBagLayout());
 		rightWrapper.setOpaque(false);
 
@@ -149,7 +162,7 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	private void createStatisticsPanel() {
-		rightTop = new RoundComponent<>(JPanel.class, new Dimension(450, 150), new Color(0, 0, 0, 0),
+		rightTop = new RoundComponent<>(JPanel.class, new Dimension(450, 170), new Color(0, 0, 0, 0),
 				new Color(0, 0, 0, 140), 20);
 		rightTop.getInner().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -157,10 +170,11 @@ public class MainMenuPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 2;
+		c.insets = new Insets(5,10,0,0);
 		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.CENTER;
 
-		JLabel label = new JLabel("Statistics");
+		JLabel label = new JLabel(StatsManager.getName());
 		label.setFont(new Font("Arial", Font.BOLD, 30));
 		label.setForeground(Color.WHITE);
 
@@ -222,13 +236,6 @@ public class MainMenuPanel extends JPanel {
 		revalidate();
 		repaint();
 	}
-
-	/*
-	 * @Override protected void paintComponent(Graphics g) { Graphics2D g2 =
-	 * (Graphics2D) g.create(); GradientPaint gp = new GradientPaint(0, 0, new
-	 * Color(35,45,65), 0, getHeight(), new Color(20,25,40)); g2.setPaint(gp);
-	 * g2.fillRect(0, 0, getWidth(), getHeight()); g2.dispose(); }
-	 */
 
 	private void showCountdownDialog() {
 

@@ -14,8 +14,8 @@ public class StatsManager {
 	private static int totalPlayed = 0;
 	private static int correct = 0;
 	private static int wrong = 0;
-
-	private static List<Integer> score;
+	
+	private static List<Integer> score = new ArrayList<>();
 
 	public static void load() {
 
@@ -41,6 +41,10 @@ public class StatsManager {
 					switch (key) {
 					case "Name":
 						name = val;
+						for (int i = 2; i < parts.length; i++) {
+							name += " ";
+							name += (parts[i].trim());
+						}
 						break;
 					case "Elective":
 						elective = val;
@@ -140,7 +144,7 @@ public class StatsManager {
 
 		save();
 	}
-
+	
 	public static int getTotalPlayed() {
 		return totalPlayed;
 	}

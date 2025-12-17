@@ -77,7 +77,7 @@ public class ResultPanel extends JPanel {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				frame.setLocationRelativeTo(null);
 				frame.showPanel("menu");
-				frame.setSize(900, 600);
+				frame.setSize(900, 700);
 			}
 
 			@Override

@@ -1,19 +1,20 @@
 package ui;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import model.*;
+import util.StatsManager;
 
 public class MainFrame extends JFrame {
-
-	private BackgroundPanel bg;
 
 	private CardLayout cardLayout;
 
 	private JPanel mainPanel;
-	private JPanel startPanel;
+	private StartPanel startPanel;
 	private MainMenuPanel menuPanel;
 	private SettingPanel settingPanel;
 	private SelectPanel subjectPanel;
@@ -27,31 +28,26 @@ public class MainFrame extends JFrame {
 		setSize(900, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-
-		//bg = new BackgroundPanel();
-		//bg.setLayout(new BorderLayout());
-
+		
 		Container c = getContentPane();
-
+		
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		mainPanel.setOpaque(false);
 
-		startPanel = new StartPanel(this);
+		startPanel = null;
 		menuPanel = null;
-		settingPanel = new SettingPanel(this);
+		settingPanel = null;
 		subjectPanel = null;
 		difficultyPanel = null;
 		problemPanel = null;
 		testPanel = null;
 		resultPanel = null;
 
-		c.add(mainPanel, BorderLayout.CENTER);
-		//setContentPane(bg);
-
 		File file = new File("resources/data/stats.txt");
 		try {
 			if (!file.exists()) {
+				startPanel = new StartPanel(this);
 				mainPanel.add(startPanel, "start");
 				cardLayout.show(mainPanel, "start");
 			} else {
@@ -61,8 +57,18 @@ public class MainFrame extends JFrame {
 			e.printStackTrace();
 		}
 		
-		mainPanel.add(settingPanel, "setting");
+		c.add(mainPanel);
+		
 		setVisible(true);
+	}
+
+	public void setCardPanelsOpaque(boolean opaque) {
+		for (Component c : mainPanel.getComponents()) {
+			if (c instanceof JComponent jc) {
+				jc.setOpaque(opaque);
+			}
+		}
+		mainPanel.repaint();
 	}
 
 	public void showPanel(String name) {
@@ -71,8 +77,11 @@ public class MainFrame extends JFrame {
 
 	public void showMenu() {
 		menuPanel = new MainMenuPanel(this);
-
+		settingPanel = new SettingPanel(this);
+		
 		mainPanel.add(menuPanel, "menu");
+		mainPanel.add(settingPanel, "setting");
+		
 		cardLayout.show(mainPanel, "menu");
 
 		if (startPanel != null) {
@@ -103,7 +112,7 @@ public class MainFrame extends JFrame {
 		cardLayout.show(mainPanel, "difficulty");
 	}
 
-	public void showProblem(String difficulty,String subject) {
+	public void showProblem(String difficulty, String subject) {
 
 		problemPanel = new ProblemPanel(this, difficulty, subject);
 
@@ -111,7 +120,7 @@ public class MainFrame extends JFrame {
 		cardLayout.show(mainPanel, "problem");
 
 	}
-	
+
 	public void showTest(String elective) {
 
 		testPanel = new TestPanel(this, elective);
@@ -126,16 +135,16 @@ public class MainFrame extends JFrame {
 		if (resultPanel != null) {
 			mainPanel.remove(resultPanel);
 		}
-		
+
 		resultPanel = new ResultPanel(this, problems, what);
 
 		mainPanel.add(resultPanel, "result");
 		cardLayout.show(mainPanel, "result");
-		
+
 		if (testPanel != null) {
 			mainPanel.remove(testPanel);
 		}
-		
+
 		if (problemPanel != null) {
 			mainPanel.remove(problemPanel);
 		}

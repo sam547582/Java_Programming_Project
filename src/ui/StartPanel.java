@@ -57,7 +57,7 @@ public class StartPanel extends JPanel {
 		labelElective = new FadeLabel("Elective Subject");
 		elec = new FadeButton[3];
 
-		elec[0] = new FadeButton("Prob & Stats", 450, 50);
+		elec[0] = new FadeButton("Prob & Stats", 250, 50);
 		elec[0].setFont(new Font("Arial", Font.PLAIN, 35));
 		elec[1] = new FadeButton("Calculus", 200, 50);
 		elec[1].setFont(new Font("Arial", Font.PLAIN, 35));
@@ -86,7 +86,9 @@ public class StartPanel extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-
+					
+					if(fieldName.getText() == "") return;
+					
 					StatsManager.updateName(fieldName.getText());
 
 					fieldName.fadeOut(500, () -> {
