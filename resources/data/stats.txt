@@ -1,6 +1,6 @@
 Name sam547582
-Elective Prob&Stats
-TargetGrade 5
+Elective Calculus
+TargetGrade 4
 totalPlayed 0
 correct 0
 wrong 0
