@@ -7,10 +7,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import model.*;
+import util.StatsManager;
 
 public class MainFrame extends JFrame {
-
-	private BackgroundPanel bg;
 
 	private CardLayout cardLayout;
 
@@ -29,11 +28,11 @@ public class MainFrame extends JFrame {
 		setSize(900, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-
-		bg = new BackgroundPanel();
-		bg.setLayout(new BorderLayout());
-		setContentPane(bg);
-
+		
+		StatsManager.load();
+		
+		Container c = getContentPane();
+		
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		mainPanel.setOpaque(false);
@@ -47,8 +46,6 @@ public class MainFrame extends JFrame {
 		testPanel = null;
 		resultPanel = null;
 
-		bg.add(mainPanel, BorderLayout.CENTER);
-
 		File file = new File("resources/data/stats.txt");
 		try {
 			if (!file.exists()) {
@@ -60,15 +57,22 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		c.add(mainPanel);
+		
 		mainPanel.add(settingPanel, "setting");
 		setVisible(true);
 	}
-	
-	public void setBackgroundImage(String path) {
-		bg.setImage(path);
+
+	public void setCardPanelsOpaque(boolean opaque) {
+		for (Component c : mainPanel.getComponents()) {
+			if (c instanceof JComponent jc) {
+				jc.setOpaque(opaque);
+			}
+		}
+		mainPanel.repaint();
 	}
-	
+
 	public void showPanel(String name) {
 		cardLayout.show(mainPanel, name);
 	}

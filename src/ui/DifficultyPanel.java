@@ -49,7 +49,7 @@ public class DifficultyPanel extends JPanel {
 		add(wrapper, BorderLayout.NORTH);
 
 		RoundComponent<JPanel> center = new RoundComponent<>(JPanel.class, new Color(0, 0, 0, 0),
-				new Color(240, 242, 245), 20);
+				new Color(240, 242, 245, 200), 20);
 		center.getInner().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();

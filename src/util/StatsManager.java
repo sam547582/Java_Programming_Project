@@ -14,7 +14,8 @@ public class StatsManager {
 	private static int totalPlayed = 0;
 	private static int correct = 0;
 	private static int wrong = 0;
-
+	private static String path = "";
+	
 	private static List<Integer> score;
 
 	public static void load() {
@@ -66,6 +67,9 @@ public class StatsManager {
 							score.add(Integer.parseInt(parts[i].trim()));
 						}
 						break;
+					case "image":
+						path = val;
+						break;
 					}
 				}
 
@@ -87,6 +91,7 @@ public class StatsManager {
 		fw.write("correct 0\n");
 		fw.write("wrong 0\n");
 		fw.write("score 0\n");
+		fw.write("image 0\n");
 		fw.close();
 	}
 
@@ -105,6 +110,7 @@ public class StatsManager {
 				fw.write(" " + k);
 			}
 			fw.write("\n");
+			fw.write("image " + path + "\n");
 			fw.close();
 
 		} catch (Exception e) {
@@ -144,6 +150,11 @@ public class StatsManager {
 
 		save();
 	}
+	
+	public static void updateImage(String s) {
+		path = s;
+		save();
+	}
 
 	public static int getTotalPlayed() {
 		return totalPlayed;
@@ -159,6 +170,10 @@ public class StatsManager {
 
 	public static String getName() {
 		return name;
+	}
+	
+	public static String getImage() {
+		return path;
 	}
 
 	public static String getElective() {
