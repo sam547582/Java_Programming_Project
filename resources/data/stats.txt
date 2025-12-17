@@ -1,7 +1,9 @@
 Name sam547582
-Elective Calculus
+Elective Prob&Stats
 TargetGrade 4
-totalPlayed 0
-correct 0
-wrong 0
-score
+totalPlayed 234
+correct 6
+wrong 228
+score 0 10 0 0 0
+TodayDate 2025-12-18
+TodayTraining 8

@@ -2,6 +2,9 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import model.*;
 import ui.component.MenuLabel;
 import ui.component.ResponsiveLabel;
@@ -58,8 +61,12 @@ public class ResultPanel extends JPanel {
 			frame.setSize(1000, 550);
 		}
 
+		frame.setResizable(false);
+		frame.enableExit();
+		
 		checkAnswer();
 		StatsManager.updateStats(correct, wrong);
+		StatsManager.increaseTodayTraining();
 
 		resultLabel = new JLabel("RESULT");
 		resultLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 50));
@@ -77,7 +84,8 @@ public class ResultPanel extends JPanel {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				frame.setLocationRelativeTo(null);
 				frame.showPanel("menu");
-				frame.setSize(900, 700);
+				frame.setSize(1000, 800);
+				frame.setLocationRelativeTo(null);
 			}
 
 			@Override
@@ -189,7 +197,7 @@ public class ResultPanel extends JPanel {
 		add(top, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
 		add(bottom, BorderLayout.SOUTH);
-		
+
 		frame.setLocationRelativeTo(null);
 		SwingUtilities.invokeLater(() -> startRowAnimation());
 	}
@@ -436,7 +444,7 @@ public class ResultPanel extends JPanel {
 		if (what.equals("test")) {
 			stats.get(TestManager.getSelectedName())[0]++;
 			stats.get(TestManager.getSelectedName())[1] = score;
-			
+
 			StatsManager.updateScore(score);
 			TestStatsManager.saveTestStats(stats);
 		} else if (what.equals("problem")) {

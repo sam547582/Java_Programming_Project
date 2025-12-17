@@ -1,4 +1,4 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class LineChartPanel extends JPanel {
 	public LineChartPanel() {
 		this.scores = StatsManager.getScore();
 		setBackground(new Color(0, 0, 0, 0));
-		setPreferredSize(new Dimension(400, 350));
+		setPreferredSize(new Dimension(500, 350));
 	}
 
 	private void drawYAxisAndGrid(Graphics2D g2) {

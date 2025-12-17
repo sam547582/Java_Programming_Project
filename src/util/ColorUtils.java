@@ -17,7 +17,6 @@ public class ColorUtils {
 		rate = Math.max(0, Math.min(1, rate));
 
 		if (rate < 0.5) {
-			// 0%~50% : Red → Green
 			double t = rate / 0.5; // 0~1로 변환
 			int r = (int) (255 * (1 - t)); // 255 → 0
 			int g = (int) (255 * t); // 0 → 255

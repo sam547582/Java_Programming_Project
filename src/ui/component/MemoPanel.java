@@ -1,4 +1,4 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 
@@ -11,7 +11,7 @@ public class MemoPanel extends JPanel {
 	private JTextArea field;
 	private JScrollPane scroll;
 	
-	MemoPanel() {
+	public MemoPanel() {
 		
 		setLayout(new BorderLayout());
 		setOpaque(false);

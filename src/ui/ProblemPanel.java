@@ -5,6 +5,9 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -51,14 +54,15 @@ public class ProblemPanel extends JPanel {
 	private Problem[] problems;
 
 	private String difficulty;
-	private String subject;
 
 	private int now_number;
 
 	ProblemPanel(MainFrame frame, String difficulty, String subject) {
 		this.frame = frame;
 		this.difficulty = difficulty;
-		this.subject = subject;
+
+		frame.setResizable(true);
+		frame.disableExit();
 
 		now_number = 0;
 
@@ -127,7 +131,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.BLACK);
 			memoPanel.updateColor(Color.BLACK);
 			drawPanel.updateColor(Color.BLACK);
-			updateProblemContent(500);
+			reSize();
 		});
 
 		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0, 0, 0, 0), Color.WHITE, "W",
@@ -138,7 +142,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.WHITE);
 			memoPanel.updateColor(Color.WHITE);
 			drawPanel.updateColor(Color.WHITE);
-			updateProblemContent(500);
+			reSize();
 		});
 
 		createJPanel();
@@ -241,44 +245,51 @@ public class ProblemPanel extends JPanel {
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;
-				
-				updateProblemContent(500);
-				
-				revalidate();
-				frame.pack();
-				
-				GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-						.getDefaultConfiguration();
-
-				Rectangle bounds = gc.getBounds();
-				Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
-
-				int usableHeight = bounds.height - insets.top - insets.bottom;
-				int maxFrameHeight = usableHeight - 100;				
-
-				int baseSize = 500;
-				int size = baseSize;
-
-				int estimatedFrameHeight = getPreferredSize().height + 100;
-
-				if (estimatedFrameHeight > maxFrameHeight) {
-					double ratio = (double) maxFrameHeight / estimatedFrameHeight;
-					size = (int) (baseSize * ratio);
+				if (!problems[now_number].getPlayerAnswer().equals("")) {
+					answerField.getInner().setText(problems[now_number].getPlayerAnswer());
 				}
-
-				size = Math.max(size, 100);
-
-				updateProblemContent(size);
-				
-				revalidate();
-				
-				Dimension d = getPreferredSize();
-				frame.setSize(d.width + 400, d.height + 100);
-				
-				revalidate();
+				reSize();
 
 			});
 		}
+	}
+
+	private void reSize() {
+		updateProblemContent(500);
+
+		revalidate();
+		frame.pack();
+
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+				.getDefaultConfiguration();
+
+		Rectangle bounds = gc.getBounds();
+		Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+
+		int usableHeight = bounds.height - insets.top - insets.bottom;
+		int maxFrameHeight = usableHeight - 100;
+
+		int baseSize = 500;
+		int size = baseSize;
+
+		int estimatedFrameHeight = getPreferredSize().height + 100;
+
+		if (estimatedFrameHeight > maxFrameHeight) {
+			double ratio = (double) maxFrameHeight / estimatedFrameHeight;
+			size = (int) (baseSize * ratio);
+		}
+
+		size = Math.max(size, 100);
+
+		updateProblemContent(size);
+
+		revalidate();
+
+		Dimension d = getPreferredSize();
+		frame.setSize(d.width + 400, d.height + 100);
+
+		revalidate();
+
 	}
 
 	private void createProblemContentLabel() {
@@ -411,7 +422,6 @@ public class ProblemPanel extends JPanel {
 				problems[now_number].setPlayerAnswer(answerField.getInner().getText());
 				problemNumberButton[now_number].setBackground(new Color(90, 95, 105));
 				problemNumberButton[now_number].setForeground(new Color(180, 185, 190));
-				answerField.getInner().setText("");
 			}
 		});
 	}

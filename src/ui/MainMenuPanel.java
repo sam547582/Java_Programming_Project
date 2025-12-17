@@ -3,6 +3,7 @@ package ui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import ui.component.LineChartPanel;
 import ui.component.MenuLabel;
 
 import java.awt.*;
@@ -16,10 +17,12 @@ public class MainMenuPanel extends JPanel {
 
 	private MainFrame frame;
 
-	private JLabel played;
+	private JLabel grade;
 	private JLabel accuracy;
-	private JLabel correct;
-	private JLabel wrong;
+	private JLabel today;
+	private JLabel elective;
+	private JLabel ox;
+	private JLabel recommend;
 
 	private JPanel rightWrapper;
 
@@ -28,7 +31,10 @@ public class MainMenuPanel extends JPanel {
 
 	public MainMenuPanel(MainFrame frame) {
 		this.frame = frame;
-
+		
+		frame.setResizable(false);
+		frame.enableExit();
+		
 		setLayout(new BorderLayout());
 		setOpaque(true);
 
@@ -38,10 +44,12 @@ public class MainMenuPanel extends JPanel {
 		TestStatsManager.syncStats();
 		StatsManager.load();
 
-		played = new JLabel();
+		grade = new JLabel();
 		accuracy = new JLabel();
-		correct = new JLabel();
-		wrong = new JLabel();
+		today = new JLabel();
+		ox = new JLabel();
+		elective = new JLabel();
+		recommend = new JLabel();
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -52,7 +60,7 @@ public class MainMenuPanel extends JPanel {
 
 		refreshStats();
 
-		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 594),
+		RoundComponent<JPanel> leftMenu = new RoundComponent<>(JPanel.class, new Dimension(400, 668),
 				new Color(0, 0, 0, 0), new Color(0, 0, 0, 140), 20);
 		leftMenu.getInner().setLayout(new BoxLayout(leftMenu.getInner(), BoxLayout.Y_AXIS));
 
@@ -67,7 +75,7 @@ public class MainMenuPanel extends JPanel {
 		westWrapper.add(leftMenu, gbcL);
 
 		JLabel title = new JLabel("KICE MATH TRAINING", SwingConstants.CENTER);
-		title.setFont(new Font("Arial", Font.BOLD, 35));
+		title.setFont(new Font("Arial", Font.BOLD, 45));
 		title.setForeground(Color.WHITE);
 
 		MenuLabel start = new MenuLabel("Training");
@@ -94,8 +102,9 @@ public class MainMenuPanel extends JPanel {
 
 		leftMenu.getInner().add(wrapLabel(test));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
-		
+
 		MenuLabel setting = new MenuLabel("Settings");
+		setting.setHoverColor(new Color(80, 92, 104));
 		setting.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -104,20 +113,19 @@ public class MainMenuPanel extends JPanel {
 		});
 		leftMenu.getInner().add(wrapLabel(setting));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
-		
+
 		MenuLabel exit = new MenuLabel("Exit");
 		exit.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Real Exit?", "EXIT",
-						JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(null, "Real Exit?", "EXIT", JOptionPane.YES_NO_OPTION) == 0) {
 					System.exit(0);
 				}
 			}
 		});
 		leftMenu.getInner().add(wrapLabel(exit));
 		leftMenu.getInner().add(Box.createVerticalStrut(20));
-		
+
 		rightWrapper = new JPanel(new GridBagLayout());
 		rightWrapper.setOpaque(false);
 
@@ -162,38 +170,81 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	private void createStatisticsPanel() {
-		rightTop = new RoundComponent<>(JPanel.class, new Dimension(450, 170), new Color(0, 0, 0, 0),
+		rightTop = new RoundComponent<>(JPanel.class, new Dimension(530, 230), new Color(0, 0, 0, 0),
 				new Color(0, 0, 0, 140), 20);
 		rightTop.getInner().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
-		c.insets = new Insets(5,10,0,0);
+		c.gridwidth = 3;
+		c.insets = new Insets(0, 10, 10, 0);
 		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.CENTER;
 
-		JLabel label = new JLabel(StatsManager.getName());
+		JLabel label = new JLabel("HI!   " + StatsManager.getName());
 		label.setFont(new Font("Arial", Font.BOLD, 30));
-		label.setForeground(Color.WHITE);
+		label.setForeground(new Color(240, 240, 240));
+
+		JLabel labelToday = new JLabel("Today Training : ");
+		labelToday.setFont(new Font("Arial", Font.BOLD, 20));
+		labelToday.setForeground(new Color(160, 165, 170));
+		JLabel labelElective = new JLabel("Elective : ");
+		labelElective.setFont(new Font("Arial", Font.BOLD, 20));
+		labelElective.setForeground(new Color(160, 165, 170));
+		JLabel labelGrade = new JLabel("Target Grade : ");
+		labelGrade.setFont(new Font("Arial", Font.BOLD, 20));
+		labelGrade.setForeground(new Color(160, 165, 170));
 
 		rightTop.getInner().add(label, c);
+
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.EAST;
+		c.insets = new Insets(5, 10, 0, 0);
+		rightTop.getInner().add(labelToday, c);
+		c.gridy = 3;
+		rightTop.getInner().add(labelElective, c);
+		c.gridy = 4;
+		rightTop.getInner().add(labelGrade, c);
+
+		c.gridx = 1;
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.WEST;
+		rightTop.getInner().add(today, c);
+		c.gridy = 3;
+		rightTop.getInner().add(elective, c);
+		c.gridy = 4;
+		rightTop.getInner().add(grade, c);
+
+		c.gridx = 0;
+		c.gridy = 6;
+		c.gridwidth = 3;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(10, 0, 0, 0);
+		rightTop.getInner().add(recommend, c);
+
+		c.insets = new Insets(5, 0, 0, 40);
+		c.anchor = GridBagConstraints.EAST;
+		c.gridwidth = 1;
+		c.gridx = 2;
+		c.gridy = 2;
+		rightTop.getInner().add(ox, c);
+
 		c.gridx = 0;
 		c.gridy = 1;
-		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 3;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(5, 10, 5, 10);
+		rightTop.getInner().add(createSeparator(), c);
+		c.gridy = 5;
+		rightTop.getInner().add(createSeparator(), c);
 
-		rightTop.getInner().add(played, c);
-		c.gridy = 2;
-		rightTop.getInner().add(accuracy, c);
-		c.gridy = 3;
-		rightTop.getInner().add(correct, c);
-		c.gridy = 4;
-		rightTop.getInner().add(wrong, c);
 	}
 
 	private void createChartPanel() {
-		rightBottom = new RoundComponent<>(JPanel.class, new Dimension(450, 400), new Color(0, 0, 0, 0),
+		rightBottom = new RoundComponent<>(JPanel.class, new Dimension(530, 400), new Color(0, 0, 0, 0),
 				new Color(0, 0, 0, 140), 20);
 		rightBottom.getInner().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -218,23 +269,69 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	private void refreshStats() {
-		played.setText("Solved : " + StatsManager.getTotalPlayed());
-		played.setFont(new Font("Arial", Font.BOLD, 20));
-		played.setForeground(ColorUtils.getContrastColor(getBackground()));
 
-		accuracy.setText("Accuracy : " + String.format("%.2f", StatsManager.getAccuracy()) + "%");
-		accuracy.setFont(new Font("Arial", Font.BOLD, 20));
-		accuracy.setForeground(ColorUtils.getContrastColor(getBackground()));
+		if (StatsManager.getTodayTraining() != 0) {
+			ox.setText("NICE");
+			ox.setFont(new Font("Arial", Font.BOLD, 20));
+			ox.setForeground(new Color(120, 190, 120));
+		} else {
+			ox.setText("Go Training!!");
+			ox.setFont(new Font("Arial", Font.BOLD, 20));
+			ox.setForeground(new Color(200, 90, 90));
+		}
 
-		correct.setText("Correct : " + StatsManager.getCorrect());
-		correct.setFont(new Font("Arial", Font.BOLD, 20));
-		correct.setForeground(ColorUtils.getContrastColor(getBackground()));
+		if (StatsManager.getTargetGrade() == 1) {
+			recommend.setText("Recommend KILLER & Hard");
+			recommend.setFont(new Font("Arial", Font.BOLD, 30));
+			recommend.setForeground(new Color(200, 80, 80));
+		} else if (StatsManager.getTargetGrade() == 2) {
+			recommend.setText("Recommend Hard");
+			recommend.setFont(new Font("Arial", Font.BOLD, 30));
+			recommend.setForeground(new Color(200, 160, 90));
+		} else if (StatsManager.getTargetGrade() == 3) {
+			recommend.setText("Recommend Hard & Normal");
+			recommend.setFont(new Font("Arial", Font.BOLD, 30));
+			recommend.setForeground(new Color(140, 170, 200));
+		} else if (StatsManager.getTargetGrade() == 4) {
+			recommend.setText("Recommend Normal & Easy");
+			recommend.setFont(new Font("Arial", Font.BOLD, 30));
+			recommend.setForeground(new Color(120, 180, 140));
+		} else if (StatsManager.getTargetGrade() == 5) {
+			recommend.setText("Recommend Normal & Easy");
+			recommend.setFont(new Font("Arial", Font.BOLD, 30));
+			recommend.setForeground(new Color(120, 180, 140));
+		}
 
-		wrong.setText("Wrong : " + StatsManager.getWrong());
-		wrong.setFont(new Font("Arial", Font.BOLD, 20));
-		wrong.setForeground(ColorUtils.getContrastColor(getBackground()));
+		grade.setText(String.valueOf(StatsManager.getTargetGrade()));
+		grade.setFont(new Font("Arial", Font.BOLD, 20));
+		grade.setForeground(new Color(210, 210, 210));
+
+		today.setText(String.valueOf(StatsManager.getTodayTraining()));
+		today.setFont(new Font("Arial", Font.BOLD, 20));
+		today.setForeground(new Color(200, 185, 130));
+
+		elective.setText(StatsManager.getElective());
+		if (StatsManager.getElective().equals("Prob&Stats"))
+			elective.setText("Prob & Stats");
+
+		elective.setFont(new Font("Arial", Font.BOLD, 20));
+
+		if (StatsManager.getElective().equals("Prob&Stats")) {
+			elective.setForeground(new Color(70, 100, 180));
+		} else if (StatsManager.getElective().equals("Calculus")) {
+			elective.setForeground(new Color(60, 160, 140));
+		} else {
+			elective.setForeground(new Color(230, 190, 80));
+		}
+
 		revalidate();
 		repaint();
+	}
+
+	private JSeparator createSeparator() {
+		JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
+		sep.setForeground(new Color(120, 120, 120, 80)); // 은은하게
+		return sep;
 	}
 
 	private void showCountdownDialog() {
@@ -250,7 +347,7 @@ public class MainMenuPanel extends JPanel {
 		dialog.add(label, BorderLayout.CENTER);
 
 		// 5초 카운트다운 변수 / 배열 선언 원인 체크하기
-		int[] time = { 1 };
+		int[] time = { 10 };
 
 		// 1초마다 실행되는 Swing Timer
 		Timer timer = new Timer(1000, null);

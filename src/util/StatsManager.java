@@ -3,6 +3,7 @@ package util;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 public class StatsManager {
 
@@ -14,7 +15,9 @@ public class StatsManager {
 	private static int totalPlayed = 0;
 	private static int correct = 0;
 	private static int wrong = 0;
-	
+	private static String todayDate = "";
+	private static int todayTraining = 0;
+
 	private static List<Integer> score = new ArrayList<>();
 
 	public static void load() {
@@ -37,7 +40,7 @@ public class StatsManager {
 				if (parts.length >= 2) {
 					String key = parts[0].trim();
 					String val = parts[1].trim();
-					
+
 					switch (key) {
 					case "Name":
 						name = val;
@@ -66,7 +69,15 @@ public class StatsManager {
 							score.add(Integer.parseInt(parts[i].trim()));
 						}
 						break;
+					case "TodayDate":
+						todayDate = val;
+						break;
+					case "TodayTraining":
+						todayTraining = Integer.parseInt(val);
+						break;
+
 					}
+
 				}
 
 			}
@@ -76,6 +87,8 @@ public class StatsManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		checkToday();
 	}
 
 	private static void createDefaultFile() throws IOException {
@@ -87,6 +100,8 @@ public class StatsManager {
 		fw.write("correct 0\n");
 		fw.write("wrong 0\n");
 		fw.write("score 0\n");
+		fw.write("TodayDate " + LocalDate.now() + "\n");
+		fw.write("TodayTraining 0\n");
 		fw.close();
 	}
 
@@ -105,6 +120,9 @@ public class StatsManager {
 				fw.write(" " + k);
 			}
 			fw.write("\n");
+			fw.write("TodayDate " + todayDate + "\n");
+			fw.write("TodayTraining " + todayTraining + "\n");
+
 			fw.close();
 
 		} catch (Exception e) {
@@ -116,6 +134,22 @@ public class StatsManager {
 		totalPlayed += correctCount + wrongCount;
 		correct += correctCount;
 		wrong += wrongCount;
+		save();
+	}
+
+	private static void checkToday() {
+		String now = LocalDate.now().toString();
+
+		if (!now.equals(todayDate)) {
+			todayDate = now;
+			todayTraining = 0;
+			save();
+		}
+	}
+
+	public static void increaseTodayTraining() {
+		checkToday();
+		todayTraining++;
 		save();
 	}
 
@@ -144,7 +178,12 @@ public class StatsManager {
 
 		save();
 	}
-	
+
+	public static int getTodayTraining() {
+		checkToday();
+		return todayTraining;
+	}
+
 	public static int getTotalPlayed() {
 		return totalPlayed;
 	}

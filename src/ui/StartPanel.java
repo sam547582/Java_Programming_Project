@@ -29,7 +29,9 @@ public class StartPanel extends JPanel {
 
 	StartPanel(MainFrame frame) {
 		this.frame = frame;
-
+		
+		frame.enableExit();
+		
 		setLayout(new BorderLayout());
 		setBackground(Color.BLACK);
 

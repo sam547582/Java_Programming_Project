@@ -14,6 +14,8 @@ public class DifficultyPanel extends JPanel {
 	public DifficultyPanel(MainFrame frame, String subject) {
 		this.frame = frame;
 		this.subject = subject;
+		
+		frame.setResizable(false);
 
 		setLayout(new BorderLayout());
 		setBackground(new Color(28, 28, 30));

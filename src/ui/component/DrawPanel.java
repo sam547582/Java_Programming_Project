@@ -1,4 +1,4 @@
-package ui;
+package ui.component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,12 +25,12 @@ public class DrawPanel extends JPanel {
 	private Color penColor;
 
 	private JLabel label;
-	private JButton penBtn;
-	private JButton lineBtn;
-	private JButton eraserBtn;
-	private JButton colorBtn;
-	private JButton undoBtn;
-	private JButton redoBtn;
+	private RoundComponent<JButton> penBtn;
+	private RoundComponent<JButton> lineBtn;
+	private RoundComponent<JButton> eraserBtn;
+	private RoundComponent<JButton> colorBtn;
+	private RoundComponent<JButton> undoBtn;
+	private RoundComponent<JButton> redoBtn;
 
 	private int startX, startY;
 	private int currentX, currentY;
@@ -38,7 +38,7 @@ public class DrawPanel extends JPanel {
 
 	private boolean isPreviewingLine = false;
 
-	DrawPanel() {
+	public DrawPanel() {
 		backColor = Color.WHITE;
 		penColor = Color.BLACK;
 
@@ -52,25 +52,31 @@ public class DrawPanel extends JPanel {
 		label.setFont(new Font("Arial", Font.BOLD, 30));
 		label.setForeground(ColorUtils.getContrastColor(backColor));
 
-		penBtn = new JButton("PEN");
-		lineBtn = new JButton("LINE");
-		eraserBtn = new JButton("ERASER");
-		colorBtn = new JButton("COLOR");
-		undoBtn = new JButton("UNDO");
-		redoBtn = new JButton("REDO");
+		penBtn = new RoundComponent<>(JButton.class, new Dimension(100, 50), new Color(0, 0, 0, 0), new Color(80, 85, 95),
+				"PEN", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+		lineBtn = new RoundComponent<>(JButton.class, new Dimension(100, 50), new Color(0, 0, 0, 0), new Color(70, 100, 160),
+				"LINE", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+		eraserBtn = new RoundComponent<>(JButton.class, new Dimension(120, 50), new Color(0, 0, 0, 0), new Color(160, 80, 80),
+				"ERASER", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+		colorBtn = new RoundComponent<>(JButton.class, new Dimension(120, 50), new Color(0, 0, 0, 0), new Color(140, 120, 170),
+				"COLOR", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+		undoBtn = new RoundComponent<>(JButton.class, new Dimension(100, 50), new Color(0, 0, 0, 0), new Color(90, 130, 120),
+				"UNDO", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
+		redoBtn = new RoundComponent<>(JButton.class, new Dimension(100, 50), new Color(0, 0, 0, 0), new Color(170, 140, 90),
+				"REDO", Color.WHITE, new Font("Arial", Font.BOLD, 20), 20);
 
-		penBtn.addActionListener(e -> mode = Mode.PEN);
-		lineBtn.addActionListener(e -> mode = Mode.LINE);
-		eraserBtn.addActionListener(e -> mode = Mode.ERASER);
-		colorBtn.addActionListener(e -> {
+		penBtn.getInner().addActionListener(e -> mode = Mode.PEN);
+		lineBtn.getInner().addActionListener(e -> mode = Mode.LINE);
+		eraserBtn.getInner().addActionListener(e -> mode = Mode.ERASER);
+		colorBtn.getInner().addActionListener(e -> {
 			Color newColor = JColorChooser.showDialog(this, "Choose Color", penColor);
 			if (newColor != null) {
 				penColor = newColor;
 				g2.setColor(penColor);
 			}
 		});
-		undoBtn.addActionListener(e -> Undo());
-		redoBtn.addActionListener(e -> Redo());
+		undoBtn.getInner().addActionListener(e -> Undo());
+		redoBtn.getInner().addActionListener(e -> Redo());
 
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(true);

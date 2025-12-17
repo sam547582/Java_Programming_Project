@@ -3,13 +3,6 @@ package model;
 import java.io.*;
 import java.util.*;
 
-/**
- * ProblemStatsManager - resources/img/problem/ 내부 모든 문제 이미지 스캔 -
- * problem_stats.txt 로드 및 동기화 - 새 문제 자동 추가 - 삭제된 문제 자동 제거 (옵션) - 문제 경로에서 subject
- * / level 자동 파싱
- * 
- * 파일 저장 형식 예: math1/easy/e001.png solve=3 wrong=1
- */
 public class TestStatsManager {
 
 	private static final String TEST_ROOT = "resources/img/test";
@@ -22,7 +15,7 @@ public class TestStatsManager {
 		File f = new File(STATS_FILE);
 
 		if (!f.exists()) {
-			return map; // 최초 실행이면 빈 map 반환
+			return map;
 		}
 
 		try (BufferedReader br = new BufferedReader(new FileReader(f))) {

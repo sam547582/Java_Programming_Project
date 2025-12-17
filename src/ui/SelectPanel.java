@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.*;
 
+import ui.component.Carousel;
 import util.RoundComponent;
 
 import java.awt.*;
@@ -15,8 +16,11 @@ public class SelectPanel extends JPanel {
 
 		frame.setSize(900, 600);
 
+		frame.setResizable(false);
+
 		setLayout(new BorderLayout());
 		setBackground(Color.GRAY);
+		frame.setLocationRelativeTo(null);
 		setOpaque(true);
 
 		JPanel wrapper = new JPanel();
@@ -38,7 +42,8 @@ public class SelectPanel extends JPanel {
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "BACK", new Color(235, 240, 245),
 				new Font("Arial", Font.BOLD, 25), 20);
 		back.getInner().addActionListener(e -> {
-			frame.setSize(900, 700);
+			frame.setSize(1000, 800);
+			frame.setLocationRelativeTo(null);
 			frame.showPanel("menu");
 		});
 		back.setHoverBackground(new Color(75, 90, 120));

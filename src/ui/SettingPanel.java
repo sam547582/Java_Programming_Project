@@ -59,14 +59,14 @@ public class SettingPanel extends JPanel {
 		wrapper.add(scrollPane,BorderLayout.CENTER);
 		
 		JLabel setting = new JLabel("Settings");
-		setting.setFont(new Font("Arial", Font.BOLD, 45));
+		setting.setFont(new Font("Arial", Font.BOLD, 60));
 		setting.setForeground(new Color(230, 233, 238));
 
 		settingWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		settingWrapper.setOpaque(false);
 		settingWrapper.add(setting);
 
-		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30),
+		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(180, 60),
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "BACK", new Color(235, 240, 245),
 				new Font("Arial", Font.BOLD, 25), 20);
 		back.getInner().addActionListener(e -> frame.showPanel("menu"));
@@ -77,7 +77,7 @@ public class SettingPanel extends JPanel {
 		backWrapper.setOpaque(false);
 		backWrapper.add(back);
 
-		RoundComponent<JButton> apply = new RoundComponent<>(JButton.class, new Dimension(140, 40),
+		RoundComponent<JButton> apply = new RoundComponent<>(JButton.class, new Dimension(180, 60),
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "APPLY", new Color(235, 240, 245),
 				new Font("Arial", Font.BOLD, 25), 20);
 		apply.getInner().addActionListener(e -> {
@@ -110,21 +110,21 @@ public class SettingPanel extends JPanel {
 
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		gbc.insets = new Insets(10, 15, 10, 15);
+		gbc.insets = new Insets(30, 15, 30, 15);
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1;
 		gbc.gridy = 0;
 
-		panel.add(createRow("name"), gbc);
+		panel.add(createRow("Name"), gbc);
 
 		List<RoundComponent<JButton>> btnElective = new ArrayList<>();
 		List<RoundComponent<JButton>> btnGrade = new ArrayList<>();
 
-		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(190, 40), new Color(0, 0, 0, 0),
+		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(200, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "Prob & Stats", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(190, 40), new Color(0, 0, 0, 0),
+		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(200, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "Calculus", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(190, 40), new Color(0, 0, 0, 0),
+		btnElective.add(new RoundComponent<>(JButton.class, new Dimension(200, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "Geometry", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
 
 		if (elective.equals("Prob&Stats")) {
@@ -159,15 +159,15 @@ public class SettingPanel extends JPanel {
 			});
 		}
 
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(90, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "1", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(90, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "2", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(90, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "3", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(90, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "4", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
-		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(80, 40), new Color(0, 0, 0, 0),
+		btnGrade.add(new RoundComponent<>(JButton.class, new Dimension(90, 60), new Color(0, 0, 0, 0),
 				new Color(55, 60, 70), "5", new Color(220, 225, 230), new Font("Arial", Font.BOLD, 25), 20));
 
 		btnGrade.get(targetGrade - 1).setBackground(new Color(90, 155, 255));
@@ -194,7 +194,7 @@ public class SettingPanel extends JPanel {
 		}
 
 		gbc.gridy = 1;
-		panel.add(createRow("elective", btnElective), gbc);
+		panel.add(createRow("Elective", btnElective), gbc);
 
 		gbc.gridy = 2;
 		panel.add(createRow("TargetGrade", btnGrade), gbc);
@@ -213,8 +213,8 @@ public class SettingPanel extends JPanel {
 
 		JPanel wrapper = new JPanel(new GridBagLayout());
 		wrapper.setOpaque(false);
-		fieldName = new RoundComponent<>(JTextField.class, new Dimension(400, 40), new Color(0, 0, 0, 0), Color.WHITE,
-				"", Color.BLACK, new Font("Arial", Font.PLAIN, 20), 20);
+		fieldName = new RoundComponent<>(JTextField.class, new Dimension(500, 60), new Color(0, 0, 0, 0), Color.WHITE,
+				"", Color.BLACK, new Font("Arial", Font.PLAIN, 35), 20);
 		fieldName.getInner().setText(name);
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -267,7 +267,7 @@ public class SettingPanel extends JPanel {
 	private JLabel createLabel(String text) {
 		JLabel label = new JLabel(text + " : ");
 		label.setForeground(new Color(220, 220, 220));
-		label.setFont(new Font("Arial", Font.BOLD, 30));
+		label.setFont(new Font("Arial", Font.BOLD, 45));
 		return label;
 	}
 

@@ -1,6 +1,9 @@
 package ui;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -10,6 +13,8 @@ import model.*;
 import util.StatsManager;
 
 public class MainFrame extends JFrame {
+
+	private WindowListener exitListener;
 
 	private CardLayout cardLayout;
 
@@ -25,12 +30,12 @@ public class MainFrame extends JFrame {
 
 	public MainFrame() {
 		setTitle("KICE MATH TRAINING");
-		setSize(900, 700);
+		setSize(1000, 800);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		
+
 		Container c = getContentPane();
-		
+
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		mainPanel.setOpaque(false);
@@ -56,10 +61,37 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		c.add(mainPanel);
-		
+
 		setVisible(true);
+	}
+
+	public void disableExit() {
+		if (exitListener != null)
+			return;
+
+		exitListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to leave?\n No records are saved.",
+						"WARNING", JOptionPane.YES_NO_OPTION) == 0) {
+					System.exit(0);
+				} else {
+					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				}
+			}
+		};
+		addWindowListener(exitListener);
+	}
+
+	public void enableExit() {
+		if (exitListener == null)
+			return;
+
+		removeWindowListener(exitListener);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		exitListener = null;
 	}
 
 	public void setCardPanelsOpaque(boolean opaque) {
@@ -78,10 +110,10 @@ public class MainFrame extends JFrame {
 	public void showMenu() {
 		menuPanel = new MainMenuPanel(this);
 		settingPanel = new SettingPanel(this);
-		
+
 		mainPanel.add(menuPanel, "menu");
 		mainPanel.add(settingPanel, "setting");
-		
+
 		cardLayout.show(mainPanel, "menu");
 
 		if (startPanel != null) {
@@ -94,7 +126,7 @@ public class MainFrame extends JFrame {
 		if (subjectPanel != null) {
 			mainPanel.remove(subjectPanel);
 		}
-		
+
 		subjectPanel = new SelectPanel(this);
 
 		mainPanel.add(subjectPanel, "subject");
