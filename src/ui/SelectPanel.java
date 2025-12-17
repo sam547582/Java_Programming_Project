@@ -13,6 +13,8 @@ public class SelectPanel extends JPanel {
 	public SelectPanel(MainFrame frame) {
 		this.frame = frame;
 
+		frame.setSize(900, 600);
+
 		setLayout(new BorderLayout());
 		setBackground(Color.GRAY);
 		setOpaque(true);
@@ -35,10 +37,13 @@ public class SelectPanel extends JPanel {
 		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(120, 30),
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "BACK", new Color(235, 240, 245),
 				new Font("Arial", Font.BOLD, 25), 20);
-		back.getInner().addActionListener(e -> frame.showPanel("menu"));
+		back.getInner().addActionListener(e -> {
+			frame.setSize(900, 700);
+			frame.showPanel("menu");
+		});
 		back.setHoverBackground(new Color(75, 90, 120));
 		back.setHoverForeground(new Color(245, 248, 252));
-		
+
 		backPanel.add(back);
 
 		wrapper.add(titlePanel, BorderLayout.CENTER);

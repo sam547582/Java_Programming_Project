@@ -76,7 +76,7 @@ public class ProblemPanel extends JPanel {
 		});
 
 		drawToggleButton = new RoundComponent<>(JButton.class, new Dimension(150, 30), new Color(0, 0, 0, 0),
-				Color.BLACK, "DRAW", Color.WHITE, new Font("Arial", Font.BOLD, 30), 20);
+				new Color(50, 70, 95), "DRAW", new Color(230, 235, 240), new Font("Arial", Font.BOLD, 30), 20);
 		drawToggleButton.setFont(new Font("Arial", Font.BOLD, 20));
 		drawToggleButton.getInner().addActionListener(e -> {
 			boolean now = drawPanel.isVisible();
@@ -109,7 +109,7 @@ public class ProblemPanel extends JPanel {
 		if (all == 0)
 			rateLabel.setText(String.valueOf(0) + "%");
 		else
-			rateLabel.setText(String.valueOf(rate * 100) + "%");
+			rateLabel.setText(String.format("%.2f", rate * 100) + "%");
 		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
 		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
@@ -127,7 +127,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.BLACK);
 			memoPanel.updateColor(Color.BLACK);
 			drawPanel.updateColor(Color.BLACK);
-			updateProblemContent();
+			updateProblemContent(500);
 		});
 
 		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0, 0, 0, 0), Color.WHITE, "W",
@@ -138,7 +138,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.WHITE);
 			memoPanel.updateColor(Color.WHITE);
 			drawPanel.updateColor(Color.WHITE);
-			updateProblemContent();
+			updateProblemContent(500);
 		});
 
 		createJPanel();
@@ -155,7 +155,7 @@ public class ProblemPanel extends JPanel {
 
 	}
 
-	private void updateProblemContent() {
+	private void updateProblemContent(int size) {
 		img = ImageUtils.getImage(problems, now_number);
 		img = ImageUtils.removeBackground(img, center.getBackground(), 240);
 		img = ImageUtils.scaleImage(img, 500);
@@ -169,7 +169,7 @@ public class ProblemPanel extends JPanel {
 		if (all == 0)
 			rateLabel.setText(String.valueOf(0) + "%");
 		else
-			rateLabel.setText(String.valueOf(rate * 100) + "%");
+			rateLabel.setText(String.format("%.2f", rate * 100) + "%");
 		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
 		;
 		rateLabel.repaint();
@@ -178,19 +178,45 @@ public class ProblemPanel extends JPanel {
 	}
 
 	private void setTimer() {
+		int time = 0;
+
 		if (difficulty.equals("easy")) {
-			timer.setTime(300);
-			timerLabel.setText("05:00");
+			time = 600;
 		} else if (difficulty.equals("normal")) {
-			timer.setTime(600);
-			timerLabel.setText("10:00");
-		} else if (difficulty.equals("normal")) {
-			timer.setTime(900);
-			timerLabel.setText("15:00");
+			time = 1200;
+		} else if (difficulty.equals("hard")) {
+			time = 1800;
 		} else {
-			timer.setTime(1800);
-			timerLabel.setText("30:00");
+			time = 2400;
 		}
+
+		if (StatsManager.getTargetGrade() == 1) {
+			time *= 1.0;
+		} else if (StatsManager.getTargetGrade() == 2) {
+			time *= 1.1;
+		} else if (StatsManager.getTargetGrade() == 3) {
+			time *= 1.2;
+		} else if (StatsManager.getTargetGrade() == 4) {
+			time *= 1.3;
+		} else if (StatsManager.getTargetGrade() == 5) {
+			time *= 1.4;
+		}
+
+		String min = String.valueOf(time / 60);
+		String sec = String.valueOf(time % 60);
+		if (time / 60 >= 10) {
+			if (time % 60 >= 10)
+				timerLabel.setText(min + ":" + sec);
+			else
+				timerLabel.setText(min + ":" + "0" + sec);
+		} else {
+			if (time % 60 >= 10)
+				timerLabel.setText("0" + min + ":" + sec);
+			else
+				timerLabel.setText("0" + min + ":" + "0" + sec);
+		}
+
+		timer.setTime(time);
 
 		timer.setTimeoutListener(new problemTimer.TimeoutListener() {
 			@Override
@@ -210,14 +236,47 @@ public class ProblemPanel extends JPanel {
 			int num = i;
 
 			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0, 0, 0, 0),
-					Color.BLACK, String.valueOf(i + 1), Color.WHITE, new Font("Arial", Font.BOLD, 20), 100);
+					new Color(10, 10, 10), String.valueOf(i + 1), new Color(220, 225, 230),
+					new Font("Arial", Font.BOLD, 20), 100);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;
-				updateProblemContent();
+				
+				updateProblemContent(500);
+				
+				revalidate();
+				frame.pack();
+				
+				GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+						.getDefaultConfiguration();
 
+				Rectangle bounds = gc.getBounds();
+				Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+
+				int usableHeight = bounds.height - insets.top - insets.bottom;
+				int maxFrameHeight = usableHeight - 100;				
+
+				int baseSize = 500;
+				int size = baseSize;
+
+				int estimatedFrameHeight = getPreferredSize().height + 100;
+
+				if (estimatedFrameHeight > maxFrameHeight) {
+					double ratio = (double) maxFrameHeight / estimatedFrameHeight;
+					size = (int) (baseSize * ratio);
+				}
+
+				size = Math.max(size, 100);
+
+				updateProblemContent(size);
+				
+				revalidate();
+				
 				Dimension d = getPreferredSize();
 				frame.setSize(d.width + 400, d.height + 100);
+				
+				revalidate();
+
 			});
 		}
 	}
@@ -334,12 +393,12 @@ public class ProblemPanel extends JPanel {
 				"SUBMIT", Color.WHITE, new Font("Arial", Font.BOLD, 25), 20);
 
 		submit.getInner().addActionListener(e -> {
-			
+
 			if (answerField.getInner().getText().equals("")) {
 				JOptionPane.showConfirmDialog(null, "Enter your answer", "X", JOptionPane.DEFAULT_OPTION);
 				return;
 			}
-			
+
 			for (int i = 0; i < answerField.getInner().getText().length(); i++) {
 				int ascii = answerField.getInner().getText().charAt(i);
 				if (ascii < 48 || ascii > 57) {
@@ -350,7 +409,8 @@ public class ProblemPanel extends JPanel {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to submit this answer?", "SUBMIT",
 					JOptionPane.YES_NO_OPTION) == 0) {
 				problems[now_number].setPlayerAnswer(answerField.getInner().getText());
-				problemNumberButton[now_number].setBackground(Color.DARK_GRAY);
+				problemNumberButton[now_number].setBackground(new Color(90, 95, 105));
+				problemNumberButton[now_number].setForeground(new Color(180, 185, 190));
 				answerField.getInner().setText("");
 			}
 		});

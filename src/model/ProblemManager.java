@@ -90,11 +90,11 @@ public class ProblemManager {
 		List<Problem> all = ProblemManager.loadProblems(path);
 
 		if (difficulty.equals("easy")) {
-			size = Math.min(all.size(), 20);
+			size = Math.min(all.size(), 15);
 		} else if (difficulty.equals("normal")) {
-			size = Math.min(all.size(), 20);
-		} else if (difficulty.equals("hard")) {
 			size = Math.min(all.size(), 10);
+		} else if (difficulty.equals("hard")) {
+			size = Math.min(all.size(), 7);
 		} else if (difficulty.equals("extreme")) {
 			size = Math.min(all.size(), 5);
 		}

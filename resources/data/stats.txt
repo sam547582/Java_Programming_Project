@@ -1,8 +1,7 @@
-Name Song Jong Heon
-Elective Calculus
-TargetGrade 3
-totalPlayed 3640
-correct 11
-wrong 3629
-score 40 60 10 0 0
-image resources/img/background/IU.jpg
+Name sam547582
+Elective Prob&Stats
+TargetGrade 5
+totalPlayed 0
+correct 0
+wrong 0
+score

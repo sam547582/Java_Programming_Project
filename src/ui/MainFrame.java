@@ -14,7 +14,7 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 
 	private JPanel mainPanel;
-	private JPanel startPanel;
+	private StartPanel startPanel;
 	private MainMenuPanel menuPanel;
 	private SettingPanel settingPanel;
 	private SelectPanel subjectPanel;
@@ -29,17 +29,15 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
-		StatsManager.load();
-		
 		Container c = getContentPane();
 		
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		mainPanel.setOpaque(false);
 
-		startPanel = new StartPanel(this);
+		startPanel = null;
 		menuPanel = null;
-		settingPanel = new SettingPanel(this);
+		settingPanel = null;
 		subjectPanel = null;
 		difficultyPanel = null;
 		problemPanel = null;
@@ -49,6 +47,7 @@ public class MainFrame extends JFrame {
 		File file = new File("resources/data/stats.txt");
 		try {
 			if (!file.exists()) {
+				startPanel = new StartPanel(this);
 				mainPanel.add(startPanel, "start");
 				cardLayout.show(mainPanel, "start");
 			} else {
@@ -60,7 +59,6 @@ public class MainFrame extends JFrame {
 		
 		c.add(mainPanel);
 		
-		mainPanel.add(settingPanel, "setting");
 		setVisible(true);
 	}
 
@@ -79,8 +77,11 @@ public class MainFrame extends JFrame {
 
 	public void showMenu() {
 		menuPanel = new MainMenuPanel(this);
-
+		settingPanel = new SettingPanel(this);
+		
 		mainPanel.add(menuPanel, "menu");
+		mainPanel.add(settingPanel, "setting");
+		
 		cardLayout.show(mainPanel, "menu");
 
 		if (startPanel != null) {
@@ -93,7 +94,7 @@ public class MainFrame extends JFrame {
 		if (subjectPanel != null) {
 			mainPanel.remove(subjectPanel);
 		}
-
+		
 		subjectPanel = new SelectPanel(this);
 
 		mainPanel.add(subjectPanel, "subject");
