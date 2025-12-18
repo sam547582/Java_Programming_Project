@@ -68,7 +68,7 @@ public class SettingPanel extends JPanel {
 
 		RoundComponent<JButton> back = new RoundComponent<>(JButton.class, new Dimension(180, 60),
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "BACK", new Color(235, 240, 245),
-				new Font("Arial", Font.BOLD, 25), 20);
+				new Font("Arial", Font.BOLD, 35), 20);
 		back.getInner().addActionListener(e -> frame.showPanel("menu"));
 		back.setHoverBackground(new Color(75, 90, 120));
 		back.setHoverForeground(new Color(245, 248, 252));
@@ -79,7 +79,7 @@ public class SettingPanel extends JPanel {
 
 		RoundComponent<JButton> apply = new RoundComponent<>(JButton.class, new Dimension(180, 60),
 				new Color(0, 0, 0, 0), new Color(55, 65, 85), "APPLY", new Color(235, 240, 245),
-				new Font("Arial", Font.BOLD, 25), 20);
+				new Font("Arial", Font.BOLD, 35), 20);
 		apply.getInner().addActionListener(e -> {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to apply?", "APPLY",
 					JOptionPane.YES_NO_OPTION) == 0) {
