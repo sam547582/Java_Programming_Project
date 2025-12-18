@@ -85,7 +85,7 @@ public class DrawPanel extends JPanel {
 			} else {
 				drawColor = color;
 			}
-			
+
 			g.setColor(drawColor);
 			g.drawLine(start.x, start.y, end.x, end.y);
 		}
@@ -139,10 +139,15 @@ public class DrawPanel extends JPanel {
 		toolBar.setFloatable(false);
 		toolBar.setOpaque(false);
 		toolBar.add(penBtn);
+		toolBar.add(Box.createHorizontalStrut(10));
 		toolBar.add(lineBtn);
+		toolBar.add(Box.createHorizontalStrut(10));
 		toolBar.add(eraserBtn);
+		toolBar.add(Box.createHorizontalStrut(10));
 		toolBar.add(colorBtn);
+		toolBar.add(Box.createHorizontalStrut(10));
 		toolBar.add(undoBtn);
+		toolBar.add(Box.createHorizontalStrut(10));
 		toolBar.add(redoBtn);
 		JPanel bottom = new JPanel(new FlowLayout());
 		bottom.setOpaque(false);
@@ -160,11 +165,11 @@ public class DrawPanel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		for (DrawCommand cmd : commands) {
 			cmd.draw(g2d, backColor, penColor);
 		}
-		
+
 		if (mode == Mode.LINE && isPreviewingLine) {
 			g2d.setStroke(new BasicStroke(penSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 			g2d.setColor(penColor);

@@ -1,9 +1,9 @@
 Name sam
 Elective Calculus
 TargetGrade 1
-totalPlayed 6
-correct 2
-wrong 4
+totalPlayed 12
+correct 5
+wrong 7
 score
 TodayDate 2025-12-19
-TodayTraining 0
+TodayTraining 2

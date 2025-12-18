@@ -266,6 +266,8 @@ public class TestPanel extends JPanel {
 				now_number = num;
 				if (!problems[now_number].getPlayerAnswer().equals("")) {
 					answerField.getInner().setText(problems[now_number].getPlayerAnswer());
+				} else {
+					answerField.getInner().setText("");
 				}
 				updateProblemContent();
 			});

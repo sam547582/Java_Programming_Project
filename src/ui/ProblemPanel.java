@@ -318,6 +318,9 @@ public class ProblemPanel extends JPanel {
 				if (!problems[now_number].getPlayerAnswer().equals("")) {
 					answerField.getInner().setText(problems[now_number].getPlayerAnswer());
 				}
+				else {
+					answerField.getInner().setText("");
+				}
 				updateProblemContent();
 
 			});

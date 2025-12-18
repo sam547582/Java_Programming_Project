@@ -20,9 +20,9 @@ resources/img/problem/geometry/hard/260928_4.png solve=0 wrong=0
 resources/img/problem/geometry/hard/260929_396.png solve=0 wrong=0
 resources/img/problem/geometry/normal/260925_1.png solve=0 wrong=0
 resources/img/problem/geometry/normal/260926_1.png solve=0 wrong=0
-resources/img/problem/math1/easy/260901_4.png solve=0 wrong=0
-resources/img/problem/math1/easy/260903_5.png solve=0 wrong=0
-resources/img/problem/math1/easy/260906_5.png solve=0 wrong=0
+resources/img/problem/math1/easy/260901_4.png solve=1 wrong=1
+resources/img/problem/math1/easy/260903_5.png solve=1 wrong=1
+resources/img/problem/math1/easy/260906_5.png solve=1 wrong=1
 resources/img/problem/math1/extreme/260922_73.png solve=0 wrong=0
 resources/img/problem/math1/hard/260910_3.png solve=0 wrong=0
 resources/img/problem/math1/hard/260912_1.png solve=0 wrong=0
