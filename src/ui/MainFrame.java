@@ -76,6 +76,15 @@ public class MainFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to leave?\n No records are saved.",
 						"WARNING", JOptionPane.YES_NO_OPTION) == 0) {
+
+					if (testPanel != null) {
+						testPanel.cancelPreload();
+					}
+					
+					if (problemPanel != null) {
+						problemPanel.cancelPreload();
+					}
+
 					System.exit(0);
 				} else {
 					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -146,6 +155,18 @@ public class MainFrame extends JFrame {
 
 	public void showProblem(String difficulty, String subject) {
 
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+				.getDefaultConfiguration();
+
+		Rectangle bounds = gc.getBounds();
+		Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+
+		int width = bounds.width - insets.left - insets.right;
+		int height = bounds.height - insets.top - insets.bottom;
+
+		setLocation(bounds.x + insets.left, bounds.y + insets.top);
+		setSize(width, height);
+
 		problemPanel = new ProblemPanel(this, difficulty, subject);
 
 		mainPanel.add(problemPanel, "problem");
@@ -154,6 +175,18 @@ public class MainFrame extends JFrame {
 	}
 
 	public void showTest(String elective) {
+
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+				.getDefaultConfiguration();
+
+		Rectangle bounds = gc.getBounds();
+		Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+
+		int width = bounds.width - insets.left - insets.right;
+		int height = bounds.height - insets.top - insets.bottom;
+
+		setLocation(bounds.x + insets.left, bounds.y + insets.top);
+		setSize(width, height);
 
 		testPanel = new TestPanel(this, elective);
 

@@ -1,0 +1,9 @@
+Name sam
+Elective Calculus
+TargetGrade 1
+totalPlayed 6
+correct 2
+wrong 4
+score
+TodayDate 2025-12-19
+TodayTraining 0

@@ -16,14 +16,14 @@ public class Problem {
 		this.path = path;
 		this.answer = answer;
 		this.score = score;
-		playerAnswer = " ";
+		playerAnswer = "";
 	}
 	
 	public Problem(int id, String path, String answer) {
 		this.id = id;
 		this.path = path;
 		this.answer = answer;
-		playerAnswer = " ";
+		playerAnswer = "";
 	}
 	
 	public void setPlayerAnswer(String answer) {

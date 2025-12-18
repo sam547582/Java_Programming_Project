@@ -16,7 +16,7 @@ public class ProblemManager {
 		}
 
 		Map<String, int[]> stats = ProblemStatsManager.loadProblemStats();
-		
+
 		List<Problem> list = new ArrayList<>();
 
 		for (File f : files) {
@@ -29,7 +29,7 @@ public class ProblemManager {
 
 			String relativePath = folderPath + "/" + fileName;
 			String answerPart = parts[1].replace(".png", "");
-			
+
 			Problem p = new Problem(Integer.parseInt(parts[0]), relativePath, answerPart);
 
 			if (stats.containsKey(relativePath)) {
@@ -90,7 +90,7 @@ public class ProblemManager {
 		List<Problem> all = ProblemManager.loadProblems(path);
 
 		if (difficulty.equals("easy")) {
-			size = Math.min(all.size(), 15);
+			size = Math.min(all.size(), 10);
 		} else if (difficulty.equals("normal")) {
 			size = Math.min(all.size(), 10);
 		} else if (difficulty.equals("hard")) {
@@ -100,6 +100,10 @@ public class ProblemManager {
 		}
 
 		problems = ProblemManager.pickWeightedRandom(all, size);
+
+		List<Problem> shuffled = new ArrayList<>(Arrays.asList(problems));
+		Collections.shuffle(shuffled);
+		problems = shuffled.toArray(new Problem[0]);
 
 		return problems;
 	}

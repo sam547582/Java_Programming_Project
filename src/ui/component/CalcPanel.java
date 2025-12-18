@@ -21,7 +21,7 @@ public class CalcPanel extends JPanel {
 		// (1) Display 영역 (식 표시용)
 		// -----------------------------------
 		display = new JTextField();
-		display.setFont(new Font("Arial", Font.BOLD, 28));
+		display.setFont(new Font("Arial", Font.BOLD, 40));
 		display.setHorizontalAlignment(SwingConstants.CENTER);
 		add(display, BorderLayout.NORTH);
 
@@ -39,7 +39,7 @@ public class CalcPanel extends JPanel {
 		int cnt = 0;
 		for (String text : buttons) {
 			JButton btn = new JButton(text);
-			btn.setFont(new Font("Arial", Font.BOLD, 24));
+			btn.setFont(new Font("Arial", Font.BOLD, 40));
 
 			buttonPanel.add(btn);
 

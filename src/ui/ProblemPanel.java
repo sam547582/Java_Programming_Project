@@ -1,6 +1,8 @@
 package ui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.net.URL;
@@ -21,7 +23,8 @@ public class ProblemPanel extends JPanel {
 
 	private MainFrame frame;
 
-	private BufferedImage img;
+	private SwingWorker<Void, Integer> preloadWorker;
+	private final Map<String, BufferedImage> imageCache = new HashMap<>();
 
 	private JPanel topWrapper;
 	private JPanel top;
@@ -48,6 +51,8 @@ public class ProblemPanel extends JPanel {
 	private JLabel timerLabel;
 	private JLabel rateLabel;
 
+	private JLabel loadingLabel;
+
 	private RoundComponent<JButton> black;
 	private RoundComponent<JButton> white;
 
@@ -68,7 +73,10 @@ public class ProblemPanel extends JPanel {
 
 		timerLabel = new JLabel();
 		timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
+		timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+
+		rateLabel = new JLabel();
+		rateLabel.setFont(new Font("Arial", Font.BOLD, 40));
 
 		finish = new RoundComponent<>(JButton.class, new Dimension(150, 40), new Color(0, 0, 0, 0), Color.BLACK,
 				"FINISH", Color.WHITE, new Font("Arial", Font.BOLD, 30), 20);
@@ -85,10 +93,6 @@ public class ProblemPanel extends JPanel {
 		drawToggleButton.getInner().addActionListener(e -> {
 			boolean now = drawPanel.isVisible();
 			drawPanel.setVisible(!now);
-
-			if (!now) {
-				drawPanel.initCanvas(center.getBackground());
-			}
 		});
 
 		setLayout(new BorderLayout());
@@ -98,24 +102,6 @@ public class ProblemPanel extends JPanel {
 		setTimer();
 
 		problems = ProblemManager.getProblem(difficulty, subject);
-
-		img = ImageUtils.getImage(problems, now_number);
-		img = ImageUtils.removeBackground(img, new Color(255, 255, 255), 240);
-		img = ImageUtils.scaleImage(img, 500);
-
-		timerLabel.setForeground(Color.BLACK);
-
-		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
-		double solve = problems[now_number].getSolveCount();
-		double rate = solve / all;
-
-		rateLabel = new JLabel();
-		if (all == 0)
-			rateLabel.setText(String.valueOf(0) + "%");
-		else
-			rateLabel.setText(String.format("%.2f", rate * 100) + "%");
-		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
-		rateLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
 		createProblemContentLabel();
 
@@ -131,7 +117,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.BLACK);
 			memoPanel.updateColor(Color.BLACK);
 			drawPanel.updateColor(Color.BLACK);
-			reSize();
+			updateProblemContent();
 		});
 
 		white = new RoundComponent<>(JButton.class, new Dimension(70, 70), new Color(0, 0, 0, 0), Color.WHITE, "W",
@@ -142,7 +128,7 @@ public class ProblemPanel extends JPanel {
 			calcPanel.updateColor(Color.WHITE);
 			memoPanel.updateColor(Color.WHITE);
 			drawPanel.updateColor(Color.WHITE);
-			reSize();
+			updateProblemContent();
 		});
 
 		createJPanel();
@@ -151,34 +137,118 @@ public class ProblemPanel extends JPanel {
 		add(center, BorderLayout.CENTER);
 		add(bottomWrapper, BorderLayout.SOUTH);
 
-		Dimension d = getPreferredSize();
-		this.frame.setSize(d.width + 400, d.height + 100);
+		SwingUtilities.invokeLater(() -> {
+			loadFirstProblem();
+			updateProblemContent();
+			preloadImages();
+		});
 
-		frame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - (d.width + 400) / 2, 0);
 		timer.start();
 
 	}
 
-	private void updateProblemContent(int size) {
-		img = ImageUtils.getImage(problems, now_number);
-		img = ImageUtils.removeBackground(img, center.getBackground(), 240);
-		img = ImageUtils.scaleImage(img, 500);
+	private void loadFirstProblem() {
+		Color bg = Color.WHITE;
 
-		timerLabel.setForeground(ColorUtils.getContrastColor(center.getBackground()));
+		String key = 0 + "_" + bg.getRGB();
+		if (imageCache.containsKey(key))
+			return;
+
+		BufferedImage img = ImageUtils.getImage(problems, 0);
+		img = ImageUtils.removeBackground(img, bg, 210);
+		img = scaleImageNeed(img, calculateImageSize());
+
+		imageCache.put(key, img);
+	}
+
+	private void preloadImages() {
+
+		preloadWorker = new SwingWorker<Void, Integer>() {
+
+			@Override
+			protected Void doInBackground() {
+
+				Color[] themes = { Color.WHITE, Color.BLACK };
+
+				int maxSize = calculateImageSize();
+
+				for (int i = 0; i < problems.length; i++) {
+
+					for (Color bg : themes) {
+						if (isCancelled())
+							return null;
+
+						String key = i + "_" + bg.getRGB();
+						if (imageCache.containsKey(key))
+							continue;
+
+						BufferedImage img = ImageUtils.getImage(problems, i);
+						img = ImageUtils.removeBackground(img, bg, 210);
+						img = scaleImageNeed(img, maxSize);
+
+						imageCache.put(key, img);
+					}
+
+					publish(i);
+				}
+
+				return null;
+
+			}
+
+			@Override
+			protected void process(List<Integer> chunks) {
+				int lastLoaded = chunks.get(chunks.size() - 1);
+
+				if (lastLoaded == now_number) {
+					updateProblemContent();
+				}
+			}
+
+		};
+		preloadWorker.execute();
+	}
+
+	public void cancelPreload() {
+		if (preloadWorker != null && !preloadWorker.isDone()) {
+			preloadWorker.cancel(true);
+		}
+	}
+
+	private void updateProblemContent() {
+		Color bg = null;
+		if (center == null)
+			bg = Color.WHITE;
+		else
+			bg = center.getBackground();
+
+		String key = now_number + "_" + bg.getRGB();
+
+		BufferedImage img = imageCache.get(key);
+
+		if (img == null) {
+			problemContentLabel.setIcon(null);
+			loadingLabel.setVisible(true);
+			return;
+		}
+
+		problemContentLabel.setIcon(new ImageIcon(img));
+		loadingLabel.setVisible(false);
+		timerLabel.setForeground(ColorUtils.getContrastColor(bg));
 
 		double all = problems[now_number].getSolveCount() + problems[now_number].getWrongCount();
 		double solve = problems[now_number].getSolveCount();
-		double rate = solve / all;
+		double rate = (all == 0) ? 0 : solve / all;
 
-		if (all == 0)
-			rateLabel.setText(String.valueOf(0) + "%");
-		else
-			rateLabel.setText(String.format("%.2f", rate * 100) + "%");
+		rateLabel.setText(all == 0 ? "0%" : String.format("%.2f", rate * 100) + "%");
 		rateLabel.setForeground(ColorUtils.getAccuracyColor(rate));
-		;
-		rateLabel.repaint();
 
-		problemContentLabel.setIcon(new ImageIcon(img));
+		revalidate();
+		repaint();
+	}
+
+	String makeCacheKey(int problemIndex, Color bg) {
+		return problemIndex + "_" + bg.getRGB();
 	}
 
 	private void setTimer() {
@@ -241,65 +311,63 @@ public class ProblemPanel extends JPanel {
 
 			problemNumberButton[i] = new RoundComponent<>(JButton.class, new Dimension(50, 50), new Color(0, 0, 0, 0),
 					new Color(10, 10, 10), String.valueOf(i + 1), new Color(220, 225, 230),
-					new Font("Arial", Font.BOLD, 20), 100);
+					new Font("Arial", Font.BOLD, 20), 160);
 
 			problemNumberButton[i].getInner().addActionListener(e -> {
 				now_number = num;
 				if (!problems[now_number].getPlayerAnswer().equals("")) {
 					answerField.getInner().setText(problems[now_number].getPlayerAnswer());
 				}
-				reSize();
+				updateProblemContent();
 
 			});
 		}
 	}
 
-	private void reSize() {
-		updateProblemContent(500);
+	private int calculateImageSize() {
 
-		revalidate();
-		frame.pack();
+		int frameHeight = frame.getContentPane().getHeight();
 
-		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDefaultConfiguration();
+		int reserved = 200;
+		int maxSize = frameHeight - reserved;
 
-		Rectangle bounds = gc.getBounds();
-		Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+		return Math.max(maxSize, 100);
+	}
 
-		int usableHeight = bounds.height - insets.top - insets.bottom;
-		int maxFrameHeight = usableHeight - 100;
+	private BufferedImage scaleImageNeed(BufferedImage img, int maxSize) {
 
-		int baseSize = 500;
-		int size = baseSize;
+		int w = img.getWidth();
+		int h = img.getHeight();
 
-		int estimatedFrameHeight = getPreferredSize().height + 100;
+		int maxDim = Math.max(w, h);
 
-		if (estimatedFrameHeight > maxFrameHeight) {
-			double ratio = (double) maxFrameHeight / estimatedFrameHeight;
-			size = (int) (baseSize * ratio);
+		// 이미 충분히 작으면 그대로 사용
+		if (maxDim <= maxSize) {
+			return img;
 		}
 
-		size = Math.max(size, 100);
+		double scale = (double) maxSize / maxDim;
 
-		updateProblemContent(size);
+		int newW = (int) (w * scale);
 
-		revalidate();
-
-		Dimension d = getPreferredSize();
-		frame.setSize(d.width + 400, d.height + 100);
-
-		revalidate();
-
+		return ImageUtils.scaleImage(img, newW);
 	}
 
 	private void createProblemContentLabel() {
 		problemContentLabel = new JLabel();
 		problemContentLabel.setOpaque(false);
-		problemContentLabel.setFont(new Font("Arial", Font.BOLD, 28));
-		problemContentLabel.setIcon(new ImageIcon(img));
-		problemContentLabel.setBounds(0, 0, img.getWidth(), img.getHeight());
 		problemContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		problemContentLabel.setVerticalAlignment(SwingConstants.TOP);
+
+		loadingLabel = new JLabel("LOADING");
+		loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		loadingLabel.setVerticalAlignment(SwingConstants.CENTER);
+		loadingLabel.setAlignmentX(0.5f);
+		loadingLabel.setAlignmentY(0.5f);
+		loadingLabel.setPreferredSize(new Dimension(800, 600));
+		loadingLabel.setFont(new Font("Arial", Font.BOLD, 80));
+		loadingLabel.setForeground(new Color(0, 0, 0, 80));
+		loadingLabel.setVisible(true);
 	}
 
 	private void createJPanel() {
@@ -367,6 +435,7 @@ public class ProblemPanel extends JPanel {
 		drawPanel = new DrawPanel();
 		drawPanel.setVisible(false);
 
+		center.getInner().add(loadingLabel);
 		center.getInner().add(drawPanel);
 		center.getInner().add(subPanel);
 

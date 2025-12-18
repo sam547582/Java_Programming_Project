@@ -54,6 +54,8 @@ public class TestManager {
 		
 		int minCount = Integer.MAX_VALUE;
 		
+		List<File> firstCandidates = new ArrayList<>();
+		
 		for (File folder : folders) {
             String name = folder.getName();
             int count = stats.get(name)[0];
@@ -65,12 +67,13 @@ public class TestManager {
             	continue;
             }
             
+            firstCandidates.add(folder);
             minCount = Math.min(minCount, count);
         }
 		
 		List<File> candidates = new ArrayList<>();
 		
-		for (File folder : folders) {
+		for (File folder : firstCandidates) {
             String name = folder.getName();
             int count = stats.get(name)[0];
             
